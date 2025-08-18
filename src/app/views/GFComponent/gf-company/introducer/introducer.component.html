@@ -1,0 +1,155 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary" style="background-color: #041562!important;color:#fff!important;">
+
+                <a class="nav-link active" aria-current="page">Introducer Details</a>
+
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="container ">
+                <div class="card-body ">
+                    <form [formGroup]="introducer">
+                        <input type="hidden"  formControlName="introducer_id">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Introducer
+                                *</label>
+                            <div class="col-sm-9">
+                                <select  class="form-control" formControlName="introducer_business_code">
+                                    <option>Select Introducer</option>
+                                    <option *ngFor="let employeeperson of stakeHolder">{{employeeperson.stakeholder_name}}</option>
+                                   
+                                </select>
+                                <span class="text-danger"
+                                *ngIf="(registerFormControl.introducer_business_code.touched || submitted) && registerFormControl.introducer_business_code.errors?.required">
+                                Introducer Bussiness Code is Required 
+                            </span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" class="form-control" placeholder="introducer company id..."
+                             [value]="sid"[(ngModel)]="sid"
+                            formControlName="introducer_company_id">
+
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label"> Branch</label>
+                            <div class="col-sm-9">
+                                    <select  class="form-control" formControlName="introducer_branch" (change)="changeBranch()">
+                                        <option>Select Introducer Branch</option>
+                                        <option *ngFor="let branch_Allnames of branch_names"[value]="branch_Allnames.id">{{branch_Allnames.branch_name}}</option>
+                                      
+                                    </select>
+                                    <span class="text-danger"
+                                    *ngIf="(registerFormControl.introducer_branch.touched || submitted) && registerFormControl.introducer_branch.errors?.required">
+                                    Introducer branch  is Required 
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label"> Department</label>
+                            <div class="col-sm-9">
+                                    <select  class="form-control" formControlName="introducer_department">
+                                        <option>Select Introducer Department</option>
+                                        <option *ngFor="let department_Allnames of getDepartmentList">{{department_Allnames.department_name}}</option>
+                                    </select>
+                                    <span class="text-danger"
+                                    *ngIf="(registerFormControl.introducer_department.touched || submitted) && registerFormControl.introducer_department.errors?.required">
+                                    Introducer department is Required 
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">% Share</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="Percentage Share"
+                                    formControlName="percentage_share">
+                                    <span class="text-danger"
+                                    *ngIf="(registerFormControl.percentage_share.touched || submitted) && registerFormControl.percentage_share.errors?.required">
+                                    Percentage share  is Required 
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                        <div id="spinner"></div>
+                      </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closepopup()">Close</button>
+                <button type="button" class="btn btn-primary" style="background-color: #041562!important;color:#fff!important;" (click)="createIntroducer()"*ngIf="save">Save</button>
+                <button type="button" class="btn btn-primary" style="background-color: #041562!important;color:#fff!important;" (click)="updateIntroducerById()"*ngIf="update">Update</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="containers">
+    <div class="cards">
+        <div class="card-header">
+            <strong>Introducer Details</strong>
+            <div class="card-header-actions">
+
+                <small className="text-muted " class="btn bg-primary rounded-circle"style="background-color: #041562!important;color:#fff!important;" (click)="isCollapsed = !isCollapsed">
+                    <i class="fa fa-angle-double-down"></i>
+                </small>
+               
+                <small className="text-muted" class="btn mr-1 bg-primary rounded-circle"style="background-color: #041562!important;color:#fff!important;" data-toggle="modal" (click)="create()">
+                    <i class="fa fa-plus"></i>
+                </small>
+            </div>
+        </div>
+        <div class="card-body bg-light" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+            [collapse]="isCollapsed">
+            <table #example class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger">
+                <thead style="background-color: #041562!important;color:#fff!important;">
+                    <tr>
+                        <th>ID</th>
+                        <th>Bussiness Code</th>
+                        <th>Introducer Branch</th>
+                        <th>Introducer Department</th>
+                        <th>Percentage Share</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let introducer of introducers;let i=index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{ introducer.introducer_business_code }}</td>
+                        <td>{{ introducer.introducer_branch.branch_name }}</td>
+                        <td>{{ introducer.introducer_department }}</td>
+                        <td>{{ introducer.percentage_share }}</td>
+                        <td class="col-lg-2">
+                            <span class="btn btn-success btn-sm mr-2" (click)="getGFIntroducerById(introducer.id)">Edit </span>
+                            <span class="btn btn-danger btn-sm" (click)="show(introducer.id)">Delete</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="ml-4 mt-2">Are You Sure to delete ?</h5>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                <button type="button" class="btn btn-danger" (click)="deleteIntroducers(ids)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>

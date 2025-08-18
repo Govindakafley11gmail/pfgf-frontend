@@ -1,0 +1,490 @@
+<div class="containers">
+    <div class="p-2 mt-4">
+        <form [formGroup]="productForm">
+            <div class="card">
+               <div class="card-header bg-white d-flex justify-content-between align-items-center">
+  <div>
+    Accounts  
+    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
+    Account Posting
+  </div>
+
+  <button routerLink="/accounts/account-list" class="btn btn-sm btn-primary">
+    List
+  </button>
+</div>
+              
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Voucher Type *</label>
+                        <div class="col-sm-4">
+
+                            <ng-select [items]="voucherTypes"
+                                bindLabel="accounttype" bindValue="accounttype"
+                                placeholder="Select collection Type"[readonly] = "isDissabled"
+                                formControlName="voucher_type" appendTo="body"
+                                (change)="changeVoucherType()">
+                            </ng-select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.voucher_type.touched
+                                ||
+                                submitted) &&
+                                registerFormControl.voucher_type.errors?.required">
+                                Voucher Type is required
+                            </span>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Voucher Date *</label>
+                        <div class="col-sm-4">
+                            <input type="date" placeholder="place your product
+                                name here" formControlName="voucher_date"[readonly] = "isDissabled"
+                                class="form-control">
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.voucher_date.touched
+                                ||
+                                submitted) &&
+                                registerFormControl.voucher_date.errors?.required">
+                                Voucher Type is required
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"> Posting Branch *</label>
+                        <div class="col-sm-4">
+
+                            <ng-select [items]="postingbranch"[readonly] = "isDissabled"
+                                bindLabel="branch_name" placeholder="Select
+                                Posting Branch" bindValue="id"
+                                formControlName="posting_branch"
+                                appendTo="body">
+                            </ng-select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.posting_branch.touched
+                                ||
+                                submitted) &&
+                                registerFormControl.posting_branch.errors?.required">
+                                Branch is required
+                            </span>
+
+                        </div>
+                        <label class="col-sm-2 col-form-label">Total Amount *</label>
+                        <div class="col-sm-4">
+                            <input type="number"[readonly] = "isDissabled"
+                                formControlName="posting_amount"
+                                placeholder="place your Total Amount"
+                                class="form-control">
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.posting_amount.touched
+                                ||
+                                submitted) &&
+                                registerFormControl.posting_amount.errors?.required">
+                                Amount is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row" *ngIf="refNo">
+                        <label class="col-sm-2 col-form-label">Reference Number
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" formControlName="reference_No"
+                                placeholder="Reference Number"[readonly] = "isDissabled"
+                                (click)="showModelReferenceNo()"
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Descriptions *</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control"[readonly] = "isDissabled"
+                                formControlName="posting_description"
+                                placeholder="place your Narration">
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <!-- header [account posting details] -->
+                    ACCOUNT POSTING DETAILS
+                    <hr>
+                    <div class="card-body">
+                        <div class="pull-right mb-3">
+                            <button type="button" (click)="addQuantity()"
+                                class="btn btn-primary"><i
+                                    class="fa fa-plus"></i>
+                                Add More Account Posting
+                            </button>
+                        </div>
+
+                        <div>
+                            <table class="table" formArrayName="quantities">
+                                <tr *ngFor="let quantity of
+                                    quantities().controls; let i=index"
+                                    [formGroupName]="i">
+                                    <td>
+                                        Ledger/Sub Ledger Account * :
+                                        <input type="text"[readonly] = "isDissabled"
+                                            formControlName="account_ledger"
+                                            (click)="showAccountLedgerModel(i)"
+                                            class="form-control">
+                                    </td>
+                                    <td>
+                                        Debit / Credit Indicator:
+                                        <ng-select [items]="indicator"[readonly] = "isDissabled"
+                                        bindLabel="debit_credit" bindValue="debit_credit"
+                                        placeholder="Select collection Type"
+                                        formControlName="debit_credit" appendTo="body"
+                                        (change)="changeAccountPosyting()">
+                                    </ng-select>
+                                    </td>
+                                    <td>
+                                        Amount:
+                                        <input type="number"
+                                            (change)="changeAccountPosyting()"
+                                            formControlName="amount"[readonly] = "isDissabled"
+                                            class="form-control">
+                                    </td>
+                                    <td>
+                                        <button (click)="removeQuantity(i)"
+                                            class="btn btn-danger mt-4">X</button>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                            <hr>
+                            <table class="table" *ngIf="RvAndPv">
+
+                                <h6><strong>Add Collection Type</strong></h6>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            Instrument No :
+                                            <input type="text"
+                                                formControlName="instrumentNo"[readonly] = "isDissabled"
+                                                class="form-control">
+                                        </td>
+                                        <td>
+                                            Instrument Date:
+                                            <input type="date"[readonly] = "isDissabled"
+                                                formControlName="instrumentDate"
+                                                class="form-control">
+                                        </td>
+                                        <td>
+                                            Bank:
+                                            <input type="number"[readonly] = "isDissabled"
+                                                formControlName="instrumentBank"
+                                                class="form-control">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <strong>Total Debit : <br>
+                                        {{debitvalue}}</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <strong>Total Credit :<br>
+                                        {{creditValue}}</strong>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+              
+                <div class="col-md-12 pull-right">
+                        <span *ngIf="document" class="text-uppercase" (click)="viewDocumentAccountposting(acPostingDocument)"><button class="btn btn-success btn-sm pull-right"><i class="fa fa-eye"></i>&nbsp; View Document</button></span>
+                    <br><br>
+                    <button type="submit" class="btn pull-right mb-2" [disabled] = "dissabled"
+                        style="background-color:
+                        #041562!important;color:#fff!important;"
+                        (click)="submitAccountPostingData()"*ngIf="accountPosting"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Submit</button>
+
+                        <button class="btn pull-right mb-2 mr-2 bg-light"
+                        (click)="resetAccountPostingData()"*ngIf="accountPosting"><i class="fa fa-window-restore" aria-hidden="true"></i>
+&nbsp;                        Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header"
+                style="background-color:#041562!important;color:#fff!important;">
+                <h6 class="modal-title"> Ledger Search </h6>
+                <button type="button" class="close" (click)="myModals.hide()"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="ledgerSearchgroup">
+                <table class="table">
+                    <tr>
+                        <td>
+                            Account Group : *
+                            <ng-select [items]="accountgroup"
+                                bindValue="account_group_id"
+                                formControlName="account_group"
+                                bindLabel="account_group_name"
+                                (change)="ChangeAccountGroup()"
+                                [ngClass]="{ 'is-invalid': submitted &&
+                                registerFormControls.account_group.errors}"
+                                placeholder="Select Account Group">
+                            </ng-select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControls.account_group.touched
+                                ||
+                                submitted) &&
+                                registerFormControls.account_group.errors?.required">
+                                Account Group is required
+                            </span>
+                        </td>
+                        <td>
+                            Account Type : *
+                            <ng-select [items]="accounttype"
+                                formControlName="account_group_type"
+                                bindLabel="acc_name"
+                                [ngClass]="{ 'is-invalid': submitted &&
+                                registerFormControls.account_group_type.errors}"
+                                bindValue="account_type_id" placeholder="Select
+                                Posting
+                                Branch">
+                                <ng-template ng-label-tmp let-item="item">
+                                    <span>{{ item.acc_name + ' -' +
+                                        item.acc_description }}</span>
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item"
+                                    let-search="searchTerm" let-index="index">
+                                    <span>{{ item.acc_name + ' -' +
+                                        item.acc_description }}</span>
+                                </ng-template>
+                            </ng-select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControls.account_group_type.touched
+                                ||
+                                submitted) &&
+                                registerFormControls.account_group_type.errors?.required">
+                                Account Group is required
+                            </span>
+                        </td>
+                        <td>
+                            Branch : *
+                            <ng-select [items]="postingbranch" bindValue="id"
+                                bindLabel="branch_name"
+                                formControlName="reg_branch" placeholder="Select
+                                Posting
+                                Branch">
+                              
+                            </ng-select>
+                            <span class="text-danger"
+                            *ngIf="(registerFormControls.reg_branch.touched
+                            ||
+                            submitted) &&
+                            registerFormControls.reg_branch.errors?.required">
+                            Branch is required
+                        </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn btn-success mt-4 pull-right"
+                                (click)="searchResult()"
+                                style="background-color:#041562!important;color:#fff!important;"><i
+                                    class="fa fa-search"></i> Search</button>
+                        </td>
+                    </tr>
+                </table>
+                <div *ngIf="searchResults" class="p-2">
+                    <div class="card-header my-2">
+                        <h6>
+                            <strong>Search Result</strong>
+                        </h6>
+                    </div>
+                    <table class="table table-bordered table-striped rounded
+                        table-hover" datatable [dtOptions]="dtOptions"
+                        [dtTrigger]="dtTrigger">
+                        <thead style="background-color:
+                            #041562!important;color:#fff!important;">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Branch</th>
+                                <th>A/c Group Code</th>
+                                <th> A/c Name</th>
+                                <th>A/c Code</th>
+                                <th> A/c Group Name</th>
+                            </tr>
+                        </thead>
+
+                        <tbody *ngFor="let searchAccountPostings of
+                            searchAccountPosting;let i=index">
+                            <tr
+                                (click)="changeledgerData(searchAccountPostings)">
+                                <td>{{i+1}}</td>
+                                <td>{{searchAccountPostings.branch_name}}</td>
+                                <td>{{searchAccountPostings.account_group_code}}</td>
+                                <td>{{searchAccountPostings.acc_name}}</td>
+                                <td>{{searchAccountPostings.acc_code}}</td>
+                                <td>{{searchAccountPostings.account_group_name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <div id="pause" *ngIf="isLoading" class="d-flex
+                align-items-center justify-content-center">
+                <div id="spinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header"
+                style="background-color:#041562!important;color:#fff!important;">
+                <h6 class="modal-title">
+                    Search Party </h6>
+                <button type="button" class="close" (click)="myModal.hide()"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="ledgerReferenceNo">
+                <table class="table">
+                    <tr>
+                        <td>
+                            Relation Type :*
+                            <ng-select [items]="RelationType"
+                                bindValue="relationtype"
+                                formControlName="relation_type"
+                                bindLabel="relationtype"
+                                (change)="ChangeRelationType()"
+                                placeholder="Select Account Group">
+                            </ng-select>
+                            <span class="text-danger"
+                                *ngIf="(refNoFormControl.relation_type.touched
+                                ||
+                                submitted) &&
+                                refNoFormControl.relation_type.errors?.required">
+                                Relation Type is required
+                            </span>
+                        </td>
+                        <td *ngIf="ComppartyType">
+                            Party Name : *
+                            <ng-select [items]="companyList"
+                                formControlName="org_name"
+                                bindValue="company_id"
+                                bindLabel="org_name" placeholder="Select Party
+                                Name">
+                            </ng-select>
+
+                        </td>
+                        <td *ngIf="EmppartyType">
+                            Party Name : *
+                            <ng-select [items]="companyList"
+                                formControlName="org_name"
+                                bindValue="pf_employee_company_id"
+                                bindLabel="employee_name"
+                                placeholder="Select Party Name">
+                            </ng-select>
+                        </td>
+                        <td *ngIf="stakeholder">
+                            Party Name : *
+                            <ng-select [items]="partystype"
+                                formControlName="org_name"
+                                bindValue="pf_employee_company_id"
+                                bindLabel="party_type_code"
+                                placeholder="Select Party Name">
+                            </ng-select>
+                        </td>
+
+                        <td>
+                            Identification No
+                            <input type="number" class="form-control"
+                                formControlName="identification_no">
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            Email
+                            <input type="number" class="form-control"
+                                formControlName="email_id">
+                        </td>
+                        <td>
+                            Mobile No
+                            <input type="number" class="form-control"
+                                formControlName="mobile_no">
+                        </td>
+                        <td>
+                            <button class="btn btn-success mt-4"
+                                (click)="searchByReferenceNumber()"
+                                style="background-color:#041562!important;color:#fff!important;"><i
+                                    class="fa fa-search"></i> Search</button>
+                        </td>
+                    </tr>
+                    <div id="pause" *ngIf="isLoading" class="d-flex
+                        align-items-center justify-content-center">
+                        <div id="spinner"></div>
+                    </div>
+                </table>
+
+                <div *ngIf="searchResultshow" class="p-2">
+                    <div class="card-header my-2">
+                        <h6>
+                            <strong>Search Result</strong>
+                        </h6>
+                    </div>
+                    <table class="table table-bordered table-striped rounded
+                        table-hover" datatable [dtOptions]="dtOptions"
+                        [dtTrigger]="dtTrigger">
+                        <thead style="background-color:
+                            #041562!important;color:#fff!important;">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Relation Type</th>
+                                <th>Party Name</th>
+                                <th>Identification No</th>
+                            </tr>
+                        </thead>
+
+                        <tbody *ngFor="let searchAccountPostings of
+                            searchAccountPosting; let i= index">
+
+                            <tr>
+                                <td>{{i+1}}</td>
+                                <td
+                                    (click)="changeSearchReferenceNumber(searchAccountPostings)">
+                                    {{searchAccountPostings.RelationType}}</td>
+                                <td
+                                    (click)="changeSearchReferenceNumber(searchAccountPostings)">
+                                    {{searchAccountPostings.PartyName}}</td>
+                                <td
+                                    (click)="changeSearchReferenceNumber(searchAccountPostings)">
+                                    {{searchAccountPostings.IdentificationNo}}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="pause" *ngIf="isLoading" class="d-flex
+    align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>

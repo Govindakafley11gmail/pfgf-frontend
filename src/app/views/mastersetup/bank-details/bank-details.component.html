@@ -1,0 +1,123 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary"style="background-color: #041562!important;color:#fff!important;">
+                <a class="nav-link active" aria-current="page">Register Bank</a>
+
+                <button type="button"class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="my-2 ">
+                <div class="card-body ">
+                    <form [formGroup]="bankdetails">
+                        <input type="hidden" class="form-control" formControlName="bank_id"
+                            placeholder="Persons Name">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Bank code </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" 
+                                    formControlName="bank_code" placeholder="bank code">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.bank_code.touched || submitted) && registerFormControl.bank_code.errors?.required">
+                                    bank code is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Bank name </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" 
+                                    formControlName="bank_name" placeholder="Bank name">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.bank_name.touched || submitted) && registerFormControl.bank_name.errors?.required">
+                                    Bank name is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Bank Branch </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" 
+                                    formControlName="bnk_branch" placeholder="Bank branch">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.bnk_branch.touched || submitted) && registerFormControl.bnk_branch.errors?.required">
+                                    Bank branch is required
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                        <div id="spinner"></div>
+                      </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="createBankDetails()"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Save</button>
+                <button type="button" class="btn btn-primary" (click)="updateBankDetailsById()"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>
+
+<!-- --------------------confirmation------------------- -->
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="ml-4 mt-2">Are you sure to delete?</h5>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                <button type="button" class="btn btn-danger" (click)="deleteBankDetailsById(ids)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------------------end --------------------confirmation------------------- -->
+
+<div class="containers my-4 ml-4">
+   
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            Master Setup  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Bank List
+            <button (click)="create()" class="btn btn-primary  mb-2 pull-right"style="background-color: #041562!important;color:#fff!important;">create </button>
+        </div>
+        <div class="card-body bg-white">
+            <table class="table table-bordered table-striped rounded table-hover " datatable
+                [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                <thead style="background-color: #041562!important;color:#fff!important;">
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Bank Code &nbsp;<i class="fa fa-qrcode" aria-hidden="true"></i></th>
+                        <th>Bank Name</th>
+                        <th>Branch</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let bankDetails of bankDetail;let i=index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{ bankDetails.bank_code }}</td>
+                        <td>{{ bankDetails.bank_name }}</td>
+                        <td>{{ bankDetails.bnk_branch }}</td>
+                        <td class="col-lg-2">
+                            <span class="btn btn-sm btn-success mr-2" (click)="getBankDetailsById(bankDetails.bank_id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit </span>
+                            <span class="btn btn-sm btn-danger" (click)="show(bankDetails.bank_id)"><i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

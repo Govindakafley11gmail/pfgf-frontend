@@ -1,0 +1,638 @@
+<div class="ml-3 my-4">
+  <div class="card shadow-sm rounded">
+    <div class="card-header bg-white mt-2">
+      Accounts  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Collection List
+      <button data-toggle="modal" [style.visibility]="collectioncreate?'visible':'hidden'" data-hover="Add New Collection" class="btn shadow-lg ml-auto font-weight-bold mr-5 hovertext
+                pull-right" (click)="create()" style="background-color:
+                #041562!important;color:#fff!important;">
+                <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create Collection
+      </button>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered table-striped rounded
+                table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead style="background-color:
+                    #041562!important;color:#fff!important;">
+          <tr>
+            <th>Sl.No</th>
+            <th>Organization</th>
+            <th>Branch</th>
+            <th>Collection Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Reg Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let collectiondetailss of collectiondetails;let i=index">
+            <td>{{i + 1}}</td>
+            <td (click)="reversedCollection(collectiondetailss.pf_collection_id)">{{collectiondetailss.org_name}}
+              [{{collectiondetailss.company_account_no}}]</td>
+            <td (click)="reversedCollection(collectiondetailss.pf_collection_id)">
+              {{collectiondetailss.branch_name}}</td>
+            <td (click)="reversedCollection(collectiondetailss.pf_collection_id)">
+              {{collectiondetailss.pf_collection_date}}</td>
+            <td (click)="reversedCollection(collectiondetailss.pf_collection_id)">
+              {{collectiondetailss.pf_collection_amount | number:".2-2"}}</td>
+            <td (click)="reversedCollection(collectiondetailss.pf_collection_id)">
+              {{collectiondetailss.pf_collection_status}}</td>
+            <td (click)="reversedCollection(collectiondetailss.pf_collection_id)">
+              {{collectiondetailss.registration_type}}</td>
+            <td class="text-center" *ngIf="collectiondetailss.get_document_data != ''">
+              <button class="btn bg-success btn-sm"[disabled]="!collectioncreate"
+                (click)="downloadPdf(collectiondetailss.get_document_data[0].doc_path)">
+                <i class="fa fa-file-pdf-o" aria-hidden="true">&nbsp;&nbsp;{{collectiondetailss.get_document_data[0].document_type}}</i>
+              </button>
+              <button class="badge-warning mr-1 mb-1 btn bg-success btn-sm"[disabled]="!collectioncreate"
+                (click)="downloadPdf(collectiondetailss.get_document_data[1].doc_path)"
+                *ngIf="collectiondetailss.get_document_data[1]?true:false">
+                <i class="fa fa-file text-white">&nbsp;&nbsp;
+                  {{collectiondetailss.get_document_data[1].document_type}}
+                </i>
+              </button>
+
+            </td>
+            <td *ngIf="collectiondetailss.get_document_data == ''"> 
+              <button class="badge-warning mr-1 btn bg-success btn-sm"[disabled]="!collectioncreate" 
+                (click)="generateMoneyReceipt(collectiondetailss.pf_collection_id)">
+                <i class="fa fa-cog text-white">&nbsp;&nbsp;
+                  Generate
+                </i>
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+      <br>
+      <ngb-pagination class="pull-right" [rotate]="true" [boundaryLinks]="true" [collectionSize]="collectionSize"
+        [maxSize]="5" [(page)]="page" (pageChange)="getPremiumData(page);">
+      </ngb-pagination>
+    </div>
+  </div>
+</div>
+
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center
+    justify-content-center">
+  <div id="spinner"></div>
+</div>
+
+<!-- collection create -->
+<div bsModal #myModal="bs-modal"  [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content shadow-lg bg-white rounded" *ngIf="newCollection">
+      <div class="modal-header" style="background-color:
+                #041562!important;color:#fff!important;">
+        <h6 class="modal-title">Add Collection</h6>
+        <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="card-body card">
+          <form [formGroup]="productForm">
+            <input type="hidden" class="form-control" formControlName="pf_collection_id">
+            <!-- <div>
+                <input type="hidden" class="form-control" formControlName="pf_collection_company_id"
+                    [value]="companyaccountno"[(ngModel)]="companyaccountno" >
+            </div> -->
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Bussiness
+                Type *</label>
+              <div class="col-sm-4">
+                <ng-select [items]="collectionType" bindLabel="collection" bindValue="collection" placeholder="Select
+                                    collection Type" (change)="changeCollectionType()"
+                  formControlName="collection_type" appendTo="body">
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControl.collection_type.touched
+                                    || submitted) &&
+                                    registerFormControl.collection_type.errors?.required">
+                  Collection Type is required
+                </span>
+              </div>
+              <label class="col-sm-2 col-form-label">Company A/C
+                No *</label>
+              <div class="col-sm-4">
+                <ng-select formControlName="pf_collection_company_account_no_id" (change)="changeCompanyAccNo()"
+                  [(ngModel)]="changecomAccNo" placeholder="Select Company A/C No" [items]="pfaccno"
+                  bindValue="company_id" bindLabel="company_account_no" [searchFn]="customSearchFn"
+                  clearAllText="Clear">
+
+                  <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+                    <span>{{ item.org_name + ' -' +
+                      item.company_account_no }}</span>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                    <span>{{ item.org_name + ' -' +
+                      item.company_account_no }}</span>
+                  </ng-template>
+
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_company_account_no_id.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_company_account_no_id.errors?.required">
+                  Company A/c No is required
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Collection
+                Branch *</label>
+              <div class="col-sm-4">
+                <ng-select [items]="colbranchs" bindLabel="branch_name" placeholder="Select
+                                    Month" [(ngModel)]="getCollectionAccoutByBranchIds"
+                  (change)="getCollectionAccoutByBranchId()" bindValue="id" formControlName="pf_collection_branch_id"
+                  appendTo="body">
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_branch_id.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_branch_id.errors?.required">
+                  Collection Branch is required
+                </span>
+              </div>
+              <label class="col-sm-2 col-form-label">Collection
+                Bank A/c *</label>
+              <div class="col-sm-4">
+                <select class="form-control" formControlName="pf_collection_bank_account_no">
+                  <option></option>
+                  <option *ngFor="let collectionbankaccno of
+                                        collectionbankaccnos" [value]="collectionbankaccno.account_type_id
+                                        +'/'+ collectionbankaccno.acc_name">
+                    {{collectionbankaccno.acc_name}}</option>
+                </select>
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_bank_account_no.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_bank_account_no.errors?.required">
+                  Collection Bank A/C No is required
+                </span>
+              </div>
+
+            </div>
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Collection
+                Amount *</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Collection Amount..."
+                  formControlName="pf_collection_amount">
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_amount.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_amount.errors?.required">
+                  Collection Amount is required
+                </span>
+                <span class="text-danger">
+                  {{error_collection_amount}}</span>
+              </div>
+              <label class="col-sm-2 col-form-label">Collection
+                Date *</label>
+              <div class="col-sm-4">
+                <!-- (change)="datechange($event)" -->
+                <input type="date" class="form-control" placeholder="Collection Date..." (change)="datechange($event)"
+                  formControlName="pf_collection_date">
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_date.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_date.errors?.required">
+                  Collection Date is required
+                </span>
+                <span class="text-danger" *ngIf="errormessage">{{isUserDateValidmessage}}</span>
+                <!-- <span *ngIf="productForm.get('pf_collection_date').errors">{{productForm.get('pf_collection_date').errors['invalidDate']}}</span> -->
+              </div>
+
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Collection
+                Month*</label>
+              <div class="col-sm-4">
+                <ng-select formControlName="pf_collection_for_the_month" bindValue="value" [items]="months"
+                  bindLabel="month" placeholder="Select Month" appendTo="body">
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_for_the_month.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_for_the_month.errors?.required">
+                  Collection Month is required
+                </span>
+              </div>
+              <label class="col-sm-2 col-form-label">Collection
+                Year *</label>
+              <div class="col-sm-4">
+                <ng-select formControlName="pf_collection_for_the_year" bindValue="year" [items]="get_Col_year"
+                bindLabel="year" placeholder="Select Year" appendTo="body">
+              </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_for_the_year.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_for_the_year.errors?.required">
+                  Collection Year is required
+                </span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-sm-2
+                                col-form-label">Narration *</label>
+              <div class="col-sm-10">
+                <textarea placeholder="Narration" class="form-control"
+                  formControlName="pf_collection_narration"></textarea>
+                <span class="text-danger" *ngIf="(registerFormControl.pf_collection_narration.touched
+                                    || submitted) &&
+                                    registerFormControl.pf_collection_narration.errors?.required">
+                  Narration is required
+                </span>
+              </div>
+            </div>
+
+            <table class="table" formArrayName="transationalDetail">
+              <tr>
+                <th colspan="2">Add Transaction Details:</th>
+                <th width="150px">
+                  <button type="button" (click)="addQuantity()" style="background-color:
+                                        #041562!important;color:#fff!important;" class="btn btn-primary pull-right">
+                    <i class="fa fa-plus"></i></button>
+                </th>
+              </tr>
+              <tr *ngFor="let transationalDetail of transationalDetail().controls; let i=index" [formGroupName]="i">
+                <th colspan="2" class="container">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Collection
+                      Mode
+                      *</label>
+                    <div class="col-sm-4">
+                      <select class="form-control" [(ngModel)]="transationalDetail.pf_collection_mode" [ngModelOptions]="{standalone:
+                                                true}" (change)="changeCollection($event,i)"
+                        formControlName="accountTransactionMode">
+                        <option>Select Collection Mode</option>
+                        <option *ngFor="let collection of collectionmode">
+                          {{collection.collectionmodes}}
+                        </option>
+                      </select>
+
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Amount
+                      *</label>
+                    <div class="col-sm-4">
+                      <input type="number" placeholder="Amount..." class="form-control"
+                        formControlName="accountVoucherAmount">
+                    </div>
+                  </div>
+                  <span *ngIf="cheque">
+                    <div class="form-group row" *ngIf="i==0">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Inst.
+                        Number
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Inst. Number" class="form-control"
+                          formControlName="accountCollectionInstrumentNo" [ngModelOptions]="{standalone:
+                                                    true}"
+                          [(ngModel)]="transationalDetail.accountCollectionInstrumentNo">
+                      </div>
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Date
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="date" placeholder="Date..." class="form-control"
+                          formControlName="accountChequeDate" [ngModelOptions]="{standalone:
+                                                    true}" [(ngModel)]="transationalDetail.pf_cheque_date">
+                      </div>
+
+                    </div>
+                  </span>
+
+                  <span *ngIf="cheque">
+                    <div class="form-group row" *ngIf="i==0">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Bank
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Bank..." class="form-control"
+                          formControlName="accountCollectionBank" [ngModelOptions]="{standalone:
+                                                    true}" [(ngModel)]="transationalDetail.accountCollectionBank">
+                      </div>
+                    </div>
+                  </span>
+
+                  <span *ngIf="cheque1">
+                    <div class="form-group row" *ngIf="i==1">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Inst.
+                        Number
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Inst. Number" class="form-control"
+                          formControlName="accountCollectionInstrumentNo" [ngModelOptions]="{standalone:
+                                                    true}"
+                          [(ngModel)]="transationalDetail.accountCollectionInstrumentNo">
+                      </div>
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Date
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="date" placeholder="Date..." class="form-control"
+                          formControlName="accountChequeDate" [ngModelOptions]="{standalone:
+                                                    true}" [(ngModel)]="transationalDetail.accountChequeDate">
+                      </div>
+                    </div>
+                  </span>
+                  <span *ngIf="cheque1">
+                    <div class="form-group row" *ngIf="i==1">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Bank
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Bank..." class="form-control"
+                          formControlName="accountCollectionBank" [ngModelOptions]="{standalone:
+                                                    true}" [(ngModel)]="transationalDetail.accountCollectionBank">
+                      </div>
+                    </div>
+                  </span>
+                </th>
+                <td>
+                  <a (click)="removeQuantity(i)" class="btn
+                                        btn-danger remove">X</a>
+                </td>
+              </tr>
+            </table>
+            <button type="submit" class="btn btn-primary" (click)="onSubmit()" style="background-color:
+                            #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Save
+            </button>
+          </form>
+          <div id="pause" *ngIf="isLoading" class="d-flex
+                        align-items-center justify-content-center">
+            <div id="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- reversed collection -->
+<div bsModal #myModals="bs-modal"  [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content shadow-lg bg-white rounded" *ngIf="reverseCollection">
+      <div class="modal-header" style="background-color:
+                #041562!important;color:#fff!important;">
+        <h6 class="modal-title">Reversed Collection</h6>
+        <button type="button" class="btn btn-primary" (click)="myModals.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="card-body card">
+          <form [formGroup]="reverseColForm">
+            <input type="hidden" class="form-control" formControlName="pf_collection_id">
+            <!-- <div>
+                <input type="hidden" class="form-control" formControlName="pf_collection_company_id"
+                    [value]="companyaccountno"[(ngModel)]="companyaccountno" >
+            </div> -->
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Bussiness
+                Type *</label>
+              <div class="col-sm-4">
+                <ng-select [items]="collectionType" bindLabel="collection" placeholder="Select
+                                    collection Type" (change)="changeCollectionType()" disabled
+                  formControlName="collection_type" appendTo="body">
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControlReversed.collection_type.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.collection_type.errors?.required">
+                  Collection Type is required
+                </span>
+              </div>
+              <label class="col-sm-2 col-form-label">Company A/C
+                No *</label>
+              <div class="col-sm-4">
+                <ng-select formControlName="pf_collection_company_account_no_id" (change)="changeCompanyAccNo()"
+                  [(ngModel)]="changecomAccNo" placeholder="Select Company A/C No" [items]="pfaccno"disabled
+                  bindValue="company_id" bindLabel="company_account_no" [searchFn]="customSearchFn"
+                  clearAllText="Clear">
+
+                  <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+                    <span>{{ item.org_name + ' -' +
+                      item.company_account_no }}</span>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                    <span>{{ item.org_name + ' -' +
+                      item.company_account_no }}</span>
+                  </ng-template>
+
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_company_account_no_id.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_company_account_no_id.errors?.required">
+                  Company A/c No is required
+                </span>
+              </div>
+
+            </div>
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Collection
+                Branch *</label>
+              <div class="col-sm-4">
+                <ng-select [items]="colbranchs" bindLabel="branch_name" placeholder="Select
+                                    Month" [(ngModel)]="getCollectionAccoutByBranchIds"disabled
+                  (change)="getCollectionAccoutByBranchId()" bindValue="id" formControlName="pf_collection_branch_id"
+                  appendTo="body">
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_branch_id.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_branch_id.errors?.required">
+                  Collection Branch is required
+                </span>
+              </div>
+              <label class="col-sm-2 col-form-label">Collection
+                Bank A/c *</label>
+              <div class="col-sm-4">
+                <select class="form-control" formControlName="pf_collection_bank_account_no"disabled>
+                  <option></option>
+                  <option *ngFor="let collectionbankaccno of
+                                        collectionbankaccnos" [value]="collectionbankaccno.account_type_id
+                                        +'/'+ collectionbankaccno.acc_name">
+                    {{collectionbankaccno.acc_name}}</option>
+                </select>
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_bank_account_no.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_bank_account_no.errors?.required">
+                  Collection Bank A/C No is required
+                </span>
+              </div>
+
+            </div>
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Collection
+                Amount *</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Collection Amount..."disabled
+                  formControlName="pf_collection_amount">
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_amount.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_amount.errors?.required">
+                  Collection Amount is required
+                </span>
+                <span class="text-danger">
+                  {{error_collection_amount}}</span>
+              </div>
+              <label class="col-sm-2 col-form-label">Collection
+                Date *</label>
+              <div class="col-sm-4">
+                <!-- (change)="datechange($event)" -->
+                <input type="date" class="form-control" placeholder="Collection Date..."disabled
+                  formControlName="pf_collection_date">
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_date.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_date.errors?.required">
+                  Collection Date is required
+                </span>
+                <span class="text-danger" *ngIf="errormessage">{{isUserDateValidmessage}}</span>
+                <!-- <span *ngIf="productForm.get('pf_collection_date').errors">{{productForm.get('pf_collection_date').errors['invalidDate']}}</span> -->
+              </div>
+
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Collection
+                Month*</label>
+              <div class="col-sm-4">
+                <ng-select formControlName="pf_collection_for_the_month" bindValue="value" [items]="months"disabled
+                  bindLabel="month" placeholder="Select Month" appendTo="body">
+                </ng-select>
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_for_the_month.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_for_the_month.errors?.required">
+                  Collection Month is required
+                </span>
+              </div>
+              <label class="col-sm-2 col-form-label">Collection
+                Year *</label>
+              <div class="col-sm-4">
+                <input class="form-control" type="month" (change)="onchange($event)" value="{{get_col_year}}"disabled>
+                <input class="form-control" type="hidden" formControlName="pf_collection_for_the_year"
+                  [(ngModel)]="yeardates">
+                <span class="text-danger" *ngIf="(registerFormControlReversed.pf_collection_for_the_year.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.pf_collection_for_the_year.errors?.required">
+                  Collection Year is required
+                </span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-sm-2
+                                col-form-label">Reverse Remarks *</label>
+              <div class="col-sm-10">
+                <textarea placeholder="Narration" class="form-control"
+                  formControlName="col_reverse_remarks"></textarea>
+                <span class="text-danger" *ngIf="(registerFormControlReversed.col_reverse_remarks.touched
+                                    || submitted) &&
+                                    registerFormControlReversed.col_reverse_remarks.errors?.required">
+                                    Reverse Remarks is required
+                </span>
+              </div>
+            </div>
+
+            <table class="table" formArrayName="transationalDetails">
+              <tr>
+                <th colspan="2">Add Transaction Details:</th>
+                <th width="150px">
+                  <button type="button" (click)="addQuantitys()" style="background-color:
+                                        #041562!important;color:#fff!important;" class="btn btn-primary pull-right">
+                    <i class="fa fa-plus"></i></button>
+                </th>
+              </tr>
+              <tr *ngFor="let transationalDetail of transationalDetails().controls; let i=index" [formGroupName]="i">
+                <th colspan="2" class="container">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Collection
+                      Mode
+                      *</label>
+                    <div class="col-sm-4">
+                      <select class="form-control" (change)="changeCollection($event,i)"disabled
+                        formControlName="accountTransactionMode">
+                        <option>Select Collection Mode</option>
+                        <option *ngFor="let collection of collectionmode" [value]="collection.collectionmodes">
+                          {{collection.collectionmodes}}
+                        </option>
+                      </select>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Amount
+                      *</label>
+                    <div class="col-sm-4">
+                      <input type="number" placeholder="Amount..." class="form-control"disabled
+                        formControlName="accountVoucherAmount">
+                    </div>
+                  </div>
+                  <span *ngIf="cheque">
+                    <div class="form-group row" *ngIf="i==0">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Inst.
+                        Number
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Inst. Number" class="form-control"disabled
+                          formControlName="accountCollectionInstrumentNo">
+                      </div>
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Date
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="date" placeholder="Date..." class="form-control"disabled
+                          formControlName="accountChequeDate">
+                      </div>
+
+                    </div>
+                  </span>
+
+                  <span *ngIf="cheque">
+                    <div class="form-group row" *ngIf="i==0">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Bank
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Bank..." class="form-control"disabled
+                          formControlName="accountCollectionBank">
+                      </div>
+                    </div>
+                  </span>
+
+                  <span *ngIf="cheque1">
+                    <div class="form-group row" *ngIf="i==1">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Inst.
+                        Number
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Inst. Number" class="form-control"disabled
+                          formControlName="accountCollectionInstrumentNo">
+                      </div>
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Date
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="date" placeholder="Date..." class="form-control"disabled
+                          formControlName="accountChequeDate">
+                      </div>
+                    </div>
+                  </span>
+                  <span *ngIf="cheque1">
+                    <div class="form-group row" *ngIf="i==1">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Bank
+                        *</label>
+                      <div class="col-sm-4">
+                        <input type="text" placeholder="Bank..." class="form-control"disabled
+                          formControlName="accountCollectionBank">
+                      </div>
+                    </div>
+                  </span>
+                </th>
+                <td>
+                  <a (click)="removeQuantitys(i)" class="btn btn-danger remove">X</a>
+                </td>
+              </tr>
+            </table>
+            <button type="submit" class="btn btn-primary" (click)="saveReversedCollection()"*ngIf="!collectionReversed" style="background-color:
+                            #041562!important;color:#fff!important;">Reversed Collection
+            </button>
+          </form>
+          <div id="pause" *ngIf="isLoading" class="d-flex
+                       align-items-center justify-content-center">
+            <div id="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

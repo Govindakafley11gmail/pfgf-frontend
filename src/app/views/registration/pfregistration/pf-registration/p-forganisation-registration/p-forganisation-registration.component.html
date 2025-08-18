@@ -1,0 +1,156 @@
+<div class="card shadow bg-white rounded ml-3 my-4">
+  <div class="card-header my-2 bg-white text-uppercase">
+    <strong>Create PF Company</strong>
+  </div>
+
+  <div class="card-body">
+    <form [formGroup]="organizationRegistration">
+
+      <!-- Row 1 -->
+      <div class="form-group row">
+        <input type="hidden" formControlName="company_id">
+        <div class="col-sm-3">
+          <label>Registration Type *</label>
+          <select formControlName="registration_type" class="form-control">
+            <option value="PF">PF</option>
+            <option value="GF">GF</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label>Organization *</label>
+          <input type="text" class="form-control" formControlName="org_name" [readonly]="isDisabled"
+            placeholder="Name of Organization...">
+        </div>
+        <div class="col-sm-3">
+          <label>License No *</label>
+          <input type="text" class="form-control" formControlName="license_no" [readonly]="isDisabled"
+            placeholder="License No">
+        </div>
+        <div class="col-sm-3">
+          <label>License Validity</label>
+          <input type="date" class="form-control" formControlName="license_validity" [readonly]="isDisabled">
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label>BIT/CIT No</label>
+          <input type="text" class="form-control" formControlName="bit_cit_no" [readonly]="isDisabled"
+            placeholder="BIT/CIT Number">
+        </div>
+        <div class="col-sm-3">
+          <label>Organization Type *</label>
+          <ng-select formControlName="org_type" [items]="orgTypes" bindLabel="org_name" bindValue="org_name"
+            placeholder="Select Organization Type" appendTo="body"></ng-select>
+        </div>
+        <div class="col-sm-3">
+          <label>Sector Type</label>
+          <ng-select formControlName="sector_type" [items]="sectorWiseData" bindLabel="sector_name"
+            bindValue="sector_name" placeholder="Select Sector Type" appendTo="body"></ng-select>
+        </div>
+        <div class="col-sm-3">
+          <label>Dzongkhag *</label>
+          <ng-select formControlName="dzongkhag_id" [items]="dzongkhag" bindLabel="dzongkhag_name"
+            bindValue="dzongkhag_id" placeholder="Select Dzongkhag" appendTo="body"></ng-select>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label>Phone No</label>
+          <input type="text" formControlName="phone_no" class="form-control" [readonly]="isDisabled"
+            placeholder="Phone No...">
+        </div>
+        <div class="col-sm-3">
+          <label>Email</label>
+          <input type="email" formControlName="email_id" class="form-control" [readonly]="isDisabled"
+            placeholder="Email">
+        </div>
+        <div class="col-sm-3">
+          <label>Website</label>
+          <input type="text" formControlName="website" class="form-control" [readonly]="isDisabled"
+            placeholder="Website">
+        </div>
+        <div class="col-sm-3">
+          <label>PostBox No</label>
+          <input type="text" formControlName="post_box_no" class="form-control" [readonly]="isDisabled"
+            placeholder="PostBox No">
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label>Registration Branch *</label>
+          <select class="form-control" formControlName="reg_branch" [disabled]="dropdownDisable">
+            <option>Select Registration Branch</option>
+            <option *ngFor="let reg_branchs of reg_branch" [value]="reg_branchs.id">
+              {{ reg_branchs.branch_name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label>Address *</label>
+          <input type="text" formControlName="address" class="form-control" [readonly]="isDisabled"
+            placeholder="Address">
+        </div>
+        <div class="col-sm-3">
+          <label>Status *</label>
+          <ng-select formControlName="status" [items]="status" bindLabel="company_status"
+            bindValue="company_status" placeholder="Select Status" appendTo="body"></ng-select>
+        </div>
+        <div class="col-sm-3">
+            <label>Interest types *</label>
+              <ng-select formControlName="interest_type" [items]="interest_types" bindLabel="interest_type"
+            bindValue="interest_type" placeholder="interest types" appendTo="body"></ng-select>
+        </div>
+      </div>
+
+      <hr class="my-4">
+      <div class="my-3 card-header bg-white">
+        <strong>MOU Details</strong>
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-group row mt-2">
+        <div class="col-sm-3">
+          <label>MOU Ref No</label>
+          <input type="text" formControlName="mou_ref_no" class="form-control" [readonly]="isDisabled"
+            placeholder="MOU Ref No">
+        </div>
+        <div class="col-sm-3">
+          <label>MOU Date *</label>
+          <input type="date" formControlName="mou_date" class="form-control" [readonly]="isDisabled"
+            placeholder="MOU Date">
+        </div>
+        <div class="col-sm-3">
+          <label>MOU Expiry Date *</label>
+          <input type="date" formControlName="mou_expiry_date" class="form-control" [readonly]="isDisabled"
+            placeholder="MOU Expiry Date">
+        </div>
+        <div class="col-sm-3">
+          <label>Interest Rate *</label>
+          <input type="number" formControlName="interest_rate" class="form-control" [readonly]="isDisabled"
+            placeholder="Interest Rate">
+        </div>
+      </div>
+
+      <div class="clearfix mt-4">
+        <button class="btn float-right ml-2 mr-1" (click)="companeyRegistrations()"
+          style="background-color: #041562!important; color: #fff!important;" *ngIf="save">Save</button>
+        <button class="btn btn-secondary float-right" (click)="cancelRegistrations()" *ngIf="cancel">Cancel</button>
+        <button class="btn btn-primary float-right ml-2 mr-1" (click)="editRegistrations()"
+          style="background-color: #041562!important; color: #fff!important;" *ngIf="edit">Edit</button>
+        <button class="btn btn-primary float-right ml-2 mr-1" (click)="updatePfCompaney()"
+          style="background-color: #041562!important; color: #fff!important;" *ngIf="update">Update</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+  <div id="spinner"></div>
+</div>

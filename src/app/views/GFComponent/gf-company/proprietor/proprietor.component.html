@@ -1,0 +1,213 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #041562!important;color:#fff!important;">
+
+                <a class="nav-link actives" aria-current="page">Proprietors Details</a>
+
+                <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="card-body ">
+                        <form [formGroup]="Proprietors">
+                            <input type="hidden" formControlName="id" class="form-control"
+                                placeholder="Name Of Proprietors ...">
+                            <input type="hidden" formControlName="p_id" class="form-control"
+                                placeholder="Name Of Proprietors ...">
+                            <input type="hidden" formControlName="prop_company_id" class="form-control"
+                                placeholder="Name Of Proprietors" [(ngModel)]="sid" [value]="sid">
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Name *</label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="proprietor_name"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.proprietor_name.errors}"
+                                        class="form-control" placeholder="Name Of Proprietors ...">
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.proprietor_name.touched || submitted) && registerFormControl.proprietor_name.errors?.required">
+                                        Proprietor name is required
+                                    </span>
+                                </div>
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Contact No *
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="contact_number"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.contact_number.errors}"
+                                        class="form-control" placeholder="Contact Number ...">
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.contact_number.touched || submitted) && registerFormControl.contact_number.errors?.required">
+                                        Contact number is required
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Email
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="email" formControlName="email_id"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.email_id.errors}"
+                                        class="form-control" placeholder="Email Id">
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.email_id.touched || submitted) && registerFormControl.email_id.errors?.required">
+                                        Email id is required
+                                    </span>
+                                </div>
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Address
+                                    *</label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="address"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.address.errors}"
+                                        class="form-control" placeholder="Address...">
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.address.touched || submitted) && registerFormControl.address.errors?.required">
+                                        Address is required
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label" *ngIf="status">Status
+                                    *</label>
+                                <div class="col-sm-4" *ngIf="status">
+                                    <input type="text" formControlName="status"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.status.errors}"
+                                        class="form-control" placeholder="Status...">
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.status.touched || submitted) && registerFormControl.status.errors?.required">
+                                        Status is required
+                                    </span>
+                                </div>
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Designation
+                                </label>
+                                <div class="col-sm-4">
+                                    <input type="text" formControlName="designation"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.designation.errors}"
+                                        class="form-control" placeholder="Designation...">
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.designation.touched || submitted) && registerFormControl.designation.errors?.required">
+                                        Designation is required
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPassword" class="col-sm-2 col-form-label">Emp.Detail
+                                </label>
+                                <div class="col-sm-10">
+                                    <textarea type="text" formControlName="employee_detail"
+                                        [ngClass]="{ 'is-invalid': submitted && registerFormControl.employee_detail.errors}"
+                                        class="form-control" placeholder="employee detail"></textarea>
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.employee_detail.touched || submitted) && registerFormControl.employee_detail.errors?.required">
+                                        Employee detail is required
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                            <div id="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closepopup()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="createPropriter()" *ngIf="save"
+                    style="background-color: #041562!important;color:#fff!important;">Save</button>
+                <button type="button" class="btn btn-primary" (click)="updatePropriteById()"
+                    style="background-color: #041562!important;color:#fff!important;" *ngIf="update">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>
+<!-- --------------------confirmation------------------- -->
+
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="ml-4 mt-2">Are You Sure to delete ?</h5>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                <button type="button" class="btn btn-danger" (click)="deletePropriterDetailById(ids)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------------------end --------------------confirmation------------------- -->
+
+<div class="containers">
+    <div class="cards">
+        <div class="card-header">
+            <strong>Proprietors Details</strong>
+            <div class="card-header-actions ">
+                <small className="text-muted " style="background-color: #041562!important;color:#fff!important;"
+                    class="btn bg-primary rounded-circle" (click)="isCollapsed = !isCollapsed">
+
+                    <i class="fa fa-angle-double-down"></i>
+                </small>
+
+                <small className="text-muted" style="background-color: #041562!important;color:#fff!important;"
+                    class="btn mr-1 bg-primary rounded-circle" data-toggle="modal" (click)="create()">
+                    <i class="fa fa-plus"></i>
+                </small>
+            </div>
+        </div>
+        <div class="card-body bg-light" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+            [collapse]="isCollapsed">
+            <table class="table table-bordered table-striped rounded table-hover " datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger">
+                <thead style="background-color: #041562!important;color:#fff!important;">
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>ProprietorsName</th>
+                        <th>ContactNo</th>
+                        <th>EmailId</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                        <th>EffectiveStartDate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let listPropriters of listPropriter;let i=index">
+                        <td>{{ listPropriters.id }}</td>
+                        <td>{{ listPropriters.proprietor_name }}</td>
+                        <td>{{ listPropriters.contact_number }}</td>
+                        <td>{{ listPropriters.email_id }}</td>
+                        <td>{{ listPropriters.address }}</td>
+                        <td>{{ listPropriters.status}}</td>
+                        <td>{{ listPropriters.effective_start_date }}</td>
+
+                        <td class="col-lg-2">
+                            <span class="btn btn-success btn-sm mr-2"
+                                (click)="getPropriterDetailsById(listPropriters.id)">Edit
+                            </span>
+                            <span class="btn btn-danger btn-sm" (click)="show(listPropriters.id)">Delete</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!-- -----------------------------------------------Introductive Detail---------------- -->

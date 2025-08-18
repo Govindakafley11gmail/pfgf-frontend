@@ -1,0 +1,81 @@
+<div class="containers ml-3 my-4">
+    <div class="card shadow p-3 mb-5 bg-white rounded">
+        <div class="card-header bg-white">
+            Registration  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Provident Fund Employees
+            <button data-toggle="modal" data-hover="Add New Collection"*ngIf="createEmployee"
+                routerLink="/registration/pfemployeeregistration"
+                class="btn  ml-auto font-weight-bold hovertext pull-right"
+                style="background-color: #041562!important;color:#fff!important;">
+                <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create Employee
+            </button>
+        </div>
+        <div class="card-body"[formGroup]="searchEmpFormGroup">
+            <label>Search</label>
+            <!-- <input type="text" class="mb-2" (keyup)="getEmployeeDataBySearchFilter($event.target.value)"> -->
+            <table class="table table-bordered table-striped rounded table-hover"  datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                <thead style="background-color: #041562!important;color:#fff!important;">
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Employee [Employee Acc No]</th>
+                        <th>Organization</th>
+                        <th>Emp Cont. Amt</th>
+                        <th>Emplyr Cont. Amt</th>
+                        <th>Total Cont</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pfemployeeDetails of pfemployeeDetail;let i=index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{ pfemployeeDetails.employee_name }},[{{pfemployeeDetails.employee_id_no}}]</td>
+                        <td>{{ pfemployeeDetails.org_name }},[{{pfemployeeDetails.company_account_no}}]</td>
+                        <td>{{ pfemployeeDetails.employee_contribution_amount|number:'.2-2'}}</td>
+                        <td>{{ pfemployeeDetails.employer_contribution_amount|number:'.2-2'}}</td>
+                        <td>{{totalcontribution[i] |number:'.2-2'}}</td>
+                        <td>{{pfemployeeDetails.status}}</td>
+
+                        <td class="col-lg-2 text-center"*ngIf="employeeEdit">
+                            <button class="btn btn-success mr-2"
+                                (click)="getPfEmployeeById(pfemployeeDetails.pf_employee_id)"*ngIf="employeeEdit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit
+                            </button>
+                            <button class="btn btn-danger" (click)="show(pfemployeeDetails.id)"*ngIf="employeeDelete"><i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete</button>
+                        </td>
+                        <td *ngIf="!employeeEdit">
+                            <i class="fa fa-lock">&nbsp; List only</i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <!-- <ngb-pagination  class="pull-right" [rotate]="true" [boundaryLinks]="true" [collectionSize]="collectionSize"
+                  [maxSize]="5" [(page)]="page" (pageChange)="getEmployeeDataBySearchFilter(page);">
+                </ngb-pagination> -->
+              
+        </div>
+    </div>
+
+    <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+        <div id="spinner"></div>
+    </div>
+    <!-- -----------------edit------------------------------------- -->
+
+    <!-- -------------confirmation------------------- -->
+    <div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger">
+                    <h4 class="modal-title">Confirmation</h4>
+                    <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <h5 class="ml-4 mt-2">Are You Sure to delete ?</h5>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                    <button type="button" class="btn btn-danger" (click)="deletePfEmployeeDetailsById(ids)">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>

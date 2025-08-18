@@ -1,0 +1,578 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1" role="dialogs" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary" style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title ">Create User</h6>
+                <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div>
+                <div class="containers">
+                    <div class="row">
+                        <div class="col-md-12 mx-auto">
+                            <div class="cards container my-4 ">
+                                <div class="card-bodys ">
+                                    <form [formGroup]="createUsers">
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">UserName*</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="User Name  ..."
+                                                    formControlName="name">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.name.touched || submitted) && registerFormControl.name.errors?.required">
+                                                    User Name is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">DOB*</label>
+                                            <div class="col-sm-4">
+                                                <input type="date" class="form-control" placeholder="Date of birth"
+                                                    formControlName="dob">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.dob.touched || submitted) && registerFormControl.dob.errors?.required">
+                                                    DOB is required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword"
+                                                class="col-sm-2 col-form-label">Designation*</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="Designation..."
+                                                    formControlName="designation">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.designation.touched || submitted) && registerFormControl.designation.errors?.required">
+                                                    Designation is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword"
+                                                class="col-sm-2 col-form-label">Employeeid*</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="Employee_id..."
+                                                    formControlName="employee_id">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.employee_id.touched || submitted) && registerFormControl.employee_id.errors?.required">
+                                                    Employee_id is required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">MobileNo
+                                                *</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="Mobile_number..."
+                                                    formControlName="mobile_number">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.mobile_number.touched || submitted) && registerFormControl.mobile_number.errors?.required">
+                                                    Mobile_number is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">PhoneNo </label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="Phone_number ..."
+                                                    formControlName="phone_number">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.phone_number.touched || submitted) && registerFormControl.phone_number.errors?.required">
+                                                    Phone_number is required
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword"
+                                                class="col-sm-2 col-form-label">BranchName</label>
+                                            <div class="col-sm-4">
+                                                <select for="inputPassword" class="form-control"
+                                                    formControlName="users_branch_id">
+
+                                                    <option>Select Branch</option>
+                                                    <option *ngFor="let selectBranch of branch_names"
+                                                        [value]="selectBranch.id">
+                                                        {{selectBranch.branch_name}}
+                                                    </option>
+                                                    <span class="text-danger"
+                                                        *ngIf="(registerFormControl.users_branch_id.touched || submitted) && registerFormControl.users_branch_id.errors?.required">
+                                                        branch_id is required
+                                                    </span>
+
+                                                </select>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Dept.
+                                                Name</label>
+                                            <div class="col-sm-4">
+                                                <select for="inputPassword" class="form-control"
+                                                    formControlName="users_department_id">
+                                                    <option>Select Department</option>
+                                                    <option *ngFor="let getDepartmentValue of department_names"
+                                                        [value]="getDepartmentValue.id">
+                                                        {{getDepartmentValue.department_name}}
+                                                    </option>
+                                                    <span class="text-danger"
+                                                        *ngIf="(registerFormControl.users_department_id.touched || submitted) && registerFormControl.users_department_id.errors?.required">
+                                                        Department name is required
+                                                    </span>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">CID No *</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="CID No..."
+                                                    formControlName="cid">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.cid.touched || submitted) && registerFormControl.cid.errors?.required">
+                                                    Cid No is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Gender *</label>
+                                            <div class="col-sm-4">
+                                                <select for="inputPassword" class="form-control"
+                                                    formControlName="gender">
+
+                                                    <option>Select Gender</option>
+                                                    <option *ngFor="let selectGender of genders">{{selectGender.gender}}
+                                                    </option>
+                                                    <span class="text-danger"
+                                                        *ngIf="(registerFormControl.gender.touched || submitted) && registerFormControl.gender.errors?.required">
+                                                        Gender is not selected
+                                                    </span>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">EmailId
+                                                *</label>
+                                            <div class="col-sm-4">
+                                                <input type="email" class="form-control" placeholder="Email Id..."
+                                                    autocomplete="off" formControlName="email">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.email.touched || submitted) && registerFormControl.email.errors?.required">
+                                                    Email_Id is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Password
+                                                *</label>
+                                            <div class="col-sm-4">
+                                                <input type="Password" class="form-control" placeholder="Password..."
+                                                    autocomplete="off" formControlName="password">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.password.touched || submitted) && registerFormControl.password.errors?.required">
+                                                    Password is required
+                                                </span>
+                                                <div class="text-danger" *ngIf="registerFormControl.password.errors?.minlength">Password must be at least 8 characters</div>
+                                            </div>
+                                               <label for="inputPassword" class="col-sm-2 col-form-label">Select Head 
+                                                *</label>
+                                            <div class="col-sm-4">
+                                               <select for="inputPassword" class="form-control"
+                                                    formControlName="head_id">
+
+                                                    <option>Select Head</option>
+                                                    <option *ngFor="let selectHead of heads" [value]="selectHead.id">{{selectHead.head}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                              <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">remarks
+                                                *</label>
+                                            <div class="col-sm-10">
+                                                <textarea class="form-control" placeholder="remarks..."
+                                                    autocomplete="off" formControlName="remarks"></textarea>
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.remarks.touched || submitted) && registerFormControl.remarks.errors?.required">
+                                                    remarks is required
+                                                </span>
+                                            </div>
+                                          
+                                        
+                                        </div>
+                                        <hr>
+                                        <div class="col my-3">
+                                            <label>Status:</label>
+                                            <input class="form-check-input m-2" type="checkbox"(change)="activeorInactive($event)">
+                                            <label class="form-check-label ml-5 my-2" for="flexCheckDefault">
+                                                Active
+                                            </label>
+
+                                        </div>
+                                        <div class="cards ">
+                                            <div class="card-header bg-white">
+                                                <strong>Roles</strong>
+
+                                            </div>
+                                            <div class="card-body p-4">
+                                                <div class="form-check">
+                                                    <div class="row">
+                                                        <div class="col-lg-3" *ngFor="let role of listRole">
+                                                            <input class="form-check-input m-2"
+                                                                (change)="checkOnChangeRole($event)" type="checkbox"
+                                                                [value]="role.name">
+                                                            <label class="form-check-label ml-5 my-2"
+                                                                for="flexCheckDefault">
+                                                                {{role.name}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cards ">
+                                            <div class="card-header bg-white">
+                                                <strong>Permission List</strong>
+                                            </div>
+                                            <div class="card-body p-4">
+                                                <div class="form-check">
+                                                    <div class="row">
+                                                        <div class="col-lg-3"
+                                                            *ngFor="let getPermission of getPermissions">
+                                                            <input class="form-check-input m-2"
+                                                                (change)="checkOnChangePermission($event)"
+                                                                type="checkbox" [value]="getPermission.name">
+                                                            <label class="form-check-label ml-5 my-2"
+                                                                for="flexCheckDefault">
+                                                                {{getPermission.name}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                                <div id="spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModal.hide()">
+                    Close</button>
+                <button type="button" class="btn btn-primary" (click)="createUser()"
+                    style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- --------------------------------editUser----------------------------------- -->
+
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1" role="dialogs" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary" style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title ">Update User</h6>
+                <button type="button" class="btn btn-primary" (click)="closed()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div>
+                <div class="containers">
+                    <div class="row">
+                        <div class="col-md-12 mx-auto">
+                            <div class="cards container my-4 ">
+                                <div class="card-bodys ">
+                                    <form [formGroup]="createUsers">
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">UserName*</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="User Name  ..."
+                                                    formControlName="name">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.name.touched || submitted) && registerFormControl.name.errors?.required">
+                                                    User Name is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">DOB*</label>
+                                            <div class="col-sm-4">
+                                                <input type="date" class="form-control" placeholder="Date of birth ..."
+                                                    formControlName="dob">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.dob.touched || submitted) && registerFormControl.dob.errors?.required">
+                                                    DOB is required
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword"
+                                                class="col-sm-2 col-form-label">Designation*</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="Designation..."
+                                                    formControlName="designation">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.designation.touched || submitted) && registerFormControl.designation.errors?.required">
+                                                    Designation is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Employee
+                                                Id*</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="Employee_id..."
+                                                    formControlName="employee_id">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.employee_id.touched || submitted) && registerFormControl.employee_id.errors?.required">
+                                                    Employeeid is required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Mobile No
+                                                *</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" placeholder="Mobile_number..."
+                                                    formControlName="mobile_number">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.mobile_number.touched || submitted) && registerFormControl.mobile_number.errors?.required">
+                                                    Mobile_number is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Phone No </label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" placeholder="Phone_number ..."
+                                                    formControlName="phone_number">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword"
+                                                class="col-sm-2 col-form-label">BranchName</label>
+                                            <div class="col-sm-4">
+                                                <select for="inputPassword" class="form-control"
+                                                    formControlName="users_branch_id">
+
+                                                    <option>Select Branch</option>
+                                                    <option *ngFor="let selectBranch of branch_names"[value]="selectBranch.id">
+                                                        {{selectBranch.branch_name}}
+                                                    </option>
+                                                    <span class="text-danger"
+                                                        *ngIf="(registerFormControl.users_branch_id.touched || submitted) && registerFormControl.users_branch_id.errors?.required">
+                                                        branch name is required
+                                                    </span>
+
+                                                </select>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Dept.
+                                                Name</label>
+                                            <div class="col-sm-4">
+                                                <select for="inputPassword" class="form-control"
+                                                    formControlName="users_department_id">
+                                                    <option>Select Department</option>
+                                                    <option *ngFor="let getDepartmentValue of department_names"[value]="getDepartmentValue.id">
+                                                        {{getDepartmentValue.department_name}}
+                                                    </option>
+                                                    <span class="text-danger"
+                                                        *ngIf="(registerFormControl.users_department_id.touched || submitted) && registerFormControl.users_department_id.errors?.required">
+                                                        Department name is required
+                                                    </span>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">CID No *</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" placeholder="CID No..."
+                                                    formControlName="cid">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.cid.touched || submitted) && registerFormControl.cid.errors?.required">
+                                                    Cid No is required
+                                                </span>
+                                            </div>
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Gender *</label>
+                                            <div class="col-sm-4">
+                                                <select for="inputPassword" class="form-control"
+                                                    formControlName="gender">
+
+                                                    <option>Select Gender</option>
+                                                    <option *ngFor="let selectGender of genders">{{selectGender.gender}}
+                                                    </option>
+                                                    <span class="text-danger"
+                                                        *ngIf="(registerFormControl.gender.touched || submitted) && registerFormControl.gender.errors?.required">
+                                                        Gender is not selected
+                                                    </span>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">EmailId
+                                                *</label>
+                                            <div class="col-sm-4">
+                                                <input type="email" class="form-control" placeholder="Email Id..."
+                                                    formControlName="email">
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.email.touched || submitted) && registerFormControl.email.errors?.required">
+                                                    EmailId is required
+                                                </span>
+                                            </div>
+<label for="inputPassword" class="col-sm-2 col-form-label">Select Head 
+                                                *</label>
+                                            <div class="col-sm-4">
+                                               <select for="inputPassword" class="form-control"
+                                                    formControlName="head_id">
+
+                                                    <option>Select Head</option>
+                                                    <option *ngFor="let selectHead of listuservalue" [value]="selectHead.user_id">{{selectHead.name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                              <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">remarks
+                                                *</label>
+                                            <div class="col-sm-10">
+                                                <textarea class="form-control" placeholder="remarks..."
+                                                    autocomplete="off" formControlName="remarks"></textarea>
+                                                <span class="text-danger"
+                                                    *ngIf="(registerFormControl.remarks.touched || submitted) && registerFormControl.remarks.errors?.required">
+                                                    remarks is required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="col my-3">
+                                            <label for="">Status:</label>
+                                            <input class="form-check-input m-2" type="checkbox"(change)="activeorInactive($event)"[checked]="validator">
+                                            <label class="form-check-label ml-5 my-2 text-capitalize"
+                                                for="flexCheckDefault">
+                                                Active
+                                            </label>
+
+                                        </div>
+                                        <div class="cards">
+                                            <div class="card-header bg-white">
+                                                <strong> Role List</strong>
+                                            </div>
+                                            <div class="card-body p-4">
+                                                <div class="form-check">
+                                                    <div class="row">
+                                                        <div class="col-lg-3" *ngFor="let role of listRole;let i=index">
+                                                            <div>
+                                                        
+                                                            <input class="form-check-input m-2"
+                                                                (change)="onCheckboxEditRoles($event,role.id)" type="checkbox"
+                                                                [checked]="checkroleToCheckInput[i] === role.id?'true':''"
+                                                                [value]="role.id">
+                                                            </div>
+                                                                <label class="form-check-label ml-5 my-2 text-capitalize"
+                                                                for="flexCheckDefault">
+                                                                {{listOfRoleInArray[i]}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cards ">
+                                            <div class="card-header bg-white">
+                                                <strong>Permission List</strong>
+                                            </div>
+                                            <div class="card-body p-4">
+                                                <div class="form-check">
+                                                    <div class="row">
+                                                        <div class="col-lg-3"
+                                                            *ngFor="let getPermission of getPermissions;let i=index">
+                                                             <div>
+                                                            <input class="form-check-input m-2"
+                                                                (change)="onCheckboxEditPermission($event,getPermission.id)" type="checkbox"
+                                                                [checked]="checkpermissionToCheckInput[i] == getPermission.id?'true':''"
+                                                                [value]="getPermission.id">
+                                                            </div>
+                                                                <label class="form-check-label ml-5 my-2 text-capitalize"
+                                                                for="flexCheckDefault">
+                                                                {{listOfPermissionInArray[i]}}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                                        <div id="spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closed()">Close</button>
+
+                <button type="button" class="btn btn-primary" (click)="updateUser()"
+                    style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i> Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ml-3 my-5">
+    <div class="col-lg-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white text-capitalize">
+               Access Management  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>System Users
+                <button type="button" class="btn btn-primary pull-right" (click)="shoewUserForm()"
+                    style="background-color: #041562!important;color:#fff!important;"*ngIf="usercreate">
+                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp; Add User
+                </button>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover " datatable [dtOptions]="dtOptions"
+                    [dtTrigger]="dtTrigger">
+                    <thead style="background-color: #041562!important;color:#fff!important;">
+                        <tr>
+                            <td>Sl.No</td>
+                            <td>Username</td>
+                            <td>Contact (#)</td>
+                            <td>Department</td>
+                            <td>Branch</td>
+                            <td>Designation</td>
+                            <td>Status</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let listuser of listuservalue;let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{listuser.name}}</td>
+                            <td>{{listuser.mobile_number}}</td>
+                            <td>{{listuser.department_name}}</td>
+                            <td>{{listuser.branch_name}}</td>
+                            <td>{{listuser.designation}}</td>
+                            <td>{{listuser.status}}</td>
+                            <td class="col-lg-2 text-center">
+                                <button class="btn btn-success btn-sm mr-2" (click)="editUser(listuser.user_id)"*ngIf="useredit">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;
+                                     Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm mt-1" (click)="deleteUser(listuser.user_id)"*ngIf="userdelete">
+                                    <i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;
+                                    Delete
+                                </button>
+                                <i class="fa fa-lock"*ngIf="!useredit">&nbsp; List only</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>

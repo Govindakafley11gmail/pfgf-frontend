@@ -1,0 +1,145 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content my-5">
+            <div class="modal-header  bg-primary"style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title">Account Group</h6>
+                <button type="button" class="btn btn-primary"(click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="cards my-4 ">
+
+                <div class="container">
+                    <form [formGroup]="accountGroup">
+                        <div class="form-group row">
+                            <input type="hidden" formControlName="id" class="form-control"
+                                placeholder="MOU Ref No  ...">
+
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Group Code *</label>
+                            <div class="col-sm-8">
+                                <input type="number" formControlName="account_group_code"
+                                     class="form-control"
+                                    placeholder="Group code">
+                                <div class="text-danger" *ngIf="registerFormControl.account_group_code.invalid">
+                                    <span 
+                                        *ngIf="(registerFormControl.account_group_code.touched || submitted) && registerFormControl.account_group_code.errors?.required">
+                                        Account Group Code is required
+                                    </span>
+                                    <span 
+                                    *ngIf="(registerFormControl.account_group_code.errors?.noWhiteSpace)">
+                                    White and empty spaces are not allowed
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label">Group Name *</label>
+                            <div class="col-sm-8">
+                                <input type="text" formControlName="account_group_name"
+                                   class="form-control"
+                                    placeholder="Account group name">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.account_group_name.touched || submitted) && registerFormControl.account_group_name.errors?.required">
+                                    Account group name is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-3 col-form-label ">Branch Wise *</label>
+                            <div class="col-sm-8">
+                                <select formControlName="branch_wise"  class="form-control">
+                                    <option>Is Branch Wise ?</option>
+                                    <option *ngFor="let branchWises of branchWise">{{branchWises.branchwise}}</option>
+                                    <span class="text-danger"
+                                        *ngIf="(registerFormControl.branch_wise.touched || submitted) && registerFormControl.branch_wise.errors?.required">
+                                        Branch wise is required
+                                    </span>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                        <div id="spinner"></div>
+                      </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="createAccountGroup()" *ngIf="save"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Save</button>
+                <button type="button" class="btn btn-primary" (click)="updateAccountGroupById()"*ngIf="update"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+  </div>
+
+
+<!-- --------------------confirmation------------------- -->
+
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="ml-4 mt-2">Are you sure to delete?</h5>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                <button type="button" class="btn btn-danger" (click)="deleteAccountGroupById(ids)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------------------end --------------------confirmation------------------- -->
+
+<div class="containers  ml-4 shadow-sm my-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            Master Setup  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Accountgroup
+            <button class="btn btn-primary m-2 pull-right"*ngIf="accountgroupcreate" (click)="create()"style="background-color: #041562!important;color:#fff!important;">
+                <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp; Add Accountgroup
+            </button>
+        </div>
+
+        <div class="card-body bg-white">
+            
+            <table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger">
+                <thead style="background-color: #041562!important;color:#fff!important;">
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Group Code &nbsp;<i class="fa fa-qrcode" aria-hidden="true"></i></th>
+                        <th>Group Name</th>
+                        <th>Branch Wise </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let accountgroups of accountgroup;let i=index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{ accountgroups.account_group_code }}</td>
+                        <td>{{ accountgroups.account_group_name }}</td>
+                        <td>{{ accountgroups.branch_wise }}</td>
+
+                        <td class="col-lg-2">
+                            <button class="btn btn-sm btn-success mr-2"
+                                (click)="getAccountGroupById(accountgroups.account_group_id)"*ngIf="accountgroupedit">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" (click)="show(accountgroups.account_group_id)"*ngIf="accountgroupdelete">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Delete</button>
+                            <i class="fa fa-lock"*ngIf="!accountgroupedit">&nbsp; List only</i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,121 @@
+<div class="card mt-4">
+  <div class="card-header bg-white">
+    <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>&nbsp;Employee
+    Search
+  </div>
+  <form class="ml-2 mr-1 mt-3" [formGroup]="employeeSearch">
+    <div class="p-2">
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="inputPassword">Employee name :</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="employee_name"
+            placeholder="Employee Name"
+          />
+        </div>
+
+        <div class="col-sm-3">
+          <label for="inputPassword">Employee Id :</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="employee_id_no"
+            placeholder="Employee Id No"
+          />
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Identification No :</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="identification_no"
+              placeholder="Identification No"
+          />
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Email :</label>
+          <input type="text" class="form-control" formControlName="email_id" placeholder="Email No" />
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Contact No :</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="contact_no"
+              placeholder="Contact No"
+          />
+        </div>
+      </div>
+      <div class="p-2 mr-1 pull-right">
+        <button
+          class="btn btn-primary pull-right"
+          style="background-color: #041562 !important; color: #fff !important"
+          (click)="searchEmployee()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+  <div
+    id="pause"
+    *ngIf="isLoading"
+    class="d-flex align-items-center justify-content-center"
+  >
+    <div id="spinner"></div>
+  </div>
+</div>
+
+<div class="containers">
+  <div class="animated fadeIn">
+    <div class="row my-5">
+      <div class="col-lg-12">
+        <div class="card shadow-sm bg-white rounded ml-4">
+          <div class="card-header bg-white">
+            Employee
+            <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Details
+          </div>
+          <div class="card-body my-2">
+            <table
+              class="table table-bordered table-striped table-hover"
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+            >
+              <thead
+                style="
+                  background-color: #041562 !important;
+                  color: #fff !important;
+                "
+              >
+                <tr>
+                  <td>Sl.No</td>
+                  <td>Employee Name</td>
+                  <td>Employee Id</td>
+                  <td>CID No</td>
+                  <td>Contact No</td>
+                  <td>Email</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let employeeDetail of employeeDetails; let i = index"
+                >
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ employeeDetail.employee_name }}</td>
+                  <td>{{ employeeDetail.employee_id_no }}</td>
+                  <td>{{ employeeDetail.identification_no }}</td>
+                  <td>{{ employeeDetail.contact_no }}</td>
+                  <td>{{ employeeDetail.email_id }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--/.col-->
+    </div>
+  </div>
+</div>

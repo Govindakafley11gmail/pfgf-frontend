@@ -1,0 +1,268 @@
+<table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+    [dtTrigger]="dtTrigger">
+    <thead style="background-color: #041562!important;color:#fff!important;">
+        <tr>
+            <th>Sl.No</th>
+            <th>Advise No</th>
+            <th>Org Name</th>
+            <th>Total Payable Amt</th>
+            <th>Org A/c No</th>
+            <th>Branch</th>
+            <th>Status</th>
+            <th>Reg Type</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let approveddata of pendingPayments;let i=index">
+            <td>{{i+1}}</td>
+            
+            <td>{{approveddata.payment_advise_no}}</td>
+            <td>{{approveddata.org_name}}</td>
+            <td>{{approveddata.total_payable_amount | number:'.2-2'}}</td>
+            <td>{{approveddata.company_account_no}}</td>
+            <td>{{approveddata.branch_name}}</td>
+            <td>{{approveddata.payment_status}}</td>
+            <td>{{approveddata.registration_type}}</td>
+            <td class="col-lg-1 text-center" *ngIf="paymentProcess">
+                <button
+                    class="btn btn-success btn-sm"
+                    (click)="Payment(approveddata.payment_advise_no)">
+                    <i class="fa fa-credit-card" aria-hidden="true">&nbsp; Payment</i>
+                </button>
+            </td>
+            <td *ngIf="!paymentProcess">
+                <i class="fa fa-lock">&nbsp; List only</i>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="container" role="document">
+        <div class="modal-content " *ngIf="paymentshow">
+            <div class="modal-header" style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title"> Refund Payment </h6>
+                <button type="button" class="btn btn-primary" (click)="myModelHide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card m-3">
+                <form [formGroup]="productForms" class="p-3">
+                    <div class="form-group row">
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Refund Advise No </label>
+                        <div class="col-sm-4">
+                            <input type="text" formControlName="payment_advise_no" readonly class="form-control">
+                        </div>
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Company Name </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" readonly formControlName="org_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Gross Amount </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Refundable Amount .." readonly
+                                formControlName="refund_net_refundable">
+
+                        </div>
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Remaining Amount </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Refundable Amount .." readonly
+                                formControlName="refund_remaining_amount">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Refundable Amount </label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Refundable Amount .." readonly
+                                formControlName="total_payable_amount">
+
+                        </div>
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Bank A/c No *
+                        </label>
+                        <div class="col-sm-4">
+                            <input type="text" placeholder="Bank..." class="form-control"readonly
+                                formControlName="pf_emp_acc_no">
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Payment Branch *</label>
+                        <div class="col-sm-4">
+
+                            <ng-select placeholder="Branch No.." [items]="branch_name" bindValue="id"
+                                formControlName="payment_branch_id" (change)="changeBranchName()"
+                                bindLabel="branch_name" clearAllText="Clear">
+                            </ng-select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.payment_branch_id.touched || submitted) && registerFormControl.payment_branch_id.errors?.required">
+                                Branch is required
+                            </span>
+                        </div>
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Payment Bank A/C No *</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" formControlName="payment_bank_account_data">
+                                <option *ngFor="let getaccounttype of getaccounttypes"
+                                    [value]="getaccounttype.account_type_id +'/'+ getaccounttype.acc_name">
+                                    {{getaccounttype.acc_name}}</option>
+                            </select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.payment_bank_account_data.touched || submitted) && registerFormControl.payment_bank_account_data.errors?.required">
+                                Payment Bank A/C No is required
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Payment Date * </label>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control" placeholder="payment_date .."
+                                formControlName="payment_date">
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.payment_date.touched || submitted) && registerFormControl.payment_date.errors?.required">
+                                Payment Date is required
+                            </span>
+                        </div>
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Transaction Mode *</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" (change)="changeCollection($event,i)"
+                                formControlName="payment_mode">
+                                <option>Select Collection Mode</option>
+                                <option *ngFor="let collection of collectionmode">
+                                    {{collection.collectionmodes}}
+                                </option>
+                            </select>
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.payment_mode.touched || submitted) && registerFormControl.payment_mode.errors?.required">
+                                Transaction Mode is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Amount
+                            *</label>
+                        <div class="col-sm-4">
+                            <input type="number" placeholder="Amount..." class="form-control"
+                                formControlName="accountVoucherAmount">
+                            <span class="text-danger"
+                                *ngIf="(registerFormControl.accountVoucherAmount.touched || submitted) && registerFormControl.accountVoucherAmount.errors?.required">
+                                Amount is required
+                            </span>
+                        </div>
+                        <label for="inputPassword" class="col-sm-2 col-form-label" *ngIf="cheque">Inst. Number
+                        </label>
+                        <div class="col-sm-4"*ngIf="cheque">
+                            <input type="text" placeholder="Inst. Number..." class="form-control"
+                                formControlName="instrumentNo">
+                        </div>
+                    </div>
+                    <div class="form-group row" *ngIf="cheque">
+
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Instrument Date *</label>
+                        <div class="col-sm-4">
+                            <input type="date" placeholder="Date..." class="form-control"
+                                formControlName="instrument_date">
+                        </div>
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Bank *</label>
+                        <div class="col-sm-4">
+                            <input type="text" placeholder="Bank..." class="form-control"
+                                formControlName="payment_bank_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Narration
+                            *</label>
+                        <div class="col-sm-10">
+                            <textarea rows="5" class="form-control"
+                                placeholder="Please describe for whom to make the refund payment"
+                                formControlName="refund_payment_remarks"></textarea>
+                        </div>
+                    </div>
+
+                    <h6 class="mt-3 ml-2" *ngIf="!paymentdetail"><strong>Refundable Table</strong></h6>
+                    <table class="table table-responsive-sm table-hover  mb-0" id="myTable"*ngIf="!paymentdetail"
+                        formArrayName="refundTransactionCategory" >
+                        <thead style="background-color: #041562!important;color:#fff!important;">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Employee Name</th>
+                                <th>Employee A/c No</th>
+                                <th>Contribution Amount</th>
+                                <th>Interest Amount</th>
+                                <th>Total Payable</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let capability of capacity;let i = index">
+                            <tr [formGroupName]="i">
+                                <td>
+                                    {{i+1}}
+                                </td>
+                                <td>
+                                    <input type="text" formControlName="employee_name" disabled
+                                        class="form-control-plaintext">
+                                </td>
+                                <td>
+                                    <input type="text" formControlName="employee_id_no" disabled
+                                        class="form-control-plaintext">
+                                </td>
+                                <td>
+                                    <input type="text" formControlName="payment_contribution_amount" disabled
+                                        class="form-control-plaintext">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control-plaintext"
+                                        formControlName="payment_interest_amount" disabled>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control-plaintext"
+                                        formControlName="payment_total_amount" disabled>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td colspan="3"><strong>Total</strong></td>
+                                <td><strong>{{Totalcontribution}}</strong></td>
+                                <td><strong>{{totalInterest}}</strong></td>
+                                <td><strong>{{totalpayable}}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="row container">
+                        <label class="mr-4">View Documents :</label>
+                        <button class="btn btn-success btn-sm mr-4" (click)="approvalUploadView(approvalUpload)"
+                            *ngIf="approvalUploaddoc"><i class="fa fa-file-pdf-o" aria-hidden="true"> &nbsp;&nbsp;Approval Upload</i></button>
+                        <button class="btn btn-success btn-sm" (click)="approvalUploadView(approvalNote)"
+                            *ngIf="approvalNotedoc"><i class="fa fa-file-pdf-o" aria-hidden="true"> &nbsp;&nbsp;Approval Note</i></button>
+                    </div>
+                    <button class="btn btn-primary pull-right" (click)="SubmitRefund()"
+                        style="background-color: #041562!important;color:#fff!important;"
+                        [disabled]="submitRefund"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Submit</button>
+
+                </form>
+                <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                    <div id="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>

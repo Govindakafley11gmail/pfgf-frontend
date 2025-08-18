@@ -1,0 +1,128 @@
+
+<div class="card mt-4">
+    <div class="card-header bg-white">
+        <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>&nbsp;Employee Transfer
+    </div>
+    <form class="ml-2 mr-1 mt-3" [formGroup]="employeeTransfer">
+        <div class="p-2">
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <label for="inputPassword">Bussiness Type :</label><br>
+                    <ng-select placeholder="Select Company Name" [items]="refundType" bindValue="value"[readonly] = "isDissabled"
+                        bindLabel="refundtype" formControlName="registration_type"
+                        (change)="changeRefundType()" clearAllText="Clear">
+                    </ng-select>
+                    <span class="text-danger" *ngIf="(registerFormControl.registration_type.touched
+                    || submitted)
+                    &&
+                    registerFormControl.registration_type.errors?.required">
+                        Bussiness Type is required
+                    </span>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="inputPassword">Previous Organization :</label>
+                    <ng-select placeholder="Select Company Name" formControlName="company_id" (change)="changeOrgById()"
+                        [items]="companyName" bindValue="company_id" bindLabel="org_name" [readonly] = "isDissabled" [searchable]="true"
+                        [(ngModel)]="org_name"
+                        clearAllText="Clear">
+                        <ng-template ng-label-tmp let-item="item">
+                            <span>{{ item.org_name + " "+ ' -[' +
+                                item.company_account_no + ']'}}</span>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                            <span>{{ item.org_name + ' -[' +
+                                item.company_account_no + ']'}}</span>
+                        </ng-template>
+                    </ng-select>
+                    <span class="text-danger" *ngIf="(registerFormControl.company_id.touched ||
+                    submitted)
+                    && registerFormControl.company_id.errors?.required">
+                        Organization Name is required
+                    </span>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="inputPassword">Employees :</label>
+                    <ng-select placeholder="Select Employees Name" [items]="employeeName"[readonly] = "isDissabled"
+                        (change)="changeEmployeeName()" bindValue="pf_employee_id" bindLabel="employee_name"
+                        formControlName="employee_id" clearAllText="Clear" [searchable]="true"
+                        [(ngModel)]="emp_name">
+                        <ng-template ng-label-tmp let-item="item">
+                            <span>{{ item.employee_name +' [ ' +
+                                item.employee_id_no + ' ]'}}</span>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                            <span>{{ item.employee_name +' [ ' +
+                                item.employee_id_no + ' ]'}}</span>
+                        </ng-template>
+                    </ng-select>
+                    <span class="text-danger" *ngIf="(registerFormControl.employee_id.touched
+                    || submitted)
+                    &&
+                    registerFormControl.employee_id.errors?.required">
+                        Employees Name is required
+                    </span>
+                </div>
+
+                <div class="col-sm-3">
+                    <label for="inputPassword">Identification No :</label>
+                    <input type="text" class="form-control" formControlName="identification_no"[readonly] = "isDissabled"
+                        placeholder="Identification No">
+                    <span class="text-danger" *ngIf="(registerFormControl.identification_no.touched
+                    || submitted)
+                    &&
+                    registerFormControl.identification_no.errors?.required">
+                        Identification No is required
+                    </span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <label for="inputPassword">Transfer to Organization :</label>
+                    <ng-select placeholder="Select Company Name" formControlName="transfer_company_id"[readonly] = "isDissabled"
+                         [items]="companyName" bindValue="company_id" bindLabel="org_name"[searchable]="true"
+                         [(ngModel)]="trans_name"
+                        clearAllText="Clear">
+                        <ng-template ng-label-tmp let-item="item">
+                            <span>{{ item.org_name + " "+ ' -[' +
+                                item.company_account_no + ']'}}</span>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                            <span>{{ item.org_name + ' -[' +
+                                item.company_account_no + ']'}}</span>
+                        </ng-template>
+                    </ng-select>
+                    <span class="text-danger" *ngIf="(registerFormControl.transfer_company_id.touched ||
+                      submitted)
+                      && registerFormControl.transfer_company_id.errors?.required">
+                        Organization Name is required
+                    </span>
+                </div>
+                <div class="col-sm-3">
+                    <label for="inputPassword">Transfer Date :</label>
+                    <input type="date" class="form-control"[readonly] = "isDissabled" formControlName="transfer_date">
+                    <span class="text-danger" *ngIf="(registerFormControl.transfer_date.touched
+                    || submitted)
+                    &&
+                    registerFormControl.transfer_date.errors?.required">
+                        Transfer date is required
+                    </span>
+                </div>
+            </div>
+            <div class="p-2 mr-1 pull-right" *ngIf="employeeTransfers">
+                <button class="btn btn-primary pull-right" (click)="transferEmployee()"[disabled] = "isDissabled" style="background-color:
+                #041562!important;color:#fff!important;">
+                    Submit
+                </button>
+                <button class="btn btn-light pull-right mr-2" (click)="reset()" >
+                    Reset
+                </button>
+            </div>
+        </div>
+    </form>
+    <div id="pause" *ngIf="isLoading" class="d-flex
+        align-items-center justify-content-center">
+        <div id="spinner"></div>
+    </div>
+</div>

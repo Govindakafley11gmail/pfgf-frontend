@@ -1,0 +1,179 @@
+<div bsModal #myModal="bs-modal" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Role Details</h6>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" [formGroup]="createRole">
+        <div class="row">
+          <p><input type="hidden" class="form-control" placeholder="role_id"
+              formControlName="role_id"></p>
+          <div class="col-md-3"><label for="roleName">Role Name :</label></div>
+          <div class="col-md-9"><input type="text" class="form-control" required
+              formControlName="role_name">
+
+          </div>
+
+          <div class="col-md-9 mt-2">
+            <input type="hidden" class="form-control" readonly placeholder="Guard_name" 
+              formControlName="guard_name">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-3">
+            <p>User Permissions</p>
+          </div>
+          <div class="card-body p-4">
+            <div class="form-check">
+              <div class="row">
+                <div class="col-lg-4" *ngFor="let permissionss of permission">
+                  <input class="form-check-input m-2" (change)="onCheckboxChanged($event)" type="checkbox"
+                    [value]="permissionss.name">
+                  <label class="form-check-label ml-4 my-1" for="flexCheckDefault">
+                    {{permissionss.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="createRoles()">Save</button>
+        <!-- <button type="button" class="btn btn-primary" (click)="updateRole()">Update</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --------------------------edit role---------------------------- -->
+
+<div bsModal #myModals="bs-modal" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Role Edit</h6>
+        <button type="button" class="close" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" [formGroup]="createRole">
+        <div class="row">
+          <p><input type="hidden" class="form-control" placeholder="role_id"
+              formControlName="role_id"></p>
+          <div class="col-md-3"><label for="roleName">Role Name :</label></div>
+          <div class="col-md-9"><input type="text" class="form-control" required
+              formControlName="role_name">
+
+          </div>
+
+          <div class="col-md-9 mt-2">
+            <input type="hidden" class="form-control" readonly formControlName="guard_name">
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-md-3">
+            <p>User Permissions</p>
+          </div>
+          <div class="card-body p-4">
+            <div class="form-check">
+              <div class="row">
+                <div class="col-lg-4" *ngFor="let permissionss of permission;let i = index"formArrayName="permissions">
+                  <input class="form-check-input m-2" (change)="onCheckboxEdit($event)"[formControlName]="i"
+                   type="checkbox"
+                    value="{{permissionss.name}}">
+                  <label class="form-check-label ml-4 my-1" for="flexCheckDefault">
+                    {{permissionss[i].name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModals.hide()">Close</button>
+        <!-- <button type="button" class="btn btn-primary" (click)="createRoles()">Save</button> -->
+        <button type="button" class="btn btn-primary" (click)="updateRole()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --------------------confirmation------------------- -->
+<div bsModal #myModal2="bs-modal" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title">Confirmation</h4>
+        <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <h5 class="ml-4 mt-2">Are Yor Sure to delete ?</h5>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModal2.hide()">No</button>
+        <button type="button" class="btn btn-danger" (click)="deleteRolesById(ids)">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --------------endConfirmation-------------------------- -->
+<br><br>
+<div class="containers my-5 bg-light">
+  <div class="animated fadeIn">
+    <div class="card-body">
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary mr-1" data-toggle="modal" (click)="create()">
+        Create
+      </button>
+    </div>
+    <!-- </div> -->
+    <br>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header bg-primary">
+            Role List
+          </div>
+          <div class="card-body mt-2">
+            <table class="table table-bordered table-striped table-hover" datatable [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger">
+              <thead class="bg-white">
+                <tr class="text-center">
+                  <td>Sl.NO</td>
+                  <td>Role Name</td>
+                  <td>Guard name</td>
+                  <td>Action</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let listRoles of listroles;let i=index">
+                  <td class="">{{i+1}}</td>
+                  <td class="">{{listRoles.name}}</td>
+                  <td class="">{{listRoles.guard_name}}</td>
+                  <td class="col-lg-2">
+                    <span class="badge badge-warning mr-2" (click)="editRolesById(listRoles.id)"><i
+                        class="fa fa-edit"></i>
+                    </span>
+                    <span class="badge badge-danger" (click)="show(listRoles.id)"><i class="fa fa-trash"
+                        width="40"></i></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--/.col-->
+    </div>
+  </div>
+</div>

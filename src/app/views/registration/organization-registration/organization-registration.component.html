@@ -1,0 +1,132 @@
+<div class="containers ml-3 my-4">
+  <div class="card shadow p-3 mb-5 bg-white rounded">
+    <div class="card-header bg-white">
+      Registration
+      <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>PF/GF Member
+      Organizations
+      <button
+        data-toggle="modal"
+        data-hover="Add New Collection"
+        (click)="openCreateCompanyModal()"
+        class="btn ml-auto font-weight-bold hovertext pull-right"
+        style="background-color: #041562 !important; color: #fff !important"
+      >
+        <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create
+        Company
+      </button>
+    </div>
+    <div class="card-body">
+      <table
+        class="table table-bordered table-hover"
+        datatable
+        [dtOptions]="dtOptions"
+        [dtTrigger]="dtTrigger"
+      >
+        <thead
+          style="background-color: #041562 !important; color: #fff !important"
+        >
+          <tr>
+            <th>Sl.No</th>
+            <th>Organization</th>
+            <th>License</th>
+            <!-- <th>Dzongkhag Name</th> -->
+            <th>Phone No</th>
+            <th>Branch</th>
+            <th>Reg Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let allPFUser of findAllCompany; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>
+              {{ allPFUser.org_name }} [{{ allPFUser.company_account_no }}]
+            </td>
+            <td>{{ allPFUser.license_no }}</td>
+            <!-- <td>{{ allPFUser.dzongkhag_name }}</td> -->
+             <td>{{ allPFUser.phone_no }}</td>
+            <td>{{ allPFUser.branch_name }}</td>
+             <td>{{ allPFUser.registration_type }}</td>
+            <td class="col-lg-2 text-center" *ngIf="companyEdit">
+              <button
+                class="btn btn-primary bg-success"
+                (click)="editpfCompaneyRegistrationByIds(allPFUser.company_id)"
+                *ngIf="companyEdit"
+              >
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i
+                >&nbsp;Edit
+              </button>
+              <button
+                class="btn btn-primary bg-danger"
+                (click)="show(allPFUser.id)"
+                *ngIf="companyDelete"
+              >
+                <i class="fa fa-minus-square-o" aria-hidden="true"></i
+                >&nbsp;Delete
+              </button>
+            </td>
+            <td *ngIf="!companyEdit">
+              <i class="fa fa-lock">&nbsp; List only</i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div
+  id="pause"
+  *ngIf="isLoading"
+  class="d-flex align-items-center justify-content-center"
+>
+  <div id="spinner"></div>
+</div>
+
+<!----------------------confirmation------------------- -->
+
+<!-- Modal Structure -->
+<div
+  bsModal
+  #myModals="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #041562 !important; color: #fff !important">
+        <h6 class="modal-title mr-3"(click)="selectedTab(1)">Company Registration</h6>
+        <h6 class="modal-title mr-3" (click)="selectedTab(2)">Proprietors Details</h6>
+        <h6 class="modal-title mr-3"(click)="selectedTab(3)">Contact Person Details</h6>
+        <h6 class="modal-title mr-3"(click)="selectedTab(4)">Introducer Details</h6>
+         <button type="button" class="close text-white" aria-label="Close" (click)="myModals.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+     <div *ngIf="activeTab === 1">
+     <app-p-forganisation-registration [companyId]="selectedCompanyId" (registrationDone)="closeModal()"></app-p-forganisation-registration>
+    </div>
+
+    <!-- Tab 2 Content -->
+    <div *ngIf="activeTab === 2">
+     <app-propriter [companyId]="selectedCompanyId"></app-propriter>
+    </div>
+
+    <!-- Tab 3 Content -->
+    <div *ngIf="activeTab === 3">
+      <app-contact-person-detail [companyId]="selectedCompanyId"></app-contact-person-detail>
+    </div>
+
+    <!-- Tab 4 Content -->
+    <div *ngIf="activeTab === 4">
+     <app-introductive-details [companyId]="selectedCompanyId"></app-introductive-details>
+    </div>
+    
+    </div>
+  </div>
+</div>
+
+<!-- ------------------end --------------------confirmation------------------- -->

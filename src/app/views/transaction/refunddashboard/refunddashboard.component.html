@@ -1,0 +1,30 @@
+<div class="card ml-3 shadow p-3 mb-5 bg-white rounded my-4">
+  <div>
+    <nav class="nav nav-pills nav-justified text-white" id="myDIV">
+      <a class="btn nav-link" (click)="refundPendingData()" [ngStyle]="{ 'background-color': toggles ? '#041562' : 'rgb(140 133 157)' }" style="letter-spacing: 3px;font-size: 12px!important;padding: 7px!important;">PENDING VERIFICATION</a>
+      <a class="btn nav-link ml-1" (click)="refundpendindViewData()" [ngStyle]="{ 'background-color': refview ? '#041562' : 'rgb(140 133 157)' }" style="letter-spacing: 3px;font-size: 12px!important;padding: 7px!important;">PENDING APPROVAL</a>
+      <a class="btn nav-link ml-1" (click)="refundApprovedData()" [ngStyle]="{'background-color': toggless ? '#041562' : 'rgb(140 133 157)' }" style="letter-spacing: 3px;font-size: 12px!important;padding: 7px!important;">PENDING PAYMENT</a>
+      <a class="btn nav-link ml-1" (click)="refundCompletedData()" [ngStyle]="{'background-color': toggle ? '#041562' : 'rgb(140 133 157)' }" style="letter-spacing: 3px;font-size: 12px!important;padding: 7px!important;">REFUND SETTLED</a>
+    </nav>
+  </div>
+  <hr>
+  <!-- 
+  (click)="refundPendingData()""
+    (click)="refundApprovedData()"
+    (click)="refundCompletedData()"  -->
+  <div class="pending" *ngIf="pending">
+    <app-refundpendingprocess></app-refundpendingprocess>
+  </div>
+
+  <!-- Refund Approved -->
+  <div class="approved" *ngIf="approved">
+    <app-refundapprovedlist></app-refundapprovedlist>
+  </div>
+
+  <div class="approved" *ngIf="completed">
+    <app-refundcompletedlist></app-refundcompletedlist>
+  </div>
+  <div class="approved" *ngIf="refview">
+    <app-refund-view-pending></app-refund-view-pending>
+  </div>
+</div>

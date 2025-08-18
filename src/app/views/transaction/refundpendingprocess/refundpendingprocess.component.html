@@ -1,0 +1,1162 @@
+<div class="text-uppercase">
+  <button
+    data-toggle="modal"
+    data-hover="Create Refund"
+    [style.visibility]="userRefundCreate ? 'visible' : 'hidden'"
+    style="background-color: #041562 !important; color: #fff !important"
+    class="btn-success btn ml-auto font-weight-bold hovertext pull-right my-1"
+    (click)="createNewPfRefund()"
+  >
+    <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create Refund
+  </button>
+</div>
+
+<table
+  class="table table-bordered table-striped rounded table-hover ml-1 mr-2 mt-2"
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
+>
+  <thead style="background-color: #041562 !important; color: #fff !important">
+    <tr>
+      <th>Sl.No</th>
+      <th>Org Name</th>
+      <th>Employee</th>
+      <th>Total Cont</th>
+      <th>Total Interest</th>
+      <th>Branch</th>
+      <th>Status</th>
+      <th>Reg Type</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pending of approvedorpendind; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ pending.org_name }},[{{ pending.company_account_no }}]</td>
+      <td>{{ pending.employee_name }},[{{ pending.employee_id_no }}]</td>
+      <td>{{ pending.refund_total_contr | number : ".2" }}</td>
+      <td>{{ pending.refund_total_interest | number : ".2" }}</td>
+      <td>{{ pending.branch_name }}</td>
+      <td>{{ pending.refund_status }}</td>
+      <td>{{ pending.registration_type }}</td>
+      <td class="col-lg-1 text-center cursor-pointer">
+        <!-- <input type="checkbox" class="form-check-input ml-1" (change)="getApprovedData(pending,$event,i)"> -->
+
+        <button
+          class="btn btn-success btn-sm ml-2"
+          (click)="ToBeApprovedListByredunfRefNo(pending.refund_ref_no)"
+        >
+          <i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp; Verify
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div
+  id="pause"
+  *ngIf="isLoading"
+  class="d-flex align-items-center justify-content-center"
+>
+  <div id="spinner"></div>
+</div>
+
+<!-- <button (click)="submitApproveedData()"[style.visibility]="userRefundNote?'visible':'hidden'" class="btn btn-primary mt-3
+    pull-right ml-2" style="background-color:
+    #041562!important;color:#fff!important;">Approve Refund
+</button> -->
+<!-- ----------------------view-------------- -->
+
+<div
+  bsModal
+  #myModal="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div
+        class="modal-header bg-light"
+        style="background-color: #041562 !important; color: #fff !important"
+      >
+        <h6 class="modal-title">
+          PF REFUND/ PENDING APPROVAL &nbsp;
+          <span class="text-primary">(View Mode)</span>
+        </h6>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="myModal.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div
+        id="pause"
+        *ngIf="isLoading"
+        class="d-flex align-items-center justify-content-center"
+      >
+        <div id="spinner"></div>
+      </div>
+      <form [formGroup]="approvedData">
+        <div class="card m-3 form-group card" style="padding: 15px">
+          <div class="form-group row">
+            <input
+              type="hidden"
+              class="form-control"
+              placeholder="Company Name ..."
+              formControlName="refund_company_id"
+            />
+            <input
+              type="hidden"
+              class="form-control"
+              placeholder="Company Name ..."
+              formControlName="refund_employee_id"
+            />
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Company Name * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Company Name ..."
+                readonly
+                formControlName="org_name"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Employee Name * :</label
+            >
+
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employee Name..."
+                readonly
+                formControlName="employee_name"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Company A/c No * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Company A/c No ..."
+                readonly
+                formControlName="comp_acc_no"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Employee A/c No * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employee A/c No..."
+                readonly
+                formControlName="emp_acc_no"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Processing Date * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="date"
+                class="form-control"
+                placeholder="Processing Date ..."
+                readonly
+                formControlName="refund_processing_date"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >CID No * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employee CID No..."
+                readonly
+                formControlName="refund_employee_cid"
+              />
+            </div>
+          </div>
+          <hr />
+
+          <div class="text-uppercase">
+            <h6 style="letter-spacing: 1px">
+              <strong>Contribution Details</strong>
+            </h6>
+            <br />
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Employee Contribution :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Processing Date ..."
+                readonly
+                formControlName="total_employee_contribution"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Interest (Employee) * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employee CID No..."
+                readonly
+                formControlName="total_interest_on_employee_contribution"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Employer Contribution :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Processing Date ..."
+                readonly
+                formControlName="total_employer_contribution"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Interest (Employer) * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employee CID No..."
+                readonly
+                formControlName="total_interest_on_employer_contribution"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Total Contribution :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Processing Date ..."
+                readonly
+                formControlName="total_contribution"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Total Interest :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                readonly
+                formControlName="total_interest"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Gross Refundable Amt :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Net Refundable ..."
+                readonly
+                formControlName="gross_refundable_amount"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Total Disbursed * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Total Intreast ..."
+                readonly
+                formControlName="prev_total_disbursed_amount"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Net Refundable Amt :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Net Refundable ..."
+                readonly
+                formControlName="net_refundable_amount"
+              />
+            </div>
+          </div>
+          <hr />
+          <div class="text-uppercase">
+            <h6 style="letter-spacing: 1px">
+              <strong>Current Refund Details</strong>
+            </h6>
+            <br />
+          </div>
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Employee Cont * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employee Contrubution..."
+                readonly
+                formControlName="refund_employee_contribution"
+              />
+            </div>
+
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Interest Employee * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Intreast Employee..."
+                readonly
+                formControlName="refund_interest_on_employee_contr"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Employer Cont * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Employer Contrubution ..."
+                readonly
+                formControlName="refund_employer_contribution"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Interest Employer * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Intreast Employee..."
+                readonly
+                formControlName="refund_interest_on_employer_contr"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Total PFContribution * :
+            </label>
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Total PFContribution ..."
+                readonly
+                formControlName="refund_total_contr"
+              />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Total Interest * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Total Intreast ..."
+                readonly
+                formControlName="refund_total_interest"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Total Process Amt * :</label
+            >
+            <div class="col-sm-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Total Disbursed Amount..."
+                readonly
+                formControlName="refund_total_disbursed_amount"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Refund Remarks :</label
+            >
+            <div class="col-sm-10">
+              <textarea
+                class="form-control"
+                placeholder="Describe how to make the payment"
+                readonly
+                formControlName="refund_processed_remarks"
+                rows="3"
+              >
+              </textarea>
+              <hr />
+            </div>
+            <label for="inputPassword" class="col-sm-2 col-form-label mt-2"
+              >View Documents * :</label
+            >
+            <div class="col-sm-10 mt-2">
+              <a
+                (click)="downloadRefundFile(downloadfile)"
+                class="btn btn-success text-light"
+                *ngIf="Supporting"
+              >
+                <i class="fa fa-file-pdf-o" aria-hidden="true">
+                  &nbsp;&nbsp;Supporting Document</i
+                >
+              </a>
+              <a
+                (click)="downloadRefundFile(downloadfile2)"
+                class="btn btn-success text-light"
+                *ngIf="refundslipdocument"
+              >
+                <i class="fa fa-file-pdf-o" aria-hidden="true"
+                  >&nbsp;&nbsp; Refund Slip
+                </i>
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <button
+              class="btn btn-primary pull-right"
+              [style.visibility]="verifyRefunds ? 'visible' : 'hidden'"
+              style="
+                background-color: #041562 !important;
+                color: #fff !important;
+              "
+              (click)="verifyRefundConformation()"
+            >
+              <i class="fa fa-check-square-o" aria-hidden="true"></i
+              >&nbsp;Verify Now
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  bsModal
+  #myModals="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-right" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <h6 class="modal-title">Confirmation</h6>
+        <button
+          type="button"
+          class="close"
+          (click)="myModals.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <h6 class="ml-4 mt-2"><i>Are you sure to verify the refund ?</i></h6>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="myModals.hide()">
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="verifyRefund()"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  bsModal
+  #myModal1="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div
+        class="modal-header"
+        style="background-color: #041562 !important; color: #fff !important"
+      >
+        <h6 class="modal-title">Process New Refund</h6>
+        <button
+          type="button"
+          class="btn bg-primary"
+          (click)="myModal1.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="p-3">
+        <!-- <app-refund></app-refund> -->
+        <div class="card mb-0">
+          <div
+            id="pause"
+            *ngIf="isLoading"
+            class="d-flex align-items-center justify-content-center"
+          >
+            <div id="spinner"></div>
+          </div>
+
+          <div>
+            <form
+              *ngIf="refundShow"
+              class="ml-2 mr-1 mt-3"
+              [formGroup]="pfrefundscreen1"
+            >
+              <div class="form-group row">
+                <input type="hidden" formControlName="pf_employee_id" />
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Bussiness Type *</label
+                >
+                <div class="col-sm-4">
+                  <ng-select
+                    placeholder="Select Company Name"
+                    [items]="refundType"
+                    bindValue="value"
+                    bindLabel="refundtype"
+                    formControlName="refundType"
+                    [searchFn]="customSearchFn"
+                    (change)="changeRefundType()"
+                    clearAllText="Clear"
+                  >
+                  </ng-select>
+                </div>
+                <input type="hidden" formControlName="pf_employee_id" />
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Organization Name *</label
+                >
+                <div class="col-sm-4">
+                  <ng-select
+                    placeholder="Select Company Name"
+                    [items]="companyname"
+                    (change)="getEmployeeList()"
+                    bindValue="company_id"
+                    bindLabel="org_name"
+                    formControlName="org_names"
+                    [(ngModel)]="comp_name"
+                    [searchFn]="customSearchFn"
+                    clearAllText="Clear"
+                  >
+                    <ng-template
+                      ng-label-tmp
+                      let-item="item"
+                      *ngIf="companyacno"
+                    >
+                      <span>{{
+                        item.org_name + " -" + item.company_account_no
+                      }}</span>
+                    </ng-template>
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-search="searchTerm"
+                      let-index="index"
+                    >
+                      <span>{{
+                        item.org_name + " -" + item.company_account_no
+                      }}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employee Name *</label
+                >
+                <div class="col-sm-4">
+                  <ng-select
+                    placeholder="Select Employee
+                                        Name"
+                    [items]="employeeName"
+                    (change)="getEmployeeDetails()"
+                    formControlName="pf_employee_id"
+                    [(ngModel)]="employee_id"
+                    bindValue="pf_employee_id"
+                    bindLabel="employee_name"
+                    [searchFn]="customSearchFn"
+                    clearAllText="Clear"
+                  >
+                    <ng-template
+                      ng-label-tmp
+                      let-item="item"
+                      *ngIf="companyacno"
+                    >
+                      <span>{{
+                        item.employee_name + " -" + item.employee_id_no
+                      }}</span>
+                    </ng-template>
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-search="searchTerm"
+                      let-index="index"
+                    >
+                      <span>{{
+                        item.employee_name + " -" + item.employee_id_no
+                      }}</span>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employee CID *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Employee Cid ..."
+                    formControlName="identification_no"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Processing Date *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="date"
+                    class="form-control"
+                    placeholder="Processing Date..."
+                    [(ngModel)]="processing_date"
+                    (change)="processingDate($event)"
+                  />
+                  <span class="text-danger">{{ processing_message }}</span>
+                </div>
+              </div>
+
+              <div class="p-2 mr-1 pull-right">
+                <button
+                  class="btn btn-primary processandSubmit"
+                  (click)="processPffund()"
+                  style="
+                    background-color: #041562 !important;
+                    color: #fff !important;
+                  "
+                >
+                  Process &nbsp;<i
+                    class="fa fa-angle-double-right"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="p-2">
+            <form
+              *ngIf="refundShowScreen2"
+              class="ml-1 mr-1 mt-3"
+              [formGroup]="pfrefundscreen2"
+            >
+              <div class="form-group row">
+                <input
+                  type="hidden"
+                  class="form-control"
+                  placeholder="Company Name ..."
+                  formControlName="refund_company_id"
+                />
+                <input
+                  type="hidden"
+                  class="form-control"
+                  placeholder="Company Name ..."
+                  formControlName="refund_employee_id"
+                />
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Company Name *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Company Name ..."
+                    readonly
+                    [value]="org_name"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employee Name *</label
+                >
+
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Employee Name..."
+                    readonly
+                    [value]="employee_name"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >PF Account No *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Company A/c No ..."
+                    readonly
+                    [value]="comp_acc_no"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Processing Date *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="date"
+                    class="form-control"
+                    placeholder="Processing Date ..."
+                    formControlName="refund_processing_date"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employee CID No *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Employee CID No..."
+                    readonly
+                    value="{{ pfemployee_id }}"
+                  />
+                </div>
+              </div>
+
+              <hr />
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employee Contribution *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Employee Contrubution..."
+                    readonly
+                    formControlName="refund_employee_contribution"
+                  />
+                </div>
+
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Interest Employee *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    readonly
+                    placeholder="Intreast
+                                        Employee..."
+                    formControlName="refund_interest_on_employee_contr"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employer Contribution *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Employer Contrubution ..."
+                    readonly
+                    formControlName="refund_employer_contribution"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Interest Employer *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    readonly
+                    placeholder="Intreast
+                                        Employee..."
+                    formControlName="refund_interest_on_employer_contr"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >As on Int Employee *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="As on Date Intreast..."
+                    readonly
+                    formControlName="refund_as_on_interest_employee"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >As on Int Employer *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Total Intreast ..."
+                    readonly
+                    formControlName="refund_as_on_interest_employer"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Total Contribution *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Total PFContribution ..."
+                    readonly
+                    formControlName="refund_total_contr"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Total Interest *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    readonly
+                    placeholder="Total Intreast
+                                        ..."
+                    formControlName="refund_total_interest"
+                    [value]="refund_total_interest"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Total Disbursed Amt *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Total Disbursed Amount..."
+                    readonly
+                    formControlName="refund_total_disbursed_amount"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Net Payable *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    readonly
+                    placeholder="Net Refundable
+                                        ..."
+                    formControlName="refund_net_refundable"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group row" *ngIf="pfRefund">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Employee Contribution <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-4">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="refund_emplyee_contrib"
+                    readonly
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.refund_emplyee_contrib.touched ||
+                        submitted) &&
+                      registerFormControl1.refund_emplyee_contrib.errors
+                        ?.required
+                    "
+                  >
+                    Employee Contribution is required
+                  </span>
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label">
+                  Employer Contribution *</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="refund_emplyr_contrib"
+                    readonly
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.refund_emplyr_contrib.touched ||
+                        submitted) &&
+                      registerFormControl1.refund_emplyr_contrib.errors
+                        ?.required
+                    "
+                  >
+                    Employer Contribution is required
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">
+                  Registration Type*</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="registration_type"
+                    readonly
+                  />
+                </div>
+
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Refund Amount *</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="number"
+                    placeholder="Refund Amount"
+                    formControlName="refund_amount"
+                    [readonly]="isDisabled"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.refund_amount.touched ||
+                        submitted) &&
+                      registerFormControl1.refund_amount.errors?.required
+                    "
+                  >
+                    Refund Amount is required
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">
+                  Supporting Document *</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="file"
+                    class="card p-1 form-control my-2"
+                    placeholder="Upload File"
+                    id="formFileSm"
+                    (change)="uploadFile($event)"
+                  />
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Refund Branch <span class="text-danger">*</span>
+                </label>
+                <div class="col-sm-4">
+                  <ng-select
+                    placeholder="Select Refund 
+                                Branch"
+                    [items]="branch_names"
+                    formControlName="id"
+                    bindValue="id"
+                    bindLabel="branch_name"
+                    [searchFn]="customSearchFn"
+                    clearAllText="Clear"
+                  >
+                  </ng-select>
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.id.touched || submitted) &&
+                      registerFormControl1.id.errors?.required
+                    "
+                  >
+                    Refund Branch is required
+                  </span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">
+                  Bank A/c No *</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="pf_emp_acc_no"
+                    placeholder="Account No"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.pf_emp_acc_no.touched ||
+                        submitted) &&
+                      registerFormControl1.pf_emp_acc_no.errors?.required
+                    "
+                  >
+                    Bank A/c is required
+                  </span>
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label">
+                  Bank Name *</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="bank_name"
+                    placeholder="Bank name"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.bank_name.touched || submitted) &&
+                      registerFormControl1.bank_name.errors?.required
+                    "
+                  >
+                    Bank Name is required
+                  </span>
+                </div>
+
+                 <label for="inputPassword" class="col-sm-2 col-form-label" *ngIf="isProcessGf">
+                  Identification No *</label
+                >
+                <div class="form-group col-sm-4"*ngIf="isProcessGf">
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="employee_identification_no"
+                    placeholder="Identification No"
+                  />
+                 
+                </div>
+              </div>
+
+              <!-- pf_emp_acc_no -->
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Remarks *</label
+                >
+                <div class="col-sm-10">
+                  <textarea
+                    class="form-control"
+                    formControlName="refund_remarks"
+                    rows="5"
+                  >
+                  </textarea>
+                </div>
+              </div>
+              <div class="p-2">
+                <button
+                  class="btn btn-primary float-right mb-1"
+                  (click)="submitPfRefund()"
+                  style="
+                    background-color: #041562 !important;
+                    color: #fff !important;
+                  "
+                >
+                  <i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- ---------------------------in module form -------------------- -->
+      </div>
+    </div>
+  </div>
+</div>

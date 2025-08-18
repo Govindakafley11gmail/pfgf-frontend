@@ -1,0 +1,151 @@
+<h5 class="text-center text-danger"style="color: black; 
+margin: 5px 0 0 5px;
+white-space: nowrap;
+overflow: hidden;
+width: 100%;
+animation: animtext 6s steps(80, end);
+animation-iteration-count: infinite; 
+ transition: all cubic-bezier(0.1, 0.7, 1.0, 0.1);" > {{data}}</h5>
+<div class="animated fadeIn mt-2">
+<div class="container-fluid card" style="padding: 20px;">
+    <div class="row">
+      <div class="col-sm-6 col-lg-3">
+        <div class="brand-card">
+          <div class="brand-card-header bg-facebook">
+           
+            <img src="../../../assets/img/img/pf2.png" alt="" width="95">
+            <div class="chart-wrapper">
+              <canvas baseChart class="chart" [datasets]="brandBoxChartData1"
+                [labels]="brandBoxChartLabels"
+                [options]="brandBoxChartOptions" [colors]="brandBoxChartColours"
+                [legend]="brandBoxChartLegend"
+                [chartType]="brandBoxChartType"></canvas>
+            </div>
+          </div>
+          <div class="brand-card-body">
+            <div>
+              <div class="text-value">{{countcompany}}</div>
+              <div class="text-uppercase text-muted small">PF Company</div>
+            </div>
+            <div>
+              <div class="text-value">{{countemployee}}</div>
+              <div class="text-uppercase text-muted small">PF Member</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="brand-card">
+          <div class="brand-card-header bg-twitter">
+            <img src="../../../assets/img/img/gf1.gif" alt="" width="96">
+            <div class="chart-wrapper">
+              <canvas baseChart class="chart" [datasets]="brandBoxChartData2"
+                [labels]="brandBoxChartLabels"
+                [options]="brandBoxChartOptions" [colors]="brandBoxChartColours"
+                [legend]="brandBoxChartLegend"
+                [chartType]="brandBoxChartType"></canvas>
+            </div>
+          </div>
+          <div class="brand-card-body">
+            <div>
+              <div class="text-value">{{countgfcompany }}</div>
+              <div class="text-uppercase text-muted small">GF Company</div>
+            </div>
+            <div>
+              <div class="text-value">{{countgfemployee}}</div>
+              <div class="text-uppercase text-muted small">GF member</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="brand-card">
+          <div class="brand-card-header bg-linkedin">
+            <img src="../../../assets/img/img/jk.gif" alt="" width="96">
+            <div class="chart-wrapper">
+              <canvas baseChart class="chart" [datasets]="brandBoxChartData3"
+                [labels]="brandBoxChartLabels"
+                [options]="brandBoxChartOptions" [colors]="brandBoxChartColours"
+                [legend]="brandBoxChartLegend"
+                [chartType]="brandBoxChartType"></canvas>
+            </div>
+          </div>
+          <div class="brand-card-body">
+            <div>
+              <div class="text-value">{{countTotalCollection}}</div>
+              <div class="text-uppercase text-muted small">Total Collections</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="brand-card">
+          <div class="brand-card-header bg-google-plus">
+            <img src="../../../assets/img/img/rf1.png" alt="" width="96">
+            <div class="chart-wrapper">
+              <canvas baseChart class="chart" [datasets]="brandBoxChartData4"
+                [labels]="brandBoxChartLabels"
+                [options]="brandBoxChartOptions" [colors]="brandBoxChartColours"
+                [legend]="brandBoxChartLegend"
+                [chartType]="brandBoxChartType"></canvas>
+            </div>
+          </div>
+          <div class="brand-card-body">
+            <div>
+              <div class="text-value">{{countTotalRefund }}</div>
+              <div class="text-uppercase text-muted small">Refund Total Payment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="animated fadeIn">
+  <div class="card-columns cols-2">
+    <div class="card">
+      <div class="card-header">
+        PF/GF Statistics
+      </div>
+      <div class="card-body">
+        <div class="chart-wrapper">
+          <canvas baseChart class="chart"
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [colors]="lineChartColours"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)">
+        </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Bar Chart
+        <div class="card-header-actions">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrapper">
+          <canvas baseChart class="chart" 
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [legend]="barChartLegend"
+          [chartType]="barChartType"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+  <div id="spinner"></div>
+</div>

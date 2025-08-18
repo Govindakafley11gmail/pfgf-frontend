@@ -1,0 +1,23 @@
+<div class="card ml-3 shadow rounded my-4">
+    <!-- <loading *ngIf="isLoading"></loading> -->
+    <div class="mt-3 ml-2">
+        <nav class="nav nav-pills nav-justified text-white" id="myDIV">
+          <a class="btn nav-link" (click)="refundPendingData()"[ngStyle]="{ 'background-color': pendingtoggle ? '#041562' : 'rgb(140 133 157)' }" style="letter-spacing: 3px;font-size: 12px!important;padding: 7px!important;">PENDING PAYMENT </a>
+          <a class="btn nav-link ml-1" (click)="paymentApprovedData()"[ngStyle]="{ 'background-color': approvedtoggle ? '#041562' : 'rgb(140 133 157)' }" style="letter-spacing: 3px;font-size: 12px!important;padding: 7px!important;">REFUND SETTLED</a>
+          <!-- <a class="btn nav-link ml-1" (click)="refundCompletedData()"[ngStyle]="{ 'background-color': completedtoggle ? 'rgb(243 241 248)' : '' }">REFUND COMPLETED</a> -->
+          <a class="btn nav-link disabled"></a>
+        </nav>
+      </div>
+    <hr>
+    <!-- Refund Pending -->
+    <div class="pending p-2" *ngIf="pending">
+        <app-pending-payment></app-pending-payment>
+
+    </div>
+
+    <!-- Refund Approved -->
+    <div class="approved p-2" *ngIf="approved">
+        <app-payment-approved></app-payment-approved>
+    </div>
+
+</div>

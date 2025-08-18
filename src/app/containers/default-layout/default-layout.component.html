@@ -1,0 +1,68 @@
+<app-header [sidebarToggler]="'lg'" class="bg-white" [navbarBrandRouterLink]="['/dashboard']" height="300" fixed="true">
+  <div class="d-flex justify-content-center">
+    <div class="searchbar" style="margin-left: 80px; font-size: large;">
+      <img src="../../../assets/img/img/header-app.png" width="270" height="65">
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <a class="nav-link nav-center text-center logo-text-bil ml-5 mt-2">
+      <h6 style="letter-spacing: 2px;"><strong>BHUTAN INSURANCE LIMITED</strong></h6>  
+     </a>
+  </div>
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item d-md-down-none">
+      <a class="nav-link text-center">
+        <img src="../../../assets/img/img/gf-header.png" alt="" width="270" height="43">
+       &nbsp;&nbsp;&nbsp;&nbsp;
+      </a>
+    </li>
+    <li class="nav-item dropdown btn" dropdown placement="bottom right">
+      <a data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle (click)="false">
+        <img src="../../../assets/img/img/administrator-male.png" alt="">
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+        <div class="dropdown-header text-center">&nbsp;{{userName}}</div>
+        <a class="dropdown-item" routerLink="../profile"><i class="fa fa-user"></i>
+          Profile
+       </a>
+        <a class="dropdown-item" routerLink="../change-password"><i class="fa fa-cog"></i>
+        Change Password
+        </a>
+        <a class="dropdown-item" (click)="logoutUser()"><i class="fa fa-lock"></i> Logout</a>
+      </div>
+    </li>
+  </ul>
+</app-header>
+
+<div class="card shadow-xl">
+  <div class="">
+    <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized" 
+      (minimizedChange)="toggleMinimize($event)">
+      <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized" class="mt-5">
+      </app-sidebar-nav>
+
+    </app-sidebar>
+  </div>
+</div>
+
+<main class="main">
+  <div class="container-fluid mt-5">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+<!-- <app-aside [fixed]="hidden" [display]="hidden">
+  </app-aside> -->
+
+  <div class="card-footer bg-white text-center" >
+    <div class="text-center">
+      <h6 class="mt-1" style="letter-spacing: 3px;">PRIVATE PROVIDENT FUND</h6>
+      <div style="background-color: #F5F5F5;width: 1600px;padding: 10px;">
+        www.bhutaninsurance.com.bt <br>
+        &copy; {{ getDate }} | Powered by Bhutan Insurance Limited <br>
+      </div>
+    </div>
+  </div>
+  <div id="pause" *ngIf="isLoading" class="d-flex
+  align-items-center justify-content-center">
+<div id="spinner"></div>
+</div>

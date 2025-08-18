@@ -1,0 +1,640 @@
+<div class="card shadow bg-white rounded ml-3 my-5">
+    <div class="card-header bg-white my-3">
+        <strong>Create GF Company</strong>
+    </div>
+    <div class="card-body">
+
+        <form [formGroup]="organizationRegistration">
+            <div class="card shadow-sm p-3">
+                <div class="form-group row">
+                    <input type="hidden" class="form-control" formControlName="company_id"
+                        placeholder="Name Of Organization...">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Organization *</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" formControlName="org_name" [readonly]="isDisabled"
+                            placeholder="Name Of Organization..."
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.org_name.errors }">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.org_name.touched || submitted) && registerFormControl.org_name.errors?.required">
+                            Org name is required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">License No *</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" formControlName="license_no"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.license_no.errors }"
+                            [readonly]="isDisabled" placeholder="Licene No">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.license_no.touched || submitted) && registerFormControl.license_no.errors?.required">
+                            License no is required
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">License Validity </label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control" formControlName="license_validity"
+                            [readonly]="isDisabled"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.license_validity.errors}"
+                            placeholder="Licine Validity">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.license_validity.touched || submitted) && registerFormControl.license_validity.errors?.required">
+                            license validity is required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">BIT/CIT No </label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" formControlName="bit_cit_no"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.bit_cit_no.errors}"
+                            [readonly]="isDisabled" placeholder="BIT/CIT Number">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.bit_cit_no.touched || submitted) && registerFormControl.bit_cit_no.errors?.required">
+                            Bit cit no is required
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Organization Type *</label>
+                    <div class="col-sm-4">
+                        <select for="inputPassword" class="form-control" formControlName="org_type" disabled
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.org_type.errors}"
+                            *ngIf="dropdownDisable">
+                            <option>Select Organization Type </option>
+                            <option *ngFor="let org_types of orgTypes;let i=index" [value]="i+1">
+                                {{org_types.org_name}}</option>
+
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="dropdownDisable && (registerFormControl.org_type.touched || submitted) && registerFormControl.org_type.errors?.required">
+                            Organization Type is required
+                        </span>
+                        <select for="inputPassword" class="form-control" formControlName="org_type"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.org_type.errors}"
+                            *ngIf="dropdownEnable">
+                            <option>Select Organization Type </option>
+                            <option *ngFor="let org_types of orgTypes;let i=index" [value]="i+1">
+                                {{org_types.org_name}}</option>
+
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="dropdownEnable &&(registerFormControl.org_type.touched || submitted) && registerFormControl.org_type.errors?.required">
+                            Organization Typeis required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Sector Type </label>
+                    <div class="col-sm-4">
+                        <ng-select formControlName="sector_type"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.sector_type.errors}"
+                            [readonly]="isDisabled" [items]="sectorWiseData" bindLabel="sector_name"
+                            bindValue="sector_name" placeholder="Select Sector Type" appendTo="body">
+                        </ng-select>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Dzongkhag *</label>
+                    <div class="col-sm-4">
+                        <select for="inputPassword" class="form-control" formControlName="dzongkhag_id" disabled
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.dzongkhag_id.errors}"
+                            *ngIf="dropdownDisable">
+                            <!-- <div class="col-sm-4"> -->
+                            <option>Select Dzongkhag</option>
+                            <option *ngFor="let listdzongkhags of dzongkhag" [value]="listdzongkhags.dzongkhag_id">
+                                {{listdzongkhags.dzongkhag_name}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf=" dropdownDisable &&(registerFormControl.dzongkhag_id.touched || submitted) && registerFormControl.dzongkhag_id.errors?.required">
+                            Dzongkhag is not selected
+                        </span>
+                        <select for="inputPassword" class="form-control" formControlName="dzongkhag_id"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.dzongkhag_id.errors}"
+                            *ngIf="dropdownEnable">
+                            <!-- <div class="col-sm-4"> -->
+                            <option>Select Dzongkhag</option>
+                            <option *ngFor="let listdzongkhags of dzongkhag" [value]="listdzongkhags.dzongkhag_id">
+                                {{listdzongkhags.dzongkhag_name}}</option>
+
+
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="dropdownEnable &&(registerFormControl.dzongkhag_id.touched || submitted) && registerFormControl.dzongkhag_id.errors?.required">
+                            Dzongkhag is not selected
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Phone No </label>
+                    <div class="col-sm-4">
+                        <input type="text" formControlName="phone_no" class="form-control" [readonly]="isDisabled"
+                            placeholder="Phone No...">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.phone_no.touched || submitted) && registerFormControl.phone_no.errors?.required">
+                            Phone no is required
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-4">
+                        <input type="email" formControlName="email_id" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.email_id.errors}"
+                            [readonly]="isDisabled" placeholder="Email_Id">
+
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Website </label>
+                    <div class="col-sm-4">
+                        <input type="text" formControlName="website" class="form-control" placeholder="Website"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.website.errors}"
+                            [readonly]="isDisabled">
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">PostBox No </label>
+                    <div class="col-sm-4">
+                        <input type="text" formControlName="post_box_no" class="form-control" [readonly]="isDisabled"
+                            placeholder="PostBox No">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.post_box_no.touched || submitted) && registerFormControl.post_box_no.errors?.required">
+                            Post_box_no is required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Registration Branch *</label>
+                    <div class="col-sm-4">
+                        <select for="inputPassword" class="form-control" formControlName="reg_branch" disabled
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.reg_branch.errors}"
+                            *ngIf="dropdownDisable">
+
+                            <option>Select Registration Branch</option>
+                            <option *ngFor="let reg_branchs of reg_branch" [value]="reg_branchs.id">
+                                {{reg_branchs.branch_name}}</option>
+                        </select>
+                        <select for="inputPassword" class="form-control" formControlName="reg_branch"
+                            *ngIf="dropdownEnable"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.reg_branch.errors}">
+
+                            <option>Select Registration Branch</option>
+                            <option *ngFor="let reg_branchs of reg_branch" [value]="reg_branchs.id">
+                                {{reg_branchs.branch_name}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.reg_branch.touched || submitted) && registerFormControl.reg_branch.errors?.required">
+                            Branch is not selected
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Address *</label>
+                    <div class="col-sm-4">
+                        <input type="text" formControlName="address" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.address.errors}"
+                            [readonly]="isDisabled" placeholder="Address">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.address.touched || submitted) && registerFormControl.address.errors?.required">
+                            Address is required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Lumpsum / Individual *</label>
+                    <div class="col-sm-4">
+                        <select for="inputPassword" class="form-control" formControlName="registered_as" disabled
+                            (change)="changeLampsumIndividual()"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.registered_as.errors}"
+                            *ngIf="dropdownDisable">
+
+                            <option>Select lumpsum/Individual</option>
+                            <option *ngFor="let lampsumOrindividuals of lampsumOrindividual">
+                                {{lampsumOrindividuals.lampsum}}</option>
+                        </select>
+                        <select for="inputPassword" class="form-control" formControlName="registered_as"
+                            (change)="changeLampsumIndividual()" *ngIf="dropdownEnable"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.registered_as.errors}">
+
+                            <option>Select lumpsum/Individual</option>
+                            <option *ngFor="let lampsumOrindividuals of lampsumOrindividual">
+                                {{lampsumOrindividuals.lampsum}}</option>
+                        </select>
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.registered_as.touched || submitted) && registerFormControl.registered_as.errors?.required">
+                            lampsum/Individual is not selected
+                        </span>
+                    </div>
+                </div>
+             
+                <div class="form-group row"*ngIf="lampsum">
+                    <label for="inputPassword" class="col-sm-2 col-form-label" >Lumpsum Amount</label>
+                    <div class="col-sm-4">
+                        <input type="number" formControlName="total_gf_amount" class="form-control"
+                            [readonly]="isDisabled" placeholder="Lumpsum Amount">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.total_gf_amount.touched || submitted) && registerFormControl.total_gf_amount.errors?.required">
+                            Lumpsum Amount is required
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="card shadow-sm p-3">
+                <div class="bg-white">
+                    <strong>MOU Details</strong>
+                </div>
+                <hr>
+
+                <div class="form-group row mt-2">
+
+                    <label for="inputPassword" class="col-sm-2 col-form-label">MOU Ref No </label>
+                    <div class="col-sm-4">
+                        <input type="text" formControlName="mou_ref_no" [ngClass]="{ 'is-invalid': submitted && registerFormControl.mou_ref_no.errors}" class="form-control" [readonly]="isDisabled"
+                            placeholder="MOU Ref No">
+                            <span class="text-danger"
+                            *ngIf="(registerFormControl.mou_ref_no.touched || submitted) && registerFormControl.mou_ref_no.errors?.required">
+                            MOU Ref No is required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">MOU Date*</label>
+                    <div class="col-sm-4">
+                        <input type="date" formControlName="mou_date" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.mou_date.errors}"
+                            [readonly]="isDisabled" placeholder="MOU Date">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.mou_date.touched || submitted) && registerFormControl.mou_date.errors?.required">
+                            Mou date is required
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">MOU Expiry Date *</label>
+                    <div class="col-sm-4">
+                        <input type="date" formControlName="mou_expiry_date" class="form-control"
+                            [readonly]="isDisabled"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.mou_expiry_date.errors}"
+                            placeholder="MOU Expiry Date">
+                        <span class="text-danger"
+                            *ngIf="(registerFormControl.mou_expiry_date.touched || submitted) && registerFormControl.mou_expiry_date.errors?.required">
+                            MOU Expiry Date is required
+                        </span>
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Intreast Rate *</label>
+                    <div class="col-sm-4">
+                        <input type="number" formControlName="interest_rate" class="form-control"
+                            [readonly]="isDisabled"
+                            [ngClass]="{ 'is-invalid': submitted && registerFormControl.interest_rate.errors}"
+                            placeholder="Intreast Rate">
+                        <div class="text-danger">
+                            <span
+                                *ngIf="(registerFormControl.interest_rate.touched || submitted) && registerFormControl.interest_rate.errors?.required">
+                                Interest rate is required
+                            </span>
+                            <span *ngIf="(registerFormControl.interest_rate.errors?.max)">
+                                Maximum Interest you can enter is 7
+                            </span>
+                            <span *ngIf="(registerFormControl.interest_rate.errors?.min)">
+                                Minimum Interest you can enter is 0
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix">
+            <button class="btn float-right ml-2 mr-1" (click)="companeyRegistrations()"
+                style="background-color: #041562!important;color:#fff!important;" *ngIf="save">Save</button>
+            <button class="btn btn-secondary float-right" (click)="cancelRegistrations()" *ngIf="cancel">Cancel</button>
+            <button class="btn btn-primary float-right ml-2 mr-1" (click)="editRegistrations()"
+                style="background-color: #041562!important;color:#fff!important;" *ngIf="edit">Edit</button>
+            <button class="btn btn-primary float-right ml-2 mr-1" (click)="updatePfCompaney()"
+                style="background-color: #041562!important;color:#fff!important;" *ngIf="update">Update</button>
+        </div>
+    </div>
+    <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+        <div id="spinner"></div>
+    </div>
+
+    <div class="card shadow-lg p-3 mb-5 rounded ml-3">
+
+        <proprietor></proprietor>
+        <contact-person></contact-person>
+        <introducer></introducer>
+    </div>
+    <!-- 
+<div bsModal #myModal="bs-modal" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document"*ngIf="employeeOflampsum">
+        <div class="modal-content">
+            <div class="modal-header bg-danger"style="background-color: #041562!important;color:#fff!important;">
+                <h4 class="modal-title"> Create New Employee</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+         
+  
+                <div class="card-body">
+                    <form [formGroup]="pfEmployee">
+                        <input type="hidden" class="form-control"  formControlName="pf_employee_id"
+                            placeholder="pf_employee_id...">
+                        <input type="hidden" class="form-control" 
+                            formControlName="pf_employee_company_id" placeholder="pf_employee_id..." [(ngModel)]="getitByCompanyId"
+                            [value]="getitByCompanyId">
+            
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Company PF A/c No *</label>
+                            <div class="col-sm-4">
+                                <ng-select formControlName="company_pf_acc_no" 
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.company_pf_acc_no.errors}"
+                                    [(ngModel)]="companyid" [readonly]="isDisabled" [items]="pfaccno" bindLabel="org_name"
+                                    bindValue="company_account_no" (change)="getcompanyId()" placeholder="Select Company A/C No"
+                                    appendTo="body">
+                                </ng-select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.company_pf_acc_no.touched || submitted) && registerFormControl.company_pf_acc_no.errors?.required">
+                                    Company Pf Acc no is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Employee Name *</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control"  [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.employee_name.errors}"
+                                    formControlName="employee_name" placeholder="employee name ...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.employee_name.touched || submitted) && registerFormControl.employee_name.errors?.required">
+                                    Employee name is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">DOB *</label>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control"  [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.date_of_birth.errors}"
+                                    formControlName="date_of_birth" placeholder="date of birth...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.date_of_birth.touched || submitted) && registerFormControl.date_of_birth.errors?.required">
+                                    Date of Birth is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Gender *</label>
+                            <div class="col-sm-4">
+                                <ng-select formControlName="gender" 
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.gender.errors}"[readonly]="isDisabled" [items]="gender"
+                                    bindLabel="gender" bindValue="gender" placeholder="Select Gender" appendTo="body">
+                                </ng-select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.gender.touched || submitted) && registerFormControl.gender.errors?.required">
+                                    Gender is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Marital Status *</label>
+                            <div class="col-sm-4">
+                                <ng-select formControlName="marital_status"  [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.marital_status.errors}"
+                                [items]="marital_status" bindLabel="maritalstatus" bindValue="maritalstatus"
+                                    placeholder="Select Marital Status" appendTo="body">
+                                </ng-select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.marital_status.touched || submitted) && registerFormControl.marital_status.errors?.required">
+                                    Marital status is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Nationality *</label>
+                            <div class="col-sm-4">
+                                <ng-select formControlName="nationality"  [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.nationality.errors}"
+                                    [items]="nationalitys" bindLabel="nationality" bindValue="nationality"
+                                    placeholder="Select Nationality" appendTo="body">
+                                </ng-select>
+            
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.nationality.touched || submitted) && registerFormControl.nationality.errors?.required">
+                                    nationality is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+            
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Identification Types *</label>
+                            <div class="col-sm-4">
+                                <ng-select formControlName="identification_types" 
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.identification_types.errors}"
+                                    [readonly]="isDisabled" [items]="identification_type" bindLabel="id_types_name"
+                                    bindValue="id_types_name" placeholder="Select Identification types" appendTo="body">
+                                </ng-select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.identification_types.touched || submitted) && registerFormControl.identification_types.errors?.required">
+                                    Identification types is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Identification No *</label>
+                            <div class="col-sm-4">
+            
+                                <input type="text" placeholder="Identification No" class="form-control" [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.identification_no.errors}"
+                                     formControlName="identification_no">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.identification_no.touched || submitted) && registerFormControl.identification_no.errors?.required">
+                                    Identification no is required
+                                </span>
+                            </div>
+                        </div>
+            
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Department *</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control"  formControlName="department"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.department.errors}"
+                                    [readonly]="isDisabled" placeholder="Department...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.department.touched || submitted) && registerFormControl.department.errors?.required">
+                                    Department is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Employee Id *</label>
+                            <div class="col-sm-4">
+            
+                                <input type="text" placeholder="employee id no" class="form-control" [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.employee_id_no.errors}"
+                                    formControlName="employee_id_no">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.employee_id_no.touched || submitted) && registerFormControl.employee_id_no.errors?.required">
+                                    Employee id no is required
+                                </span>
+                            </div>
+                        </div>
+            
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Degination *</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" formControlName="designation" 
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.designation.errors}"
+                                    [readonly]="isDisabled" placeholder="Designation...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.designation.touched || submitted) && registerFormControl.designation.errors?.required">
+                                    Designation is required
+                                </span>
+                            </div>
+            
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Contact No *</label>
+                            <div class="col-sm-4">
+            
+                                <input type="number" placeholder="contact no" class="form-control" 
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.contact_no.errors}"
+                                    [readonly]="isDisabled" formControlName="contact_no">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.contact_no.touched || submitted) && registerFormControl.contact_no.errors?.required">
+                                    Contact no is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Email *</label>
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control"  formControlName="email_id"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.email_id.errors}"
+                                    [readonly]="isDisabled" placeholder="email id">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.email_id.touched || submitted) && registerFormControl.email_id.errors?.required">
+                                    Email id is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Address *</label>
+                            <div class="col-sm-4">
+            
+                                <input type="text" placeholder="Address" class="form-control" 
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.address.errors}"
+                                    [readonly]="isDisabled" formControlName="address">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.address.touched || submitted) && registerFormControl.address.errors?.required">
+                                    Address is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Basic Pay *</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control"  formControlName="basic_pay"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.basic_pay.errors}"
+                                    [readonly]="isDisabled" (keyup)="calculation1($event)" placeholder="Basic pay...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.basic_pay.touched || submitted) && registerFormControl.basic_pay.errors?.required">
+                                    Basic pay is required
+                                </span>
+                            </div>
+            
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Contribution %*</label>
+                            <div class="col-sm-4">
+            
+                                <input type="number" placeholder="Contribution" (keyup)="calculation2($event)"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.contribution.errors}"
+                                    [readonly]="isDisabled" class="form-control" 
+                                    formControlName="contribution">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.contribution.touched || submitted) && registerFormControl.contribution.errors?.required">
+                                    contribution is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+            
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Employee Cont. Amt*</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" 
+                                    [readonly]="isDisabled"
+                                    [ngClass]="{ 'is-invalid': submitted && registerFormControl.employee_contribution_amount.errors}"
+                                    formControlName="employee_contribution_amount" [(ngModel)]="EmployeeContributionAmt"
+                                   placeholder="Employee contribution amount...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.employee_contribution_amount.touched || submitted) && registerFormControl.employee_contribution_amount.errors?.required">
+                                    Employee contribution amount is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Employer Cont. Amt*</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.employer_contribution_amount.errors}"
+                                  [readonly]="isDisabled"
+                                    formControlName="employer_contribution_amount" placeholder="Employer contribution amount..."
+                                    [(ngModel)]="EmployerContributionAmt" >
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.employer_contribution_amount.touched || submitted) && registerFormControl.employer_contribution_amount.errors?.required">
+                                    Employer contribution amount is required
+                                </span>
+                            </div>
+            
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Service Joining Date *</label>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control"  [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.service_joining_date.errors}"
+                                    formControlName="service_joining_date" placeholder="Service joining date...">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.service_joining_date.touched || submitted) && registerFormControl.service_joining_date.errors?.required">
+                                    Service joining date is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Status *</label>
+                            <div class="col-sm-4">
+                                <ng-select formControlName="status"  [readonly]="isDisabled" [items]="statuss"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.status.errors}"
+                                    bindLabel="status" bindValue="status" placeholder="Select Status" appendTo="body">
+                                </ng-select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.status.touched || submitted) && registerFormControl.status.errors?.required">
+                                    Status is required
+                                </span>
+                            </div>
+            
+                        </div>
+            
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Registration Date *</label>
+                            <div class="col-sm-4">
+            
+                                <input type="date" placeholder="Registration date" class="form-control" [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.registration_date.errors}"
+                                    formControlName="registration_date">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.registration_date.touched || submitted) && registerFormControl.registration_date.errors?.required">
+                                    Registration date is required
+                                </span>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Employee A/c No *</label>
+                            <div class="col-sm-4">
+                                <input type="number" placeholder="Pf Employee A/c no" class="form-control" [readonly]="isDisabled"
+                                [ngClass]="{ 'is-invalid': submitted && registerFormControl.pf_emp_acc_no.errors}"
+                                     formControlName="pf_emp_acc_no">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.registration_date.touched || submitted) && registerFormControl.registration_date.errors?.required">
+                                    Registration date is required
+                                </span>
+                            </div>
+            
+                            <div class="col-sm-4">
+                                <input type="hidden" class="form-control" formControlName="pf_employee_company_id"
+                               
+                                    placeholder="pf employee company id...">
+            
+                                <input type="hidden" class="form-control" formControlName="total_contribution"
+                                    [(ngModel)]="EmployeeTotalContributionAmt" [value]="EmployeeTotalContributionAmt"
+                                    placeholder="Total_contribution...">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix">
+                        <button type="button" class="btn btn-primary float-right ml-2 mr-1" (click)="createPfEmployeeDetails()"
+                        style="background-color: #041562!important;color:#fff!important;"
+                           *ngIf="save">Save</button>
+                        <button type="button" class="btn btn-light float-right" (click)='cancelPfEmployeeById()'
+                            *ngIf="cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary float-right ml-2 mr-1" (click)='editPfEmployeeById()'
+                        style="background-color: #041562!important;color:#fff!important;"
+                            *ngIf="edit">Edit</button>
+                        <button type="button" class="btn btn-primary float-right ml-2 mr-1" (click)='updataPfEmployeeById()'
+                        style="background-color: #041562!important;color:#fff!important;"
+                            *ngIf="update">Update</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div> -->

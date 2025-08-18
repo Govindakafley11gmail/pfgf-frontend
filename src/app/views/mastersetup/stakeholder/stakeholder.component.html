@@ -1,0 +1,148 @@
+<div bsModal #myModal="bs-modal"  [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary"style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title">Stake Holder</h6>
+                <button type="button"class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="cards my-4 ">
+                <div class="container">
+                    <form [formGroup]="stakeHolderDetail">
+                        <div class="form-group row">
+                            <input type="hidden" formControlName="id"  class="form-control"
+                                placeholder="Stakeholder_Name  ...">
+
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Stakeholder Name *</label>
+                            <div class="col-sm-4">
+                                <input type="text" formControlName="stakeholder_name"
+                                    class="form-control" placeholder="Stakeholder Name">
+                              <span class="text-danger"
+                                    *ngIf="(registerFormControl.stakeholder_name.touched || submitted) && registerFormControl.stakeholder_name.errors?.required">
+                                   Stakeholder Name is required
+                                </span>
+                            </div>
+
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Party Type *</label>
+                            <div class="col-sm-4">
+                                <select formControlName="stakeholder_party_type" class="form-control"
+                                  >
+                                    <option>Select Party Type </option>
+                                    <option *ngFor="let partyTypes of partytype">{{partyTypes.descriptions}}</option>
+                                </select>
+                              <span class="text-danger"
+                                    *ngIf="(registerFormControl.stakeholder_party_type.touched || submitted) && registerFormControl.stakeholder_party_type.errors?.required">
+                                    Party Type is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Employee ID </label>
+                            <div class="col-sm-4">
+                                <input type="text" formControlName="employee_id"
+                                    class="form-control" placeholder="Employee id">
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Tpn No </label>
+                            <div class="col-sm-4">
+                                <input type="text" formControlName="tpn_no"  class="form-control"
+                                    placeholder="Tpn No">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Bank Account No </label>
+                            <div class="col-sm-4">
+                                <input type="text" formControlName="bank_account_no"
+                                    class="form-control" placeholder="Bank Account No">
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Bank Name </label>
+                            <div class="col-sm-4">
+                                <input type="text" formControlName="bank_name"
+                                    class="form-control" placeholder="Bank Name ">
+                            </div>
+                        </div>
+                    </form>
+                    <div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                        <div id="spinner"></div>
+                      </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="createStakeHolderDetail()"*ngIf="save"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Save</button>
+                <button type="button" class="btn btn-primary"(click)="updataStakeHolderById()"*ngIf="update"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- --------------------confirmation------------------- -->
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="ml-4 mt-2">Are you sure to delete?</h5>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                <button type="button" class="btn btn-danger" (click)="deleteStakeHolderById(ids)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ------------------end --------------------confirmation------------------- -->
+
+<div class="containers my-4 ml-4">
+    <div class="card bg-white">
+        <div class="card-header bg-white">
+            Master Setup  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Stakeholders
+            <button class="btn btn-primary ml-2 pull-right"*ngIf="stakeHoldercreate" (click)="create()"style="background-color: #041562!important;color:#fff!important;">
+                <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp; Add Stakeholder
+            </button>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger">
+                <thead style="background-color: #041562!important;color:#fff!important;">
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Stakeholder Name</th>
+                        <th>Party Type</th>
+                        <th>TPN No</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let stakeholders of stakeholder;let i=index">
+                        <td>{{ i+1 }}</td>
+                        <td>{{ stakeholders.stakeholder_name }}</td>
+                        <td>{{ stakeholders.stakeholder_party_type }}</td>
+                        <td>{{ stakeholders.tpn_no }}</td>
+                        <td class="col-lg-2">
+                            <span class="btn btn-sm btn-success mr-2" (click)="editStakeHolderById(stakeholders.id)"*ngIf="stakeHolderEdit">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit </span>
+                            <span class="btn btn-sm btn-danger" (click)="show(stakeholders.id)"*ngIf="stakeHolderDelete">
+                                <i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete</span>
+                            <i class="fa fa-lock"*ngIf="!stakeHolderEdit">&nbsp; List only</i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+  </div>
+
+
+<!-- -----------------------------------------------Introductive Detail---------------- -->

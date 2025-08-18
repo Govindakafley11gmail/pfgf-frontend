@@ -1,0 +1,86 @@
+<loading *ngIf="isLoading"></loading>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <loading *ngIf="isLoading"></loading>
+
+      <table
+        class="table table-bordered table-striped rounded table-hover"
+        datatable
+        [dtOptions]="dtOptions"
+        [dtTrigger]="dtTrigger"
+        style="width: 100%;"
+      >
+        <thead style="background-color: #041562!important; color: #fff!important;">
+          <tr>
+            <th>Sl.No</th>
+            <th>Voucher Number</th>
+            <th>Voucher Date</th>
+            <th>Voucher Amount</th>
+            <th>Narration</th>
+            <th>Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let findAllAccountPostings of findAllAccountPosting; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ findAllAccountPostings.account_voucher_number }}</td>
+            <td>{{ findAllAccountPostings.account_voucher_date }}</td>
+            <td>{{ findAllAccountPostings.account_voucher_amount }}</td>
+            <td>{{ findAllAccountPostings.account_voucher_narration }}</td>
+            <td (click)="reversedAccountVoucher(findAllAccountPostings.account_transaction_id)">
+              {{ findAllAccountPostings.account_voucher_type }}
+            </td>
+            <td
+              (click)="downloadAccountVoucher(findAllAccountPostings.doc_path)"
+              class="btn btn-sm bg-primary text-white"
+            >
+              Download
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div
+  bsModal
+  #myModals="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-right" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <h6 class="modal-title">Confirmation</h6>
+        <button
+          type="button"
+          class="close"
+          (click)="myModals.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <h6 class="ml-4 mt-2"><i>Are you sure to verify the refund ?</i></h6>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="myModals.hide()">
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="reverdedTransaction(transaction_id)"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

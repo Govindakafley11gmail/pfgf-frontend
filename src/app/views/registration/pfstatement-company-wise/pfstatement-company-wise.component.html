@@ -1,0 +1,164 @@
+
+<div class="card"*ngIf="!showgeneratediv">
+    <div class="card-header bg-primary">
+        PF Statement (Company Wise)
+    </div>
+    <ul class="list-group list-group-flush">
+        <form [formGroup]="pfStatementEmpWise">
+            <li class="list-group-item">
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">From Date *</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control" placeholder="Date..." formControlName="fromDate">
+                    </div>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">To Date *</label>
+                    <div class="col-sm-4">
+                        <input type="date" class="form-control" placeholder="..." formControlName="toDate">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">Employee Name *</label>
+                    <div class="col-sm-4">
+
+                        <ng-select placeholder="Select Employee Name" [items]="employeeName"
+                            formControlName="employee_name" bindValue="employee_name" (change)="changeEmployeeName()"
+                            bindLabel="employee_name" [searchFn]="customSearchFn" clearAllText="Clear">
+
+                            <ng-template ng-label-tmp let-item="item" *ngIf="emp_name">
+                                <span>{{ item.employee_name + ' -' + item.company_pf_acc_no }}</span>
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                <span>{{ item.employee_name + ' -' + item.company_pf_acc_no }}</span>
+                            </ng-template>
+
+                        </ng-select>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <Button class="btn btn-primary ml-3" (click)="submitPFStatement()">Generate</Button>
+                </div>
+            </li>
+        </form>
+    </ul>
+</div>
+
+<!-- ----------------pfstatement company wise--------- -->
+<div *ngIf="showgeneratediv">
+<div class="mt-1 aligniterms">
+    <span>Download<i class="bi bi-arrow-right color-danger"></i></span>
+    <span class="text-primary mr-2 text-light" (click)="downloadPfstatementByEmpWise()"><i
+            class="bi bi-download ml-1 colorofdownload btn" style="font-size: 2em;">
+        </i>
+    </span>
+</div>
+<div  id="contentToConvert">
+    <br>
+<div class="card ml-3">
+    <div class="form-group row mt-2">
+        <div class="col-sm-12">
+            <img src="../../../../assets/img/img/collectionHeader.png" style="margin-left: 30%;">
+        </div>
+       
+    </div>
+
+    <div class="form-group row ml-3">
+        <div class="col-sm-6" style="font-weight: bold;">
+            <div class="name">
+                <span>Name: Govinda</span>
+            </div>
+            <div class="pfac">
+                <span>PF A/c No: Govinda</span>
+            </div>
+            <div class="date">
+                <span>Date Of Registration: Govinda</span>
+            </div>
+            <div class="orgname">
+                <span>Organiozation name & PF : Govinda</span>
+            </div>
+        </div>
+
+        <div class="col-sm-5 aligniterm mr-1">
+            <div class="name">
+                <span>Date: 01/2022 to 06/2022</span>
+            </div>
+            <div class="pfac">
+                <span>Processing Date: 13/01/2022</span>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped ">
+        <thead>
+            <tr>
+                <th scope="col" colspan="3">Member Balance</th>
+                <th scope="col" colspan="1">Member's Cont</th>
+                <th scope="col" colspan="1">Employer's Cont</th>
+                <th scope="col" colspan="1">Int On Mem's Cont</th>
+                <th scope="col" colspan="1">Int On Empl's's Cont</th>
+                <th scope="col" colspan="1">Total Cont</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <th scope="row" colspan="3">mark</th>
+                <td colspan="1">Mark</td>
+                <td colspan="1">Otto</td>
+                <td colspan="1">@mdo</td>
+                <td colspan="1">@mdo</td>
+                <td colspan="1">@mdo</td>
+            </tr>
+        </tbody>
+
+        <thead>
+            <span>Detail of Current Year Contributions</span><br>
+            <tr>
+
+                <th>Due Month</th>
+                <th>Narration</th>
+                <th>Tran Date</th>
+                <th>Member's Cont</th>
+                <th>Int On Mem's Cont</th>
+                <th>Employer's Cont</th>
+                <th>Int On Empl's Cont</th>
+                <th>Total cont</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <th scope="row">mark</th>
+                <td colspan="1">Mark</td>
+                <td colspan="1">Otto</td>
+                <td colspan="1">@mdo</td>
+                <td colspan="1">@mdo</td>
+                <td colspan="1">@mdo</td>
+                <td colspan="1">@mdo</td>
+                <td colspan="1">@mdo</td>
+
+            </tr>
+        </tbody>
+
+    </table>
+    <div class="form-group ml-3 mt-2">
+        Net Payable As On 20//:00
+    </div>
+    <div class="form-group  row">
+        <div class="col-sm-10"></div>
+        <div class="col-sm-2">
+            For Bhutan Insurance Limited
+        </div>
+
+    </div>
+    <div class="form-group  row mt-5">
+        <div class="col-sm-9"></div>
+        <div class="col-sm-2">
+            Authorised Signature
+        </div>
+
+    </div>
+
+</div>
+</div>
+</div>

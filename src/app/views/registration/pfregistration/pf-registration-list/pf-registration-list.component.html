@@ -1,0 +1,76 @@
+<div class="containers ml-3 my-4">
+  <div class="card shadow p-3 mb-5 bg-white rounded">
+    <div class="card-header bg-white">
+      Registration  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>PF Member Organizations
+      <button data-toggle="modal"*ngIf="createcompany"data-hover="Add New Collection"routerLink="../PFCompaneyRegistration" class="btn  ml-auto font-weight-bold hovertext pull-right"
+      style="background-color: #041562!important;color:#fff!important;">
+      <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create Company
+    </button>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-bordered table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead style="background-color: #041562!important;color:#fff!important;">
+          <tr>
+            <th>Sl.No</th>
+            <th>Organization</th>
+            <th>License</th>
+            <th>Address</th>
+            <th>Dzongkhag</th>
+            <th>Phone</th>
+            <th>License Validity</th>
+            <th>Branch</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let allPFUser of allPFUsers;let i=index">
+            <td>{{ i+1 }}</td>
+            <td>{{ allPFUser. org_name }} [{{allPFUser.company_account_no}}]</td>
+            <td>{{ allPFUser.license_no }}</td>
+            <td>{{ allPFUser.address }}</td>
+            <td>{{ allPFUser. dzongkhag_name }}</td>
+            <td>{{ allPFUser.phone_no }}</td>
+            <td>{{ allPFUser.license_validity }}</td>
+            <td>{{ allPFUser.branch_name }}</td>
+            <td class="col-lg-2 text-center" *ngIf="companyEdit">
+              <button class="btn btn-primary bg-success" (click)="editpfCompaneyRegistrationByIds(allPFUser.company_id)"*ngIf="companyEdit">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit
+              </button>
+              <button class="btn btn-primary bg-danger" (click)="show(allPFUser.id)"*ngIf="companyDelete">
+                <i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete
+              </button>
+            </td>
+            <td *ngIf="!companyEdit">
+              <i class="fa fa-lock">&nbsp; List only</i>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+  <div id="spinner"></div>
+</div>
+
+<!----------------------confirmation------------------- -->
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title">Confirmation</h4>
+        <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <h5 class="ml-4 mt-2">Are you sure to delete?</h5>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+        <button type="button" class="btn btn-danger" (click)="deleteOrganizationListById(ids)">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ------------------end --------------------confirmation------------------- -->

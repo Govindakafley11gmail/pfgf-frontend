@@ -1,0 +1,98 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #041562!important;color:#fff!important;">
+        <h6 class="modal-title">Department</h6>
+        <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="containers">
+          <form [formGroup]="createDepartment">
+            <div class="form-group row">
+
+              <label for="inputPassword" class="col-sm-4 col-form-label required">Department Name *</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder="Dept. Name" formControlName="department_name">
+
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-sm-4 col-form-label">Code *&nbsp;<i class="fa fa-qrcode" aria-hidden="true"></i>
+              </label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" placeholder=" Dept. code"
+                  formControlName="department_code">
+                <input type="hidden" class="form-control" placeholder="Department Id" formControlName="department_id">
+              </div>
+            </div>
+          </form>
+          <div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+            <div id="spinner"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="createDepartname()" *ngIf="save"
+          style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Save</button>
+        <button type="button" class="btn btn-primary" (click)="updateDepartname()" *ngIf="update"
+          style="background-color: #041562!important;color:#fff!important;">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="containers my-4">
+  <div class="animated fadeIn">
+    <div class="row ml-4">
+      <div class="col-lg-12">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white">
+            Master Setup  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Departments
+            <button type="button" class="btn btn-primary mr-1 pull-right" data-toggle="modal" (click)="create()"*ngIf="departmentcreate"
+              style="background-color: #041562!important;color:#fff!important;">
+              <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp; Add Department
+            </button>
+          </div>
+          <div class="card-body my-2">
+            <table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger">
+              <thead style="background-color: #041562!important;color:#fff!important;">
+                <tr class="text-center">
+                  <th>Sl.No</th>
+                  <th>Dept. Code &nbsp;<i class="fa fa-qrcode" aria-hidden="true"></i></th>
+                  <th>Department Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let listDepartmentvalue of listDepartmentvalue;let i=index">
+                  <td class="">{{i+1}}</td>
+                  <td class="">{{listDepartmentvalue.department_code}}</td>
+                  <td class="">{{listDepartmentvalue.department_name}}</td>
+
+                  <td class="col-lg-2">
+                    <button class="btn btn-sm btn-success" (click)="editDepartment(listDepartmentvalue.id)"*ngIf="departmentEdit">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit </button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteDepartment(listDepartmentvalue.id)"*ngIf="departmentDelete">
+                      <i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete</button>
+                    <i class="fa fa-lock"*ngIf="!departmentEdit">&nbsp; List only</i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--/.col-->
+    </div>
+  </div>
+</div>
+
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+  <div id="spinner"></div>
+</div>

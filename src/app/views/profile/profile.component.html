@@ -1,0 +1,173 @@
+<div class="card mt-4">
+    <div class="card-header text-uppercase bg-white">
+      <strong>User Profile</strong>  
+    </div>
+    <form class="ml-2 mr-1 mt-3" [formGroup]="createUsers">
+        <div class="p-2">
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <label for="inputPassword">User Name :</label><br>
+              <input type="text" class="form-control"
+              placeholder="User Name" formControlName="name" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.registration_type.touched
+                    || submitted)
+                    &&
+                    registerFormControl.registration_type.errors?.required">
+                    Bussiness Type is required
+                </span> -->
+            </div>
+
+            <div class="col-sm-3">
+              <label for="inputPassword">DOB :</label>
+              <input type="date"class="form-control"
+              placeholder="Date of birth"formControlName="dob" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.company_id.touched ||
+                    submitted)
+                    && registerFormControl.company_id.errors?.required">
+                    Organization Name is required
+                </span> -->
+            </div>
+
+            <div class="col-sm-3">
+              <label for="inputPassword">Designation :</label>
+              <input type="text" class="form-control"
+              placeholder="Designation" formControlName="designation" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.collection_receipt_no.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_receipt_no.errors?.required">
+                    Collection/reciept No is required
+                </span> -->
+            </div>
+
+            <div class="col-sm-3">
+              <label for="inputPassword">Employee Id :</label>
+              <input type="text" class="form-control"
+                     placeholder="Employee Id" formControlName="employee_id" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.collection_receipt_amt.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_receipt_amt.errors?.required">
+                    Collection/Reciept Amount is required
+                </span> -->
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <label for="inputPassword">Mobile No :</label>
+              <input type="number" class="form-control"
+                     placeholder="Mobile No" formControlName="mobile_number" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.collection_date.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_date.errors?.required">
+                    Collection Date is required
+                </span> -->
+            </div>
+            <div class="col-sm-3">
+              <label for="inputPassword">Phone No :</label>
+              <input type="number" class="form-control"
+                     placeholder="Phone No" formControlName="phone_number" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.excess_refund_amt.touched
+                    || submitted)
+                    &&
+                    registerFormControl.excess_refund_amt.errors?.required">
+                    Excess Refund Amtis required
+                </span> -->
+            </div>
+            <div class="col-sm-3">
+              <label for="inputPassword">Branch:</label>
+              <select  class="form-control" formControlName="users_branch_id">
+                <option>---Select Branch name---</option>
+                <option *ngFor="let branchlists of branchlist"[value]="branchlists.id">{{branchlists.branch_name}}</option>
+               
+            </select>
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.refund_date.touched ||
+                    submitted)
+                    &&
+                    registerFormControl.refund_date.errors?.required">
+                    Refund Date is required
+                </span> -->
+            </div>
+            <div class="col-sm-3">
+              <label for="inputPassword">Department :</label>
+              <select  class="form-control" formControlName="users_department_id">
+                <option>---Select Department name---</option>
+                <option *ngFor="let departmentlists of departmentlist"[value]="departmentlists.id">{{departmentlists.department_name}}</option>
+               
+            </select>
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.branch_id.touched ||
+                    submitted)
+                    && registerFormControl.branch_id.errors?.required">
+                    Branch is required
+                </span> -->
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-3">
+              <label for="inputPassword">CID :</label>
+              <input type="text" class="form-control"
+                     placeholder="CID No"formControlName="cid" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.collection_date.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_date.errors?.required">
+                    Collection Date is required
+                </span> -->
+            </div>
+            <div class="col-sm-3">
+              <label for="inputPassword">Gender :</label>
+              <input type="text" class="form-control"
+                     placeholder="Gender"formControlName="gender" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.excess_refund_amt.touched
+                    || submitted)
+                    &&
+                    registerFormControl.excess_refund_amt.errors?.required">
+                    Excess Refund Amtis required
+                </span> -->
+            </div>
+            <div class="col-sm-3">
+              <label for="inputPassword">Email:</label>
+              <input type="email" class="form-control"
+                    placeholder="Email"formControlName="email" >
+              <!-- <span class="text-danger"
+                    *ngIf="(registerFormControl.refund_date.touched ||
+                    submitted)
+                    &&
+                    registerFormControl.refund_date.errors?.required">
+                    Refund Date is required
+                </span> -->
+            </div>
+            <div class="col-sm-3">
+              <label for="inputPassword">Signature Upload:</label>
+              <input type="file_name" class="form-control"(change)="onFileSelected($event)"
+                    placeholder="file_name"formControlName="file_name" >
+             
+            </div>
+          </div>
+          <div class="p-2 mr-1 pull-right">
+            <button class="btn btn-primary pull-right"
+                    (click)="updateUserProfile()" style="background-color:
+                #041562!important;color:#fff!important;">
+              Update
+            </button>
+          </div>
+        </div>
+    </form>
+    <div id="pause" *ngIf="isLoading" class="d-flex
+        align-items-center justify-content-center">
+        <div id="spinner"></div>
+    </div>
+</div>
+
+

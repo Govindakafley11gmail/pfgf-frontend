@@ -1,0 +1,191 @@
+<div id="pause" class="d-flex align-items-center justify-content-center" *ngIf="isLoading">
+  <div id="spinner"></div>
+</div>
+<!-----------------forget password--------------------- -->
+
+<div class="d-flex justify-content-center align-items-center vh-100" 
+     style="background: url('/assets/img/bg-pattern.png') no-repeat center center fixed; background-size: cover;">
+  <div class="card shadow" style="width: 100%; max-width: 420px;">
+    
+    <!-- Dzongkha Heading -->
+    <div class="card-header text-center text-white" style="background-color: #1a1edb;">
+      <h2 style="font-family: 'Katrang', serif; font-size: 18px;">
+        ༄༅།།འབྲུག་ཉེན་བཅོལ་ཚད་འཛིན།
+      </h2>
+    </div>
+
+    <!-- Login Form Body -->
+    <div class="card-body">
+      <h2 class="text-center text-primary">Sign In</h2>
+      <p class="text-center text-muted mb-4">Enter your Email and Password<br>to access BIL PPF/GF</p>
+
+      <p class="text-danger text-center" *ngIf="message">{{ message }}</p>
+
+      <form [formGroup]="form">
+        <!-- Email -->
+        <div class="form-group mb-3">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            placeholder="User Email"
+            formControlName="email"
+            autocomplete="off"
+          />
+          <span class="text-danger" *ngIf="(registerFormControl.email.touched || submitted) && registerFormControl.email.errors?.required">
+            Email is required
+          </span>
+          <span class="text-danger" *ngIf="registerFormControl.email.errors?.email">
+            Email is not valid
+          </span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group mb-3">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Password"
+            formControlName="password"
+            autocomplete="off"
+          />
+          <span class="text-danger" *ngIf="(registerFormControl.password.touched || submitted) && registerFormControl.password.errors?.required">
+            Password is required
+          </span>
+        </div>
+
+        <!-- Forgot password -->
+        <div class="text-right mb-3">
+          <a class="text-decoration-none" (click)="forgotPassword()">Forgot Password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary btn-block" (click)="login()" style="background-color: #1a1edb;">Sign In</button>
+
+        <!-- Optional Register -->
+        <div class="text-center my-3">
+          <a href="https://pf.bil.local" class="text-decoration-none">HOME</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary" style="background-color: #041562!important;color:#fff!important;">
+        <h6>Forgot Password Form</h6>
+        <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="card-body">
+          <form [formGroup]="forgotPasswordFormGroup">
+            <div class="form-group row" *ngIf="emailandpass">
+              <div class="col-sm-12">
+                <label for="inputPassword" class="col-form-label">Email </label><br>
+                <input type="email" class="form-control" formControlName="user_email" placeholder="User Email"
+                  autocomplete="off">
+
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="emailandpass">
+              <div class="col-sm-12">
+                <label for="inputPassword" class="col-form-label">Identification / CID No</label><br>
+                <input type="text" class="form-control" formControlName="cid" placeholder="Identification / CID No">
+
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="Verification">
+              <strong class="text-center">Enter OTP in 1 hrs time Interval: <span class="text-danger">
+                  {{index}}</span></strong>
+              <div class="col-sm-12">
+                <label for="inputPassword" class="col-form-label">Enter OTP</label><br>
+                <input type="number" class="form-control" formControlName="user_otp" placeholder="Enter OTP">
+                <!-- <span class="text-danger"
+                  *ngIf="(forgotPasswordFormGroup.user_cid.touched || submitted) && forgotPasswordFormGroup.user_cid.errors?.required">
+                  Identification No is required
+                </span> -->
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="password">
+              <div class="col-sm-12">
+                <label for="inputPassword" class="col-form-label"> New Password</label><br>
+                <input type="password" class="form-control" placeholder="Enter Password" formControlName="password">
+                <span class="text-danger"
+                  *ngIf="registerFormControl.password.touched && registerFormControl.password.errors?.invalidPassword">
+                  Password should have minimum 8 characters, at least 1 uppercase letter, 1 lowercase
+                  letter and 1 number and special character
+                </span>
+                <!-- <span class="text-danger"
+              *ngIf="(forgotPasswordFormGroup.user_cid.touched || submitted) && forgotPasswordFormGroup.user_cid.errors?.required">
+              Identification No is required
+            </span> -->
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="password">
+              <div class="col-sm-12">
+                <label for="inputPassword" class="col-form-label">Confirm Password</label><br>
+                <input type="password" class="form-control" formControlName="confirm_password"
+                  placeholder="Enter Password">
+                <!-- <span class="text-danger"
+                  *ngIf="(forgotPasswordFormGroup.user_cid.touched || submitted) && forgotPasswordFormGroup.user_cid.errors?.required">
+                  Identification No is required
+                </span> -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <button class="btn" style="background-color: #041562!important;color:#fff!important;"
+          (click)="changeUserPassword()" *ngIf="emailandpass">Submit</button>
+      </div>
+      <button class="btn" style="background-color: #041562!important;color:#fff!important;" (click)="verifyOTP()"
+        *ngIf="Verification">Submit</button>
+      <button class="btn" style="background-color: #041562!important;color:#fff!important;"
+        (click)="submitToChangePassword()" *ngIf="password">Submit</button>
+    </div>
+    <div id="pause" class="d-flex align-items-center justify-content-center" *ngIf="isLoading">
+      <div id="spinner"></div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="card container modal-content">
+      <div class="modal-header">
+        <p class="text-dark"  style="font-size: small;">
+          <i class="fa fa-bullhorn" aria-hidden="true" style="font-size: 25px;"></i>&nbsp;&nbsp;Notice to the System Users(<i style="color:black">Authorized or Unauthorized</i>)
+        </p>
+      </div>
+      <div class="modal-body">
+        <p class="text-dark text-justify" style="font-size: small;">
+          The use of this system is for authorized use only. Users have no explicit or implicit expectation of privacy. Any or all uses of this system and all data on this system may be <i style="color:black">intercepted, monitored, recorded, copied, audited, inspected, and disclosed</i> to authorized sites and law enforcement personnel.
+          <br>
+          The user consent to such disclosure at the discretion of authorized site personnel. Unauthorized or improper use of this system may result in administrative disciplinary action, civil and criminal penalties. By continuing to use this system you indicate your awareness of and consent to these terms and conditions of use. 
+          STOP IMMEDIATELY!!! if you do not agree to the conditions stated in this warning.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <p class="text-dark" style="font-size: small;">
+          Contact your reporting manager for <i style="color:black">Company Acceptable Usage Policy</i> reading and understanding and discuss with HR or IT Security Officer or the Reporting Manager for action required.
+        </p>
+      </div>
+      <div class="text-center">
+        <button class="btn btn-primary my-3 btn-sm" (click)="loginToDashboard()"><i class="fa fa-check-square-o"></i> I agree</button>
+        <button class="btn btn-danger my-3 btn-sm" (click)="clanceLogin(token)"><i class="fa fa-times"></i>&nbsp;I disagree</button>
+      </div>
+    </div>
+
+  </div>
+</div>

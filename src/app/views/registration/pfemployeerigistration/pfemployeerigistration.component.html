@@ -1,0 +1,168 @@
+<div class="card shadow bg-white rounded ml-4 my-4">
+  <div class="card-header my-3 bg-white">
+    <strong>Create New Employee</strong>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="pfEmployee">
+      <input type="hidden" formControlName="pf_employee_id">
+
+      <!-- Row 1 -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+              <label>Registration Type*</label>
+          <ng-select formControlName="registration_type"
+            [items]="registrationType"
+            bindLabel="registration_type"
+            bindValue="registration_type"
+            placeholder="Select Type"
+            appendTo="body"
+            (change)="handleRegistrationTypeChange()">
+            <ng-template ng-label-tmp let-item="item">
+              <span>{{ item.registration_type }}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <span>{{ item.registration_type }}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-md-3">
+          <label>Company A/c*</label>
+          <ng-select formControlName="company_id"
+            [items]="pfaccno"
+            bindLabel="org_name"
+            bindValue="company_id"
+            placeholder="Select Company"
+            appendTo="body"
+            (change)="getcompanyId($event)">
+            <ng-template ng-label-tmp let-item="item">
+              <span>{{ item.org_name +' [ '+ item.company_account_no + ' ]'}}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <span>{{ item.org_name +' [ '+ item.company_account_no + ' ]'}}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Employee*</label>
+          <input type="text" class="form-control" formControlName="employee_name" placeholder="Employee Name">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>DOB</label>
+          <input type="date" class="form-control" formControlName="date_of_birth">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Gender</label>
+          <ng-select formControlName="gender" [items]="gender" bindLabel="gender" bindValue="gender" placeholder="Select"></ng-select>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label>Marital</label>
+          <ng-select formControlName="marital_status" [items]="marital_status" bindLabel="maritalstatus" bindValue="maritalstatus" placeholder="Select"></ng-select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Nationality*</label>
+          <ng-select formControlName="nationality" [items]="nationalitys" bindLabel="nationality" bindValue="nationality" placeholder="Select"></ng-select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>ID Type*</label>
+          <ng-select formControlName="identification_types" [items]="identification_type" bindLabel="id_types_name" bindValue="id_types_name" placeholder="Select"></ng-select>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>ID No*</label>
+          <input type="text" class="form-control" formControlName="identification_no" placeholder="ID Number">
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label>Dept</label>
+          <input type="text" class="form-control" formControlName="department" placeholder="Department">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Reg Date*</label>
+          <input type="date" class="form-control" formControlName="registration_date">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Designation</label>
+          <input type="text" class="form-control" formControlName="designation" placeholder="Designation">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Contact</label>
+          <input type="text" class="form-control" formControlName="contact_no" placeholder="Contact No">
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label>Email</label>
+          <input type="email" class="form-control" formControlName="email_id" placeholder="Email">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Address*</label>
+          <input type="text" class="form-control" formControlName="address" placeholder="Address">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Basic Pay*</label>
+          <input type="number" class="form-control" formControlName="basic_pay" placeholder="Basic Pay" (keyup)="calculation1()">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Contribution*</label>
+          <input type="number" class="form-control" formControlName="contribution" placeholder="Contribution %" (keyup)="calculation1()">
+        </div>
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label>Emp Cont.*</label>
+          <input type="number" class="form-control" formControlName="employee_contribution_amount" [(ngModel)]="EmployeeContributionAmt" placeholder="Employee Contribution">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Empr Cont.*</label>
+          <input type="number" class="form-control" formControlName="employer_contribution_amount" [(ngModel)]="EmployerContributionAmt" placeholder="Employer Contribution">
+        </div>
+
+        <div class="form-group col-md-3">
+          <label>Join Date*</label>
+          <input type="date" class="form-control" formControlName="service_joining_date">
+        </div>
+
+        <div class="form-group col-md-3" *ngIf="registrationDate">
+          <label>Status*</label>
+          <ng-select formControlName="status" [items]="statuss" bindLabel="status" bindValue="status" placeholder="Select"></ng-select>
+        </div>
+      </div>
+    </form>
+
+    <!-- Buttons -->
+    <div class="clearfix mt-3">
+      <button type="button" class="btn btn-primary float-right ml-2" (click)="createPfEmployeeDetails()" *ngIf="save">Save</button>
+      <button type="button" class="btn btn-light float-right" (click)="cancelPfEmployeeById()" *ngIf="cancel">Cancel</button>
+      <button type="button" class="btn btn-primary float-right ml-2" (click)="editPfEmployeeById()" *ngIf="edit">Edit</button>
+      <button type="button" class="btn btn-primary float-right ml-2" (click)="updataPfEmployeeById()" *ngIf="update">Update</button>
+    </div>
+  </div>
+</div>
+
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+  <div id="spinner"></div>
+</div>
+

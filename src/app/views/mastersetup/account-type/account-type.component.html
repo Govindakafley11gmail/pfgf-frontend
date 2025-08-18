@@ -1,0 +1,163 @@
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary"style="background-color: #041562!important;color:#fff!important;">
+                <a class="nav-link active" aria-current="page">Account Type</a>
+
+                <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="my-2 ">
+                <div class="card-body ">
+                    <form [formGroup]="accounttype">
+                        <input type="hidden" class="form-control"  [(ngModel)]="accountgroupids"
+                        formControlName="account_group_id" placeholder="Account_Group_Id..." [value]="accountgroupids">
+                        
+                        <input type="hidden" class="form-control"
+                            formControlName="account_type_id">
+                        <div class="form-group row">
+                            <label  class="col-sm-2 col-form-label">Account Name </label>
+                            <div class="col-sm-4">
+                                    <select  class="form-control"
+                                    formControlName="acc_code" (change)="account_group_id($event)">
+                                        <option >Select Account Group</option>
+                                        <option *ngFor="let accountgroups of accountgroupName"[value]="accountgroups.account_group_code" >{{accountgroups.account_group_name}}</option>
+                                    </select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.acc_code.touched || submitted) && registerFormControl.acc_code.errors?.required">
+                                    Account Name is required
+                                </span>
+                            </div>
+                            <label  class="col-sm-2 col-form-label">Type Name </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" 
+                                    formControlName="acc_name" placeholder="Type name">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.acc_name.touched || submitted) && registerFormControl.acc_name.errors?.required">
+                                    Type name is required
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                    
+                            <label  class="col-sm-2 col-form-label">Nature </label>
+                            <div class="col-sm-4">
+                                    <select class="form-control" 
+                                    formControlName="acc_nature">
+                                        <option >Select Nature</option>
+                                        <option *ngFor="let accountNatures of accountNature">{{accountNatures.acc_nature}}</option>
+                                    </select>
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.acc_nature.touched || submitted) && registerFormControl.acc_nature.errors?.required">
+                                    Acc nature is required
+                                </span>
+                            </div>
+                            <label  class="col-sm-2 col-form-label">Sub Ledger </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control"
+                                    formControlName="acc_sub_ledger" placeholder="Sub ledger">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.acc_sub_ledger.touched || submitted) && registerFormControl.acc_sub_ledger.errors?.required">
+                                   Sub ledger is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label  class="col-sm-2 col-form-label"> Description</label>
+                            <div class="col-sm-4">
+                                <input type="text" placeholder="Description" class="form-control"
+                                     formControlName="acc_description">
+                                <span class="text-danger"
+                                    *ngIf="(registerFormControl.acc_description.touched || submitted) && registerFormControl.acc_description.errors?.required">
+                                    Account description is required
+                                </span>
+                            </div>
+                            <label  class="col-sm-2 col-form-label">Branch</label>
+                            <div class="col-sm-4">
+                            <select class="form-control" 
+                            formControlName="acc_branch_id">
+                                <option >Select Branch </option>
+                                <option *ngFor="let branchNames of branchName"[value]="branchNames.id">{{branchNames.branch_name}}</option>
+                            </select>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                    <div id="spinner"></div>
+                  </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="createAccontTypeDetail()"*ngIf="save"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Save</button>
+                <button type="button" class="btn btn-primary" (click)='updateAccountTypeById()'*ngIf="update"style="background-color: #041562!important;color:#fff!important;"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- --------------------confirmation------------------- -->
+<div bsModal #myModals="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" (click)="myModals.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="ml-4 mt-2">Are you sure to delete?</h5>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="myModals.hide()">No</button>
+                <button type="button" class="btn btn-danger" (click)="deleteAccountTypeDetailById(ids)">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------------------end --------------------confirmation------------------- -->
+
+<div class="containers mt-4 shadow-sm ml-4">
+    <div class="card p-2">
+        <div class="card-header bg-white">
+            Master Setup  <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Accounttypes
+            <button (click)="create()"*ngIf="accountTypecreate" class="btn btn-primary pull-right"style="background-color: #041562!important;color:#fff!important;">
+                <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp; Add Accounttype 
+            </button>
+        </div>
+    <br>
+        <table class="table table-bordered table-striped rounded table-hover " datatable [dtOptions]="dtOptions"
+            [dtTrigger]="dtTrigger">
+            <thead style="background-color: #041562!important;color:#fff!important;">
+                <tr>
+                    <th>Sl.No</th>
+                    <th>Group Code &nbsp;<i class="fa fa-qrcode" aria-hidden="true"></i></th>
+                    <th>Type Name</th>
+                    <th>Nature</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let accountTypeDetails of accountTypeDetail;let i=index">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ accountTypeDetails.acc_code }}</td>
+                    <td>{{ accountTypeDetails.acc_name }}</td>
+                    <td>{{ accountTypeDetails.acc_nature }}</td>
+                    <td class="col-lg-2">
+                        <button class="btn btn-sm btn-success mr-2"*ngIf="accountTypeedit"
+                            (click)="getAccountTypeById(accountTypeDetails.account_type_id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit </button>
+                        <button class="btn btn-sm btn-danger"*ngIf="accountTypedelete" (click)="show(accountTypeDetails.account_type_id)"><i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete</button>
+                        <i class="fa fa-lock"*ngIf="!accountTypeedit">&nbsp; List only</i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="pause"*ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+  </div>

@@ -1,0 +1,167 @@
+<br>
+<loading *ngIf="isLoading"></loading>
+<table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+    [dtTrigger]="dtTrigger">
+    <thead style="background-color: #041562!important;color:#fff!important;">
+        <tr>
+            <th>Sl.No</th>
+            <th>Org Name</th>
+            <!-- <th>Payable Amt</th> -->
+            <th>Org A/c No</th>
+            <th>Branch</th>
+            <th>Status</th>
+            <th>Reg type</th>
+            <!-- <th>Documents &nbsp;<i class="fa fa-file-code-o" aria-hidden="true"></i></th> -->
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let approveddata of paymentapproved;let i=index">
+            <td>{{i+1}}</td>
+            <td (click)="onPressRefundSetteled(approveddata.company_id)">{{approveddata.org_name}}</td>
+            <!-- <td *ngIf="(approveddata.company_payments == null)">Not Found</td> -->
+            <!-- <td *ngIf="(approveddata.company_payments != null)"> -->
+                <!-- {{approveddata.company_payments.total_payable_amount|number:'.2-2'}}</td> -->
+            <td>{{approveddata.company_account_no}}</td>
+            <td>{{approveddata.branch_name}}</td>
+            <!-- <td *ngIf="(approveddata.company_payments == null)">Null</td> -->
+            <td>{{approveddata.payment_status}}</td>
+            <td>{{approveddata.registration_type}}</td>
+            <!-- <td class="col-lg-2 text-center">
+                <button class="btn btn-success btn-sm" *ngIf="approveddata.company_payments !=NULL"
+                    (click)="viewRefundSetteled(approveddata.company_payments.payment_advise_no)">
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;Payment Voucher
+                </button>
+                 <button class="btn btn-sm form-control btn-success"*ngIf = "approveddata.company_payments !=NULL" (click)="downloadPaymentVoucher(approveddata.company_payments.paymentdetails[0].payment_document[0].doc_path)">P.Receipt</button>
+                <span *ngIf="approveddata.company_payments ==NULL">No Voucher</span>
+            </td> -->
+        </tr>
+    </tbody>
+  
+</table>
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content shadow-lg bg-white rounded " *ngIf="isCheckedRefundSetteled">
+            <div class="modal-header" style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title">{{refundSetteled.org_name}}</h6>
+                <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card bg-white rounded m-3">
+                <div class="p-3">
+                    <h6 class="mt-2 ml-2"><strong>Employee Payment Details</strong></h6>
+                    <table class="table table-responsive-sm table-hover  mb-0" id="myTable">
+                        <thead style="background-color: #041562!important;color:#fff!important;">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Company/Employee Name</th>
+                                <th>Payable Amt</th>
+                                <th>Payment Status</th>
+                                <th>Documents &nbsp;<i class="fa fa-file-code-o" aria-hidden="true"></i></th>
+                            </tr>
+                        </thead>
+                        <thead style="background-color: #565f99!important;color:#fff!important;">
+                            <tr>
+                                <th colspan="5">Excess Payment Details for PF/GF</th>
+                            </tr>
+                        </thead>
+                       
+                        <tbody *ngFor="let arrayemployeeExcessDetails of arrayEmployeeRefundExcessSetteled;let i=index">
+                            <tr *ngIf="arrayemployeeExcessDetails !=null && arrayemployeeExcessDetails.registration_type === 'PF' && arrayemployeeExcessDetails.payment_document.length != 0 ? arrayemployeeExcessDetails.payment_document[0].document_type ==='ExcessPaymentVoucher': false">
+                                <td>
+                                    {{i+1}}
+                                </td>
+                                
+                                <td *ngIf="arrayemployeeExcessDetails !=null">
+                                    {{refundSetteled.org_name}}
+                                </td>
+                               
+                                <td *ngIf="arrayemployeeExcessDetails == null">NULL</td>
+                                <td *ngIf ="arrayemployeeExcessDetails != null">
+                                    {{arrayemployeeExcessDetails.payment_total_amount |number:'.2-2'}}
+                                </td>
+                                <!-- 11094807865287 -->
+                            
+                                <td *ngIf="arrayemployeeExcessDetails == null">NULL</td>
+                                <td *ngIf ="arrayemployeeExcessDetails != null">
+                                    {{arrayemployeeExcessDetails.payment_data.payment_status}}
+                                </td>
+                                <td *ngIf ="arrayemployeeExcessDetails != null && arrayemployeeExcessDetails.payment_document != null ">
+                                    <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeExcessDetails.payment_document[0].doc_path)">Document</button>
+                                </td>
+                                <td *ngIf ="arrayemployeeExcessDetails === null">No Document</td>
+                            </tr>
+
+                            <tr *ngIf="arrayemployeeExcessDetails !=null && arrayemployeeExcessDetails.registration_type === 'GF'">
+                                <td>
+                                    {{i+1}}
+                                </td>
+                                
+                                <td>
+                                    {{refundSetteled.org_name}}
+                                </td>
+                                <td>
+                                    {{arrayemployeeExcessDetails.payment_total_amount |number:'.2-2'}}
+                                </td>
+                               
+                                <td>
+                                    {{arrayemployeeExcessDetails.payment_data.payment_status}}
+                                </td>
+                                <td *ngIf ="arrayemployeeExcessDetails != null && arrayemployeeExcessDetails.payment_document != null">
+                                    <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeExcessDetails.payment_document[0].doc_path)">Document</button>
+                                </td>
+                                <td *ngIf ="arrayemployeeExcessDetails === null">No Document</td>
+                            </tr>
+                        </tbody>
+                        <thead style="background-color:  #565f99!important;color:#fff!important;">
+                            <tr>
+                                <th colspan="5"> Employee Wise Payment Details PF/GF</th>
+                            </tr>
+                        </thead>
+
+                        <tbody *ngFor="let arrayemployeeDetails of arrayEmployeeRefundSetteled;let i=index">
+                            <tr>
+                                <td>
+                                    {{i+1}}
+                                </td>
+                                <td *ngIf="arrayemployeeDetails !=null">
+                                    {{arrayemployeeDetails.employee_name}}
+                                </td>
+                               
+                                <td *ngIf="arrayemployeeDetails == null || arrayemployeeDetails.company_payment_details== null">NULL</td>
+                                <td *ngIf ="arrayemployeeDetails != null && arrayemployeeDetails.company_payment_details != null">
+                                    {{arrayemployeeDetails.company_payment_details.payment_total_amount |number:'.2-2'}}
+                                </td>
+                               
+                            
+                                <td *ngIf="arrayemployeeDetails == null || arrayemployeeDetails.company_payment_details== null">NULL</td>
+                                <td *ngIf ="arrayemployeeDetails != null && arrayemployeeDetails.company_payment_details != null">
+                                    RP
+                                </td>
+                                <td *ngIf ="arrayemployeeDetails.company_payment_details != null && arrayemployeeDetails.company_payment_details.payment_document.length > 2">
+                                        <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeDetails.company_payment_details.payment_document[0].doc_path)">Approval Upload</button>
+
+                                        <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeDetails.company_payment_details.payment_document[1].doc_path)">Advice Note</button>
+
+                                    <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeDetails.company_payment_details.payment_document[2].doc_path)">Voucher</button>
+                                       <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeDetails.company_payment_details.payment_document[3].doc_path)">Letter</button>
+
+                                </td>
+                                <td *ngIf ="arrayemployeeDetails.company_payment_details != null && arrayemployeeDetails.company_payment_details.payment_document.length  == 2">
+                                    <button class="btn btn-success btn-sm"(click)="downloadPaymentVoucher(arrayemployeeDetails.company_payment_details.payment_document[1].doc_path)">Document</button>
+                                </td>
+                                <td *ngIf ="arrayemployeeDetails.company_payment_details === null">No Document</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+              
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,155 @@
+<div class="card mt-4">
+  <div class="card-header bg-white">
+    Refund <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Excess Payment Refund
+  </div>
+  <form class="ml-2 mr-1 mt-3" [formGroup]="excessRefund">
+    <div class="p-2">
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="inputPassword">Bussiness Type :</label><br>
+          <ng-select placeholder="Select Company Name" [items]="refundType" bindValue="value" bindLabel="refundtype"
+            [readonly]="isDissabled" formControlName="registration_type"
+            (change)="changeRefundType()" clearAllText="Clear">
+          </ng-select>
+          <span class="text-danger" *ngIf="(registerFormControl.registration_type.touched
+                    || submitted)
+                    &&
+                    registerFormControl.registration_type.errors?.required">
+            Bussiness Type is required
+          </span>
+        </div>
+
+        <div class="col-sm-3">
+          <label for="inputPassword">Organization Name :</label>
+          <ng-select placeholder="Select Company Name" formControlName="company_id" (change)="changeOrgById()"
+            [items]="companyName" bindValue="company_id" bindLabel="org_name" [readonly]="isDissabled"[searchable]="true"
+            [(ngModel)]="org_name"
+            clearAllText="Clear">
+            <ng-template ng-label-tmp let-item="item">
+              <span>{{ item.org_name +' [ ' +
+                item.company_account_no + ' ]'}}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+              <span>{{ item.org_name + ' [ ' +
+                item.company_account_no + ' ]'}}</span>
+            </ng-template>
+          </ng-select>
+          <span class="text-danger" *ngIf="(registerFormControl.company_id.touched ||
+                    submitted)
+                    && registerFormControl.company_id.errors?.required">
+            Organization Name is required
+          </span>
+        </div>
+
+        <div class="col-sm-3">
+          <label for="inputPassword">Collection/reciept No :</label>
+          <ng-select placeholder="Select Collection/reciept No" [items]="collection_receipt_no"
+            (change)="collectionReceiptNo()" bindValue="pf_collection_no" bindLabel="pf_collection_no"
+            [readonly]="isDissabled" formControlName="collection_receipt_no"
+            clearAllText="Clear">
+          </ng-select>
+          <span class="text-danger" *ngIf="(registerFormControl.collection_receipt_no.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_receipt_no.errors?.required">
+            Collection/reciept No is required
+          </span>
+        </div>
+
+        <div class="col-sm-3">
+          <label for="inputPassword">Collection/Reciept Amt :</label>
+          <input type="text" readonly class="form-control" formControlName="collection_receipt_amt"
+            [readonly]="isDissabled" placeholder="Collection/Reciept Amt">
+          <span class="text-danger" *ngIf="(registerFormControl.collection_receipt_amt.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_receipt_amt.errors?.required">
+            Collection/Reciept Amount is required
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="inputPassword">Collection Date :</label>
+          <input type="date" readonly class="form-control" formControlName="collection_date"
+            placeholder="Collection/Reciept Amt">
+          <span class="text-danger" *ngIf="(registerFormControl.collection_date.touched
+                    || submitted)
+                    &&
+                    registerFormControl.collection_date.errors?.required">
+            Collection Date is required
+          </span>
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Excess Refund Amt :</label>
+          <input type="number" class="form-control" [readonly]="isDissabled" formControlName="excess_refund_amt"
+            placeholder="Excess Refund Amt">
+          <span class="text-danger" *ngIf="(registerFormControl.excess_refund_amt.touched
+                    || submitted)
+                    &&
+                    registerFormControl.excess_refund_amt.errors?.required">
+            Excess Refund Amtis required
+          </span>
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Refund Date :</label>
+          <input type="date" class="form-control" [readonly]="isDissabled" formControlName="refund_date" placeholder="Refund
+                    Date">
+          <span class="text-danger" *ngIf="(registerFormControl.refund_date.touched ||
+                    submitted)
+                    &&
+                    registerFormControl.refund_date.errors?.required">
+            Refund Date is required
+          </span>
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Branch :</label>
+          <ng-select placeholder="Select Branch name" [items]="listbranch" bindValue="id" [readonly]="isDissabled"
+            bindLabel="branch_name" formControlName="branch_id" clearAllText="Clear">
+          </ng-select>
+          <span class="text-danger" *ngIf="(registerFormControl.branch_id.touched ||
+                    submitted)
+                    && registerFormControl.branch_id.errors?.required">
+            Branch is required
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="inputPassword">Bank A/c *:</label>
+          <input type="number" class="form-control" [readonly]="isDissabled" formControlName="pf_emp_acc_no"
+            placeholder="Bank A/c no">
+          <span class="text-danger" *ngIf="(registerFormControl.pf_emp_acc_no.touched
+                    || submitted)
+                    &&
+                    registerFormControl.pf_emp_acc_no.errors?.required">
+                    Bank A/c is required
+          </span>
+        </div>
+        <div class="col-sm-3">
+          <label for="inputPassword">Bank Name *:</label>
+          <input type="text" class="form-control" [readonly]="isDissabled" formControlName="bank_name" placeholder="Bank Name">
+          <span class="text-danger" *ngIf="(registerFormControl.bank_name.touched ||
+                    submitted)
+                    &&
+                    registerFormControl.bank_name.errors?.required">
+                    Bank Name is required
+          </span>
+        </div>
+      </div>
+      <div class="p-2 mr-1 pull-right" *ngIf="RefundExcessRefunds">
+        <button class="btn btn-primary pull-right" [disabled]="isDissabled" (click)="processExcessPffund()" style="background-color:
+                #041562!important;color:#fff!important;">
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp; Submit
+        </button>
+        <button class="btn btn-secondary pull-right mr-2" (click)="resetExcessRefund()">
+          Reset
+        </button>
+      </div>
+    </div>
+  </form>
+  <div id="pause" *ngIf="isLoading" class="d-flex
+        align-items-center justify-content-center">
+    <div id="spinner"></div>
+  </div>
+</div>

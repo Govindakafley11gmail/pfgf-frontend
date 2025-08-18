@@ -1,0 +1,171 @@
+<div class="my-2">
+    <table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+        [dtTrigger]="dtTrigger">
+        <thead style="background-color: #041562!important;color:#fff!important;">
+            <tr>
+                <th>Sl.No</th>
+                <th>Receipt No</th>
+                <th>Org Name</th>
+                <th>Branch</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Reg Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let collectiondetailss of approveddepositlist;let i=index">
+                <td>{{i+1}}</td>
+                <td>{{collectiondetailss.pf_collection_no}}</td>
+                <td>{{collectiondetailss.org_name}},{{collectiondetailss.company_account_no}}</td>
+                <td>{{collectiondetailss.pf_gf_collection_branches.branch_name}}</td>
+
+                <td>{{collectiondetailss.month_name}}</td>
+                <td>{{collectiondetailss.pf_collection_for_the_year}}</td>
+
+                <td>{{collectiondetailss.pf_collection_amount|number:'.2-2'}}</td>
+                <td class="col-lg-2 text-center"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;{{collectiondetailss.pf_collection_status}}</td>
+                <td>{{collectiondetailss.registration_type}}</td>
+                <td class="col-lg-2 text-center">
+                    <button class="btn btn-success btn-sm ml-4"
+                        (click)="viewFormControl(collectiondetailss.pf_collection_id)">
+                        <i class="fa fa-eye"></i> &nbsp; Deposit Details
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <ngb-pagination class="pull-right" [rotate]="true" [boundaryLinks]="true" [collectionSize]="collectionSize"
+        [maxSize]="5" [(page)]="page" (pageChange)="getPremiumData(page);">
+    </ngb-pagination>
+</div>
+<div bsModal #myModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content shadow-lg bg-white rounded">
+            <div class="modal-header" style="background-color: #041562!important;color:#fff!important;">
+                <h6 class="modal-title">Add New Deposit</h6>
+                <button type="button" class="btn btn-primary" (click)="myModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card mt-2 bg-white rounded m-3">
+                <form [formGroup]="capabilityForm">
+                    <div class="p-3">
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Collection Receipt No </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" placeholder="Company Name " readonly
+                                    formControlName="collectionRecieptNo">
+                            </div>
+
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Company Name </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" formControlName="org_name"
+                                    placeholder="Company Name " readonly>
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Total
+                                Receipt Amount
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" formControlName="totalRecieptAmount"
+                                    placeholder="Total Receipt Amount" readonly>
+
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Company A/c No
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" formControlName="company_account_no"
+                                    placeholder="Company A/c No" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Collection
+                                Date
+                            </label>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control" formControlName="pf_collection_date"
+                                    placeholder="Collection Date" readonly>
+                            </div>
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Registration Type</label>
+                            <div class="col-sm-4">
+                                <input type="text" formControlName="registration_type" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Excess Payment Amt</label>
+                            <div class="col-sm-4">
+                                <input type="number" formControlName="excess_payment_amount" class="form-control"
+                                    readonly>
+                            </div>
+
+                        </div>
+                        <h6 class="mt-5 ml-2"><strong>Employee Detail Lists</strong></h6>
+                        <table class="table table-responsive-sm table-hover mb-0" id="myTable"
+                            formArrayName="pfEmployeeId" *ngIf="capabilityForms">
+                            <thead style="background-color: #041562!important;color:#fff!important;">
+                                <tr>
+                                    <td>Sl.No</td>
+                                    <td>Employee Name</td>
+                                    <td>Employee A/c No</td>
+                                    <td>Identification No</td>
+                                    <td>Employee Contribution</td>
+                                    <td>Employer Contribution</td>
+                                    <!-- <th>Action</th> -->
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let capability of capacity;let i = index">
+
+                                <tr [formGroupName]="i">
+                                    <td>
+                                        {{i+1}}
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="employee_name" disabled
+                                            class="form-control-plaintext">
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="company_account_no" disabled
+                                            class="form-control-plaintext">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" formControlName="identification_no" disabled
+                                            class="form-control-plaintext">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control-plaintext"
+                                            formControlName="employee_contribution_amount" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control-plaintext"
+                                            formControlName="employer_contribution_amount" disabled>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tr>
+                                <td colspan="4"><strong>Total</strong></td>
+                                <td><strong>{{adddatas}}</strong></td>
+                                <td><strong>{{total_employer}}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+                <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+                    <div id="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div>
