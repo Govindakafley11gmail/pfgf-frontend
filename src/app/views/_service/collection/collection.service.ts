@@ -59,7 +59,9 @@ export class CollectionService {
   getCollectionAccoutByBranchId(id): Observable<any> {
     return this.http.get(`${this.Api_Http}` + "/getCollectionAccoutByBranchId/" + id, { headers: this.header })
   }
-
+   getBankAccountNo(id):Observable<any>{
+     return this.http.get(`${this.Api_Http}` + "/getBankAccount/" + id, { headers: this.header })
+   }
   getCollectionByCpmpanyId(id): Observable<any> {
     return this.http.get(`${this.Api_Http}` + "/getDueAmountByCompanyId/" + id, { headers: this.header })
   }
@@ -97,10 +99,13 @@ export class CollectionService {
     return this.http.post(`${this.Api_Http}` + "/new-company-report", formData, { headers: this.header })
   }
   CompanyWiseRemittanceDueReport(formData) {
-    return this.http.post(`${this.Api_Http}` + "/company-wise-remittance-report", formData, { headers: this.header })
+    return this.http.post(`${this.Api_Http}` + "/renewal-company-report", formData, { headers: this.header })
   }
   monthlyDepositReportSearch(formdata) {
     return this.http.post(`${this.Api_Http}` + "/monthly-deposit-statement", formdata, { headers: this.header })
+  }
+  companyListWithLapsedReport(formData) {
+    return this.http.post(`${this.Api_Http}` + "/get-all-mou-lapsed-list", formData, { headers: this.header })
   }
 
   companyWiseStatement(formdata) {
@@ -114,7 +119,7 @@ export class CollectionService {
     return this.http.post(`${this.Api_Http}` + "/monthly-refund-pending-report", formdata, { headers: this.header })
   }
   ActiveOrInactiveEmployeeList(data){
-    return this.http.post(`${this.Api_Http}` + "/get-all-inactive-user-report", data, { headers: this.header })
+    return this.http.post(`${this.Api_Http}` + "/employee-wise-fundbalance-report", data, { headers: this.header })
   }
 companyListWithintroducerReport(formData){
   return this.http.post(`${this.Api_Http}` + "/get-all-introducer-report", formData, { headers: this.header })
@@ -128,9 +133,9 @@ companyListWithintroducerReport(formData){
   }
 
   mouRenewalReport(formdata) {
-    return this.http.post(`${this.Api_Http}` + "/mou-renewal-list-report", formdata, { headers: this.header })
+    return this.http.post(`${this.Api_Http}` + "/get-renewal-list-report", formdata, { headers: this.header })
   }
-
+ 
   companyWisefundReport(formdata) {
     return this.http.post(`${this.Api_Http}` + "/company-wise-fundbalance-report", formdata, { headers: this.header })
   }
@@ -160,6 +165,9 @@ companyListWithintroducerReport(formData){
 
   downloadReport(docPath) {
     return this.http.get(`${this.Api_Http}` + "/download-statement/" + docPath, { headers: this.headers, responseType: 'blob' })
+  }
+  downloadReportAccountPosting(docPath) {
+    return this.http.get(`${this.Api_Http}` + "/download-refund-file/" + docPath, { headers: this.headers, responseType: 'blob' })
   }
 
   //accountposting

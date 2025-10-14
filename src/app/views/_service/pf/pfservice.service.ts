@@ -155,8 +155,8 @@ export class PfserviceService {
   downloadRefundFile(path){
     return this.http.get(`${this.Api_Http}` + "/download-refund-file/"+path,{ headers: this.header, responseType: 'blob' })
   }
-  revertAccountTransaction(transaction_id: string){
-    return this.http.post(`${this.Api_Http}` + "/reversed-Account-Posting",  transaction_id , { headers: this.header });
+  revertAccountTransaction(formdata: string){
+    return this.http.post(`${this.Api_Http}` + "/reversed-Account-Posting",  formdata , { headers: this.header });
   }
 
   getpfEmployeeById(emp_id){

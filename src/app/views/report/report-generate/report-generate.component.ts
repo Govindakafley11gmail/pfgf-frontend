@@ -162,7 +162,7 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
 
     { reportname: "MOU Lapsed Report", value: "companyListWithLapsedReport" },
     { reportname: "Introducer Report", value: "companyListWithintroducerReport" },
-    { reportname: "InActive Employee Report", value: "inActiveEmployeeList" },
+    { reportname: "Employee wise Fund Balance Report", value: "EmployeeWiseFundBalanceReport" },
     { reportname: "Monthly Refund Pending Report", value: "monthlyRefundPendingReport" },
     { reportname: "New Company Report", value: "newcompanyListReport" },
     {
@@ -170,9 +170,20 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
       value: "CompanyWiseRemittanceDueReport",
     },
   ];
+
   documentTypes = [
     { label: "PDF", value: "PDF" },
     { label: "HTML", value: "HTML" },
+  ];
+
+  mouStatus = [
+    { status: "Active", value: "Active" },
+    { status: "Lapsed", value: "Lapsed" },
+  ];
+
+  remittanceStatus = [
+    { status: "Active", value: "Active" },
+    { status: "InActive", value: "InActive" },
   ];
 
   employeewise;
@@ -180,6 +191,8 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
   branchName;
   excessref;
   isstatus:boolean=false
+  isRemetStatus:boolean=false;
+  isMouStatus: boolean =false;
   getReportCategory() {
     if (this.report.value.report_name == "DailyColStatement") {
       this.dailyColletionFormControl(this.report.value.report_name);
@@ -202,8 +215,11 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
       this.monthAndYear = false;
       this.date = true;
       this.excessref = false;
-    } else if (this.report.value.report_name == "inActiveEmployeeList") {
+    } else if (this.report.value.report_name == "EmployeeWiseFundBalanceReport") {
       this.employeeWiseFormControl(this.report.value.report_name);
+            this.getBranchName();
+       this.isRemetStatus = true;
+       this.isMouStatus =true;
       this.employeewise = false;
       this.isstatus = false
       this.accountLedgerReport = false;
@@ -241,11 +257,13 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
       this.date = true;
       this.excessref=false;
     }
-    else if (this.report.value.report_name == "companyListWithintroducerReport") {
-        this.dailyColletionFormControl(this.report.value.report_name);
-         this.dailycollectionCondition = true;
+    else if (this.report.value.report_name == "companyListWithLapsedReport") {
+      this.dailyColletionFormControl(this.report.value.report_name);
+      this.dailycollectionCondition = false;
       this.accountLedgerReport = false;
       this.employeewise = false;
+       this.isRemetStatus =true;
+       this.isMouStatus =true;
       this.monthlydeposit = false;
       this.companyeewise = false;
       this.monthAndYear = false;
@@ -277,7 +295,6 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
     } else if (this.report.value.report_name == "AccountLedgerStatement") {
       this.formdata = true;
       this.accountLedgerFormControl(this.report.value.report_name);
-
       this.dailycollectionCondition = false;
       this.accountLedgerReport = true;
       this.employeewise = false;
@@ -288,7 +305,6 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
     } else if (this.report.value.report_name == "TrialBalanceStatement") {
       this.formdata = true;
       this.dailyColletionFormControl(this.report.value.report_name);
-
       this.dailycollectionCondition = true;
       this.employeewise = false;
       this.monthlydeposit = false;
@@ -310,7 +326,8 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
     } else if (this.report.value.report_name == "CompanyWiseFundBalance") {
       this.formdata = true;
       this.companyWiseReport(this.report.value.report_name);
-
+      this.isMouStatus = true;
+      this.isRemetStatus =true;
       this.employeewise = false;
       this.accountLedgerReport = false;
       this.dailycollectionCondition = false;
@@ -322,7 +339,8 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
     }
      else if (this.report.value.report_name == "CompanyWiseRemittanceDueReport") {
       this.dailyColletionFormControl(this.report.value.report_name);
-
+      this.isMouStatus = true;
+      this.isRemetStatus = true;
       this.employeewise = false;
       this.accountLedgerReport = false;
       this.dailycollectionCondition = false;
@@ -490,7 +508,8 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
       employee_cid_no: [""],
       Excess_Payment_Refund: new FormControl(""),
       doc_type: [""],
-      status: [""]
+      status: [""],
+      remit_status: [""]
     });
   }
 
@@ -503,6 +522,7 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
       to_date: ["", [Validators.required]],
       company_id: [""],
       doc_type: [""],
+      mou_status: [""]
     });
   }
 
@@ -698,6 +718,7 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
         }
       );
     }
+    // MouLapsedList
     
        else if (this.report.value.report_name == "newcompanyListReport") {
       this.isLoading = true;
@@ -838,7 +859,7 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
         }
       );
     }
-    else if (this.report.value.report_name == "inActiveEmployeeList") {
+    else if (this.report.value.report_name == "EmployeeWiseFundBalanceReport") {
       this.isLoading = true;
       await this.collection.ActiveOrInactiveEmployeeList(this.report.value).subscribe(
         (res) => {
@@ -893,7 +914,36 @@ export class ReportGenerateComponent implements OnInit, OnDestroy {
           this.tosatr.error(error["statusText"] + ". " + error.error.message);
         }
       );
-    } else if (this.report.value.report_name == "TrialBalanceStatement") {
+    } 
+     else if (this.report.value.report_name == "companyListWithLapsedReport") {
+      this.isLoading = true;
+      await this.collection.companyListWithLapsedReport(this.report.value).subscribe(
+        (res) => {
+          this.viewAllreportFormControl(this.report.value.report_name);
+          this.isLoading = false;
+          this.report.reset(this.report);
+          this.generateReport = false;
+
+          if (res[0] == "success") {
+            this.tosatr.success(res["message"]);
+            this.viewReport();
+            this.viewAllOthersReport = true;
+            this.viewReports = true;
+            this.generateReport = false;
+          } else {
+            this.viewReports = false;
+            this.generateReport = true;
+            this.tosatr.error(res["message"]);
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          this.tosatr.error(error["statusText"] + ". " + error.error.message);
+        }
+      );
+    }
+    
+    else if (this.report.value.report_name == "TrialBalanceStatement") {
       this.isLoading = true;
       await this.collection.trialBalanceReport(this.report.value).subscribe(
         (res) => {

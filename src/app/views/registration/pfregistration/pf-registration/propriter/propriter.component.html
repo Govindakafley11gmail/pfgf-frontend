@@ -2,26 +2,7 @@
   <div class="container">
     <div class="card-body">
       <form [formGroup]="Proprietors">
-        <input
-          type="hidden"
-          formControlName="id"
-          class="form-control"
-          placeholder="Name Of Proprietors ..."
-        />
-        <input
-          type="hidden"
-          formControlName="p_id"
-          class="form-control"
-          placeholder="Name Of Proprietors ..."
-        />
-        <input
-          type="hidden"
-          formControlName="prop_company_id"
-          class="form-control"
-          placeholder="Name Of Proprietors"
-          [(ngModel)]="sid"
-          [value]="sid"
-        />
+        
         <div class="form-group row">
           <label for="inputPassword" class="col-sm-2 col-form-label"
             >Name *</label
@@ -30,14 +11,11 @@
             <input
               type="text"
               formControlName="proprietor_name"
-              [ngClass]="{
-                'is-invalid':
-                  submitted && registerFormControl.proprietor_name.errors
-              }"
+              
               class="form-control"
               placeholder="Name Of Proprietors ..."
             />
-            <span
+            <!-- <span
               class="text-danger"
               *ngIf="
                 (registerFormControl.proprietor_name.touched || submitted) &&
@@ -45,7 +23,7 @@
               "
             >
               Proprietor name is required
-            </span>
+            </span> -->
           </div>
           <label for="inputPassword" class="col-sm-2 col-form-label"
             >Contact No *</label
@@ -54,14 +32,11 @@
             <input
               type="text"
               formControlName="contact_number"
-              [ngClass]="{
-                'is-invalid':
-                  submitted && registerFormControl.contact_number.errors
-              }"
+             
               class="form-control"
               placeholder="Contact Number ..."
             />
-            <span
+            <!-- <span
               class="text-danger"
               *ngIf="
                 (registerFormControl.contact_number.touched || submitted) &&
@@ -69,7 +44,7 @@
               "
             >
               Contact number is required
-            </span>
+            </span> -->
           </div>
         </div>
 
@@ -92,21 +67,11 @@
             <input
               type="text"
               formControlName="address"
-              [ngClass]="{
-                'is-invalid': submitted && registerFormControl.address.errors
-              }"
+              
               class="form-control"
               placeholder="Address..."
             />
-            <span
-              class="text-danger"
-              *ngIf="
-                (registerFormControl.address.touched || submitted) &&
-                registerFormControl.address.errors?.required
-              "
-            >
-              Address is required
-            </span>
+           
           </div>
         </div>
 
@@ -118,37 +83,13 @@
             <input
               type="text"
               formControlName="designation"
-              [ngClass]="{
-                'is-invalid':
-                  submitted && registerFormControl.designation.errors
-              }"
+              
               class="form-control"
               placeholder="Designation..."
             />
-            <span
-              class="text-danger"
-              *ngIf="
-                (registerFormControl.designation.touched || submitted) &&
-                registerFormControl.designation.errors?.required
-              "
-            >
-              Designation is required
-            </span>
+           
           </div>
-          <label
-            for="inputPassword"
-            *ngIf="status"
-            class="col-sm-2 col-form-label"
-            >Status *</label
-          >
-          <div class="col-sm-4" *ngIf="status">
-            <input
-              type="text"
-              formControlName="status"
-              class="form-control"
-              placeholder="Status..."
-            />
-          </div>
+        
         </div>
         <div class="form-group row">
           <label for="inputPassword" class="col-sm-2 col-form-label"
@@ -158,32 +99,15 @@
             <textarea
               type="text"
               formControlName="employee_detail"
-              [ngClass]="{
-                'is-invalid':
-                  submitted && registerFormControl.employee_detail.errors
-              }"
+             
               class="form-control"
               placeholder="employee detail"
             ></textarea>
-            <span
-              class="text-danger"
-              *ngIf="
-                (registerFormControl.employee_detail.touched || submitted) &&
-                registerFormControl.employee_detail.errors?.required
-              "
-            >
-              Employee detail is required
-            </span>
+            
           </div>
         </div>
       </form>
-      <div
-        id="pause"
-        *ngIf="isLoading"
-        class="d-flex align-items-center justify-content-center"
-      >
-        <div id="spinner"></div>
-      </div>
+      
     </div>
   </div>
 </div>
@@ -192,7 +116,6 @@
     type="button"
     class="btn btn-primary"
     (click)="createPropriter()"
-    *ngIf="save"
     style="background-color: #041562 !important; color: #fff !important"
   >
     Save
@@ -202,64 +125,20 @@
     class="btn btn-primary"
     (click)="updatePropriteById()"
     style="background-color: #041562 !important; color: #fff !important"
-    *ngIf="update"
   >
     Update
   </button>
 </div>
 
-<div
+<!-- <div
   id="pause"
   *ngIf="isLoading"
   class="d-flex align-items-center justify-content-center"
 >
   <div id="spinner"></div>
-</div>
+</div> -->
 <!-- --------------------confirmation------------------- -->
 
-<div
-  bsModal
-  #myModals="bs-modal"
-  [config]="{ backdrop: 'static', keyboard: false }"
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="myModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header bg-danger">
-        <h4 class="modal-title">Confirmation</h4>
-        <button
-          type="button"
-          class="close"
-          (click)="myModals.hide()"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <h5 class="ml-4 mt-2">Are You Sure to delete ?</h5>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="myModals.hide()"
-        >
-          No
-        </button>
-        <button
-          type="button"
-          class="btn btn-danger"
-          (click)="deletePropriterDetailById(ids)"
-        >
-          Yes
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- ------------------end --------------------confirmation------------------- -->
 
 <div class="containers">

@@ -24,6 +24,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OrganizationRegistrationComponent } from './organization-registration/organization-registration.component';
 import { EmployeeDetailsComponent } from './employee-details/employee-details.component';
+import { EmployeeloanComponent } from './employeeloan/employeeloan.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { EmployeeDetailsComponent } from './employee-details/employee-details.co
     PfemployeerigistrationlistComponent,
     OrganizationRegistrationComponent,
     EmployeeDetailsComponent,
+    EmployeeloanComponent,
 
   ],
   imports: [

@@ -35,7 +35,7 @@ export class CollectionlistComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   Api_Http = Api;
 
   headers = new HttpHeaders({
@@ -274,13 +274,13 @@ max: any = 0;
     this.isLoading = true;
     this.wait(2000).then(() => (this.isLoading = false));
   }
-  private changeCompanyAccNo = async () => {
+   changeCompanyAccNo = async () => {
     this.save = true;
     this.companyacno = true;
-    this.companyaccountno = this.changecomAccNo;
+    this.companyaccountno = this.productForm.value.pf_collection_company_account_no_id;
     if (this.companyaccountno != null) {
       await this.collection
-        .getCollectionByCpmpanyId(this.changecomAccNo)
+        .getCollectionByCpmpanyId(this.companyaccountno)
         .subscribe(
           (res) => {
 
@@ -432,7 +432,7 @@ max: any = 0;
 
     if (this.getCollectionAccoutByBranchIds != null) {
       await this.collection
-        .getCollectionAccoutByBranchId(this.getCollectionAccoutByBranchIds)
+        .getBankAccountNo(this.getCollectionAccoutByBranchIds)
         .subscribe((res) => {
           this.collectionbankaccnos = res;
         });

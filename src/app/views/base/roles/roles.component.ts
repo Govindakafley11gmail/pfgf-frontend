@@ -15,7 +15,7 @@ export class RolesComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') public myModal: ModalDirective;
   @ViewChild('myModals') public myModals: ModalDirective;
   @ViewChild('myModal2') public myModal2: ModalDirective;
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   permission;
   permissionArray = [];

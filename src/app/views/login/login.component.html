@@ -3,28 +3,32 @@
 </div>
 <!-----------------forget password--------------------- -->
 
+
 <div class="d-flex justify-content-center align-items-center vh-100" 
-     style="background: url('/assets/img/bg-pattern.png') no-repeat center center fixed; background-size: cover;">
-  <div class="card shadow" style="width: 100%; max-width: 420px;">
+     style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe);">
+
+  <div class="card shadow-lg rounded-4" style="width: 100%; max-width: 420px; border: none; overflow: hidden;">
     
     <!-- Dzongkha Heading -->
-    <div class="card-header text-center text-white" style="background-color: #1a1edb;">
-      <h2 style="font-family: 'Katrang', serif; font-size: 18px;">
+    <div class="card-header text-center text-white py-3" style="background: linear-gradient(90deg, #1a1edb, #3b3fc9);">
+      <h2 style="font-family: 'Katrang', serif; font-size: 20px; margin: 0;">
         ༄༅།།འབྲུག་ཉེན་བཅོལ་ཚད་འཛིན།
       </h2>
     </div>
 
     <!-- Login Form Body -->
-    <div class="card-body">
-      <h2 class="text-center text-primary">Sign In</h2>
-      <p class="text-center text-muted mb-4">Enter your Email and Password<br>to access BIL PPF/GF</p>
+    <div class="card-body p-4">
+      <h2 class="text-center text-primary mb-2">Sign In</h2>
+      <p class="text-center text-muted mb-4" style="font-size: 0.9rem;">
+        Enter your Email and Password to access BIL PPF/GF
+      </p>
 
-      <p class="text-danger text-center" *ngIf="message">{{ message }}</p>
+      <p class="text-danger text-center mb-2" *ngIf="message">{{ message }}</p>
 
-      <form [formGroup]="form">
+      <form [formGroup]="form" (ngSubmit)="login()">
         <!-- Email -->
-        <div class="form-group mb-3">
-          <label for="email">Email:</label>
+        <div class="form-floating mb-3">
+             <label for="email">Email</label>
           <input
             type="email"
             id="email"
@@ -33,17 +37,18 @@
             formControlName="email"
             autocomplete="off"
           />
-          <span class="text-danger" *ngIf="(registerFormControl.email.touched || submitted) && registerFormControl.email.errors?.required">
+       
+          <div class="text-danger mt-1 small" *ngIf="(registerFormControl.email.touched || submitted) && registerFormControl.email.errors?.required">
             Email is required
-          </span>
-          <span class="text-danger" *ngIf="registerFormControl.email.errors?.email">
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="registerFormControl.email.errors?.email">
             Email is not valid
-          </span>
+          </div>
         </div>
 
         <!-- Password -->
-        <div class="form-group mb-3">
-          <label for="password">Password:</label>
+        <div class="form-floating mb-3">
+           <label for="password">Password</label>
           <input
             type="password"
             id="password"
@@ -52,27 +57,31 @@
             formControlName="password"
             autocomplete="off"
           />
-          <span class="text-danger" *ngIf="(registerFormControl.password.touched || submitted) && registerFormControl.password.errors?.required">
+         
+          <div class="text-danger mt-1 small" *ngIf="(registerFormControl.password.touched || submitted) && registerFormControl.password.errors?.required">
             Password is required
-          </span>
+          </div>
         </div>
 
         <!-- Forgot password -->
-        <div class="text-right mb-3">
-          <a class="text-decoration-none" (click)="forgotPassword()">Forgot Password?</a>
+        <div class="text-end mb-4">
+          <a class="text-decoration-none text-primary" (click)="forgotPassword()">Forgot Password?</a>
         </div>
 
         <!-- Submit -->
-        <button type="submit" class="btn btn-primary btn-block" (click)="login()" style="background-color: #1a1edb;">Sign In</button>
+        <button type="submit" class="btn btn-primary w-100 py-2 mb-3" style="background: linear-gradient(90deg, #1a1edb, #3b3fc9); border: none; font-weight: 500;">
+          Sign In
+        </button>
 
-        <!-- Optional Register -->
-        <div class="text-center my-3">
-          <a href="https://pf.bil.local" class="text-decoration-none">HOME</a>
+        <!-- Optional Register / Home -->
+        <div class="text-center">
+          <a href="https://pf.bil.local" class="text-decoration-none text-secondary">HOME</a>
         </div>
       </form>
     </div>
   </div>
 </div>
+
 
 
 

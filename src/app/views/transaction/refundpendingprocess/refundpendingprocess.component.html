@@ -1123,6 +1123,49 @@
                   />
                  
                 </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label" >
+                  Ref. letter No *</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    required
+                    formControlName="reference_no"
+                    placeholder="Reference No"
+                  />
+                   <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.reference_no.touched || submitted) &&
+                      registerFormControl1.reference_no.errors?.required
+                    "
+                  >
+                    Ref. letter No is required
+                  </span>
+                 
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label">
+                  Ref. letter Date *</label
+                >
+                <div class="form-group col-sm-4">
+                  <input
+                    type="date"
+                    required
+                    class="form-control"
+                    formControlName="reference_date"
+                    placeholder="Reference Date"
+                  />
+                  <span
+                    class="text-danger"
+                    *ngIf="
+                      (registerFormControl1.reference_date.touched || submitted) &&
+                      registerFormControl1.reference_date.errors?.required
+                    "
+                  >
+                    Ref. letter Date is required
+                  </span>
+                </div>
               </div>
 
               <!-- pf_emp_acc_no -->

@@ -5,6 +5,7 @@ import { Subject } from "rxjs";
 import { DataTableDirective } from "angular-datatables";
 import { ModalDirective } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-account-posting-list",
@@ -18,16 +19,20 @@ export class AccountPostingListComponent implements OnInit {
     dtOptions: any = {}; // Now Angular will recognize it
     transaction_id:string;
     @ViewChild('myModals') public myModals: ModalDirective;
-  
+   accountposting: FormGroup;
     datatableElement: any = DataTableDirective;
   constructor(
     private employee: PfemployeeService,
     private pfservice: PfserviceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.loadPaymentData();
+    this.accountposting = this.fb.group({
+      account_transaction_id: [""],
+    })
   }
 
   loadPaymentData() {
@@ -50,9 +55,11 @@ export class AccountPostingListComponent implements OnInit {
       (error) => {}
     );
   }
-  reverdedTransaction(transaction_id: string){
+  reverdedTransaction(){
     // Logic for reverting the transaction
-    this.pfservice.revertAccountTransaction(transaction_id).subscribe(
+        console.log('Reversing account voucher for transaction ID:', this.accountposting.value.account_transaction_id);
+
+    this.pfservice.revertAccountTransaction(this.accountposting.value).subscribe(
       (res) => {
         this.toastr.success("Transaction reverted successfully");
         this.loadPaymentData(); // Reload the data after reverting
@@ -65,8 +72,10 @@ export class AccountPostingListComponent implements OnInit {
   }
 
   reversedAccountVoucher(transactionId: string) {
-    this.transaction_id = transactionId;
-
+    console.log('Reversing account voucher for transaction ID:', transactionId);
+     this.accountposting.patchValue({
+      account_transaction_id: transactionId,
+    });
     this.myModals.show();
   }
 

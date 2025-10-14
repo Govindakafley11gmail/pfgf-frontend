@@ -18,7 +18,7 @@ export class GfEmployeeListComponent implements OnInit {
   @ViewChild('myModal') public myModal: ModalDirective;
   @ViewChild('myModals') public myModals: ModalDirective;
   dtTrigger: Subject<any> = new Subject<any>();
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   pfemployeeDetail
   ids;
   pfEmployee: FormGroup

@@ -15,7 +15,7 @@ import { CollectionService } from '../../_service/collection/collection.service'
 export class PfIndividualApprovedDepositComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') public myModal: ModalDirective;
   dtTrigger: Subject<any> = new Subject<any>();
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   @ViewChild(DataTableDirective, { static: false })
   datatableElement: any = DataTableDirective;
   approveddepositlist;

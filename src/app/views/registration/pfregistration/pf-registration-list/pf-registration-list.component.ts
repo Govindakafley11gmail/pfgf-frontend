@@ -14,7 +14,7 @@ import { UserService } from '../../../_service/user.service';
 })
 export class PfRegistrationListComponent implements OnInit {
   @ViewChild('myModals') public myModals: ModalDirective;
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   allPFUsers
   ids;

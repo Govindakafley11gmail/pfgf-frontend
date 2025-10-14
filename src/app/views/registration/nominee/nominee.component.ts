@@ -45,7 +45,7 @@ ngOnChanges() {
   ngOnInit(): void {
     this.pfNomineeFormcontrol();
     if (this.employeeData) {
-      this.getPFNomineeDetails(this.employeeData.pf_employee_id);
+      this.getPFNomineeDetails(this.employeeData);
     }
     this.isCollapsed = true;
   }
@@ -67,7 +67,7 @@ ngOnChanges() {
   pfNomineeFormcontrol() {
     this.pfNominee = this.fb.group({
       nominee_id: [''],
-      nominee_employee_id: [this.route.snapshot.params['id'], [Validators.required]],
+      nominee_employee_id: [this.employeeData, [Validators.required]],
       name: ['', [Validators.required]],
       relationship: ['', [Validators.required]],
       identification_no: ['', [Validators.required]],
@@ -85,12 +85,9 @@ ngOnChanges() {
 
   async createPfNomineeDetails() {
 
-    if (this.pfNominee.invalid) {
-      this.submitted = true;
-      return;
-    } else {
+ 
       this.createNominee();
-    }
+    
   }
 
   async createNominee() {

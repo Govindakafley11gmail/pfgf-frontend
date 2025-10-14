@@ -52,10 +52,10 @@ export class DefaultLayoutComponent implements OnInit {
       localStorage.removeItem('foo')
     }
   }
+
   getUserData() {
     return this.userservice.editPermission(localStorage.getItem('id')).subscribe(res => { })
   }
-
 
   toggleMinimize(e) {
     this.sidebarMinimized = e;

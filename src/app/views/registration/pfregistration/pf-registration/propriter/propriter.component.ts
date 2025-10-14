@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {ModalDirective} from 'ngx-bootstrap/modal';
@@ -18,7 +18,7 @@ export class PropriterComponent implements OnInit {
   @Input() companyId!: number;
   
   allPFUsers
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   Proprietors: FormGroup
   ids;
@@ -38,12 +38,28 @@ export class PropriterComponent implements OnInit {
   status
   sid
   constructor(private PFservice: PfserviceService, private fb: FormBuilder, private tosatr: ToastrService,private route:ActivatedRoute) { }
-
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['companyId'] && this.companyId) {
+    this.getPropriterByCompanyId(this.companyId);
+    this.Proprietors.patchValue({prop_company_id: this.companyId})
+  }
+}
   ngOnInit() {
-    console.log('hello there',this.companyId)
+    console.log(this.companyId)
     // this.pfRegistrationList()
     this.propriterFormControl();
-     if(this.companyId) {
+    if (this.companyId) {
+       this.Proprietors = this.fb.group({
+      p_id: [''],
+      prop_company_id: new FormControl(this.companyId),
+      proprietor_name: new FormControl('', [Validators.required]),
+      contact_number: new FormControl('',[Validators.required]),
+      email_id: new FormControl(''),
+      employee_detail:new FormControl(''),
+      designation:new FormControl(''),
+      address: new FormControl('', [Validators.required]),
+      status: new FormControl('Active')
+    });
       this.getPropriterByCompanyId(this.companyId);
      }   
   }
@@ -65,11 +81,10 @@ export class PropriterComponent implements OnInit {
   }
 
   create() {
-    this.clearForm();
-    if (this.route.snapshot.params['id']) {
+    if (this.companyId) {
       this.save =true;
 
-      this.sid = this.route.snapshot.params['id'];
+      this.sid = this.companyId;
       this.update=false;
       this.myModal.show();
       this.status = false;
@@ -80,15 +95,14 @@ export class PropriterComponent implements OnInit {
     }
   }
   closepopup() {
-    this.clearForm();
     this.myModal.hide();
     this.status = false;
 
   }
   propriterFormControl() {
     this.Proprietors = this.fb.group({
-      p_id: new FormControl(''),
-      prop_company_id: new FormControl(this.route.snapshot.params['id']),
+      p_id: [''],
+      prop_company_id: new FormControl(''),
       proprietor_name: new FormControl('', [Validators.required]),
       contact_number: new FormControl('',[Validators.required]),
       email_id: new FormControl(''),
@@ -100,6 +114,7 @@ export class PropriterComponent implements OnInit {
   }
   submitted
   createPropriter() {
+    console.log( this.Proprietors.value)
     // stop here if form is invalid
     if (this.Proprietors.invalid) {
       this.submitted = true;
@@ -112,7 +127,6 @@ export class PropriterComponent implements OnInit {
         this.submitted = false;
         this.isLoading = false;
         this.status = false;
-        this.myModal.hide()
         this.tosatr.success('Created successfully!!!')
         this.ngOnDestroy();
       }, error => {
@@ -124,20 +138,7 @@ export class PropriterComponent implements OnInit {
     }
   }
 
-  clearForm() {
 
-    this.Proprietors.reset({
-
-      'proprietor_name': '',
-      'contact_number': '',
-      'email_id': '',
-      'ext_no': '',
-      'employee_detail':'',
-      'designation':'',
-      'address':'',
-      'status': ''
-    });
-  }
 
   getPropriterByCompanyId(companyId) {
     // this.sid = this.route.snapshot.params['id'];
@@ -184,7 +185,6 @@ export class PropriterComponent implements OnInit {
       this.update=true;
       this.status = true;
       this.Proprietors = this.fb.group({
-        id:[res[0]['id']],
         p_id: [res[0]['p_id']],
         prop_company_id: [res[0]['prop_company_id']],
         proprietor_name: [res[0]['proprietor_name']],
@@ -223,12 +223,7 @@ export class PropriterComponent implements OnInit {
   }
 
   expanded(event: any): void {
-    // console.log(event);
-    if(this.route.snapshot.params['id']){
-      // this.getPropriterByCompanyId()
-    }else{
-      this.tosatr.warning('Failed to List Proprieter By Company !')
-    }
+   
 
   }
   get registerFormControl() {

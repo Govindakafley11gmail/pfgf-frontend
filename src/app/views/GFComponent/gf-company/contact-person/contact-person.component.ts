@@ -17,7 +17,7 @@ export class ContactPersonComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') public myModal: ModalDirective;
   @ViewChild('myModals') public myModals: ModalDirective;
   dtTrigger: Subject<any> = new Subject<any>();
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   save
   update
   ContactPerson: FormGroup;

@@ -117,21 +117,20 @@
               <label class="col-sm-2 col-form-label">Company A/C
                 No *</label>
               <div class="col-sm-4">
-                <ng-select formControlName="pf_collection_company_account_no_id" (change)="changeCompanyAccNo()"
-                  [(ngModel)]="changecomAccNo" placeholder="Select Company A/C No" [items]="pfaccno"
-                  bindValue="company_id" bindLabel="company_account_no" [searchFn]="customSearchFn"
-                  clearAllText="Clear">
-
-                  <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                    <span>{{ item.org_name + ' -' +
-                      item.company_account_no }}</span>
-                  </ng-template>
-                  <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                    <span>{{ item.org_name + ' -' +
-                      item.company_account_no }}</span>
-                  </ng-template>
-
-                </ng-select>
+                <ng-select formControlName="pf_collection_company_account_no_id" 
+            [items]="pfaccno"
+            bindLabel="org_name"
+            bindValue="company_id"
+            placeholder="Select Company"
+            appendTo="body"
+            (change)="changeCompanyAccNo()">
+            <ng-template ng-label-tmp let-item="item">
+              <span>{{ item.org_name +' [ '+ item.company_account_no + ' ]'}}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <span>{{ item.org_name +' [ '+ item.company_account_no + ' ]'}}</span>
+            </ng-template>
+          </ng-select>
                 <span class="text-danger" *ngIf="(registerFormControl.pf_collection_company_account_no_id.touched
                                     || submitted) &&
                                     registerFormControl.pf_collection_company_account_no_id.errors?.required">

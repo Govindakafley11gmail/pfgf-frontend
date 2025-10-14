@@ -15,7 +15,7 @@ export class ProprietorComponent implements OnInit {
   @ViewChild('myModal') public myModal: ModalDirective;
   @ViewChild('myModals') public myModals: ModalDirective;
   allPFUsers
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   dtTrigger: Subject<any> = new Subject<any>();
   Proprietors: FormGroup
   ids;

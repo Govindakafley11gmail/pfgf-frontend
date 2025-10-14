@@ -1,7 +1,9 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from "@angular/core";
@@ -22,6 +24,8 @@ export class PfemployeerigistrationComponent implements OnInit {
   @ViewChild("myModal") public myModal: ModalDirective;
   @ViewChild("myModals") public myModals: ModalDirective;
   @Input() employeeData: any; // This will receive data from parent
+
+  // Create an EventEmitter
 
   dtTrigger: Subject<any> = new Subject<any>();
   // dtOptions: DataTables.Settings = {};
@@ -64,23 +68,27 @@ export class PfemployeerigistrationComponent implements OnInit {
   ) {
     // this.getPfEmoloyeeAccNo();
   }
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes["employeeData"] && this.employeeData) {
-      this.fetchCompanyDetails();
-      this.isDisabled = true;
-      this.save = false;
-      this.edit = true;
-      this.cancel = false;
-      this.update = false;
-      this.dropdownDisable = true;
-      this.pfEmployee.patchValue(this.employeeData);
-    }
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   if (changes["employeeData"] && this.employeeData) {
+  //     this.fetchCompanyDetails();
+  //     this.isDisabled = true;
+  //     this.save = false;
+  //     this.edit = true;
+  //     this.cancel = false;
+  //     this.update = false;
+  //     this.dropdownDisable = true;
+  //     this.pfEmployee.patchValue(this.employeeData);
+  //   }
+  // }
   companyacno = true;
   ngOnInit(): void {
     this.pfemployeeFormcontrol();
     this.identificationType();
+    this.fetchCompanyDetails();
+    console.log(this.employeeData);
     if (!this.employeeData) {
+     this.pfEmployee.patchValue(this.employeeData);
+
       this.save = true;
       this.edit = false;
       this.cancel = false;
@@ -97,17 +105,17 @@ export class PfemployeerigistrationComponent implements OnInit {
       this.isLoading = true;
     }
   }
-   async fetchCompanyDetails() {
+  async fetchCompanyDetails() {
     this.isLoading = true;
     await this.pfservice.findAllCompany().subscribe(res => {
       this.isLoading = false;
       // if(res['success']){
-        this.pfaccno = res;
+      this.pfaccno = res;
       // }
       this.dtTrigger.next();
-    },error=>{
+    }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
   isLoading = false;
@@ -172,9 +180,10 @@ export class PfemployeerigistrationComponent implements OnInit {
     this.companyacno = true;
     this.pfservice.editPfCompaneyById($event.company_id).subscribe(
       (res) => {
+        console.log(res);
         this.pfEmployee
           .get("company_account_no")
-          .patchValue(res["Data"][0].company_account_no);
+          .patchValue(res["Data"].company_account_no);
       },
       (error) => {
         this.tosatr.error(error["statusText"] + ". " + error.error.message);
@@ -263,7 +272,7 @@ export class PfemployeerigistrationComponent implements OnInit {
     this.dropdownDisable = true;
     this.isLoading = true;
     this.pfemployee
-      .getPfEmployeeById(this.route.snapshot.params["id"])
+      .getPfEmployeeById(this.employeeData)
       .subscribe(
         (res) => {
           this.isLoading = false;
@@ -334,7 +343,7 @@ export class PfemployeerigistrationComponent implements OnInit {
   createPfEmployeeDetails() {
     console.log(this.pfEmployee.value);
     this.submitted = true;
-
+    // {"success":true,"message":"Employee created successfully","employee_id":"20250822762037"}
     if (this.pfEmployee.valid) {
       this.isLoading = true;
       if (this.pfEmployee.value.registration_type == "Provident Fund") {
@@ -346,6 +355,7 @@ export class PfemployeerigistrationComponent implements OnInit {
               if (res == "success") {
                 this.tosatr.success(res["message"]);
                 this.isDisabled = true;
+                this.employeeData = res;
                 this.save = false;
                 this.edit = true;
                 this.cancel = false;
@@ -353,7 +363,7 @@ export class PfemployeerigistrationComponent implements OnInit {
                 this.dropdownDisable = true;
                 this.isLoading = true;
               } else {
-                this.tosatr.error(res["message"]);
+                this.tosatr.success(res["message"]);
               }
             },
             (error) => {
@@ -371,6 +381,13 @@ export class PfemployeerigistrationComponent implements OnInit {
               // this.pfEmployee.reset(this.pfEmployee);
               this.isLoading = false;
               if (res[0] == "success") {
+                this.isDisabled = true;
+                this.save = false;
+                this.edit = true;
+                this.cancel = false;
+                this.update = false;
+                this.dropdownDisable = true;
+                this.isLoading = true;
                 this.tosatr.success(res["message"]);
                 // this.router.navigate(['/registration/pfemployeeregistration', res['message']])
               } else {
@@ -408,23 +425,35 @@ export class PfemployeerigistrationComponent implements OnInit {
 
   updataPfEmployeeById() {
     this.isLoading = true;
-    this.pfemployee
-      .updataPfEmployeeById(this.pfEmployee.value.id, this.pfEmployee.value)
-      .subscribe(
-        (res) => {
-          this.isLoading = false;
-          if (res[0] == "success") {
-            this.tosatr.success(res["message"]);
-          } else {
-            this.tosatr.error(res["message"]);
+    if (this.pfEmployee.value.registration_type == "Provident Fund") {
+      this.pfemployee
+        .updataPfEmployeeById(this.pfEmployee.value.id, this.pfEmployee.value)
+        .subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res[0] == "success") {
+              this.tosatr.success(res["message"]);
+            } else {
+              this.tosatr.error(res["message"]);
+            }
+            this.ngOnDestroy();
+          },
+          (error) => {
+            this.isLoading = false;
+            this.tosatr.error(error["statusText"] + ". " + error.error.message);
           }
-          this.ngOnDestroy();
-        },
-        (error) => {
-          this.isLoading = false;
-          this.tosatr.error(error["statusText"] + ". " + error.error.message);
+        );
+    }else{
+      this.pfemployee.updataGfEmployeeById(this.pfEmployee.value.id, this.pfEmployee.value).subscribe(res=>{
+        this.isLoading = false;
+        if (res[0] == "success") {
+          this.tosatr.success(res["message"]);
+        } else {
+          this.tosatr.error(res["message"]);
         }
-      );
+        this.ngOnDestroy();
+      })
+    }
   }
 
   collapsed(event: any): void {

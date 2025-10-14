@@ -4,7 +4,7 @@
       <input type="hidden" formControlName="introducer_id" />
       <div class="form-group row">
         <label for="inputPassword" class="col-sm-3 col-form-label"
-          >Introducer *</label
+          >Bussiness Code *</label
         >
         <div class="col-sm-9">
           <select
@@ -29,14 +29,7 @@
         </div>
       </div>
 
-      <input
-        type="hidden"
-        class="form-control"
-        placeholder="introducer company id..."
-        [value]="sid"
-        [(ngModel)]="sid"
-        formControlName="introducer_company_id"
-      />
+      
 
       <div class="form-group row">
         <label for="inputPassword" class="col-sm-3 col-form-label">
@@ -160,22 +153,11 @@
           <i class="fa fa-angle-double-down"></i>
         </small>
 
-        <small
-          className="text-muted"
-          class="btn mr-1 bg-primary rounded-circle"
-          style="background-color: #041562 !important; color: #fff !important"
-          data-toggle="modal"
-          (click)="create()"
-        >
-          <i class="fa fa-plus"></i>
-        </small>
       </div>
     </div>
     <div
       class="card-body bg-light"
-      (collapsed)="collapsed($event)"
-      (expanded)="expanded($event)"
-      [collapse]="isCollapsed"
+    
     >
       <table
         #example

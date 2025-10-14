@@ -1,8 +1,6 @@
-<loading *ngIf="isLoading"></loading>
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      <loading *ngIf="isLoading"></loading>
 
       <table
         class="table table-bordered table-striped rounded table-hover"
@@ -44,7 +42,9 @@
     </div>
   </div>
 </div>
-
+<!-- <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
+    <div id="spinner"></div>
+</div> -->
 <div
   bsModal
   #myModals="bs-modal"
@@ -76,7 +76,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          (click)="reverdedTransaction(transaction_id)"
+          (click)="reverdedTransaction()"
         >
           Yes
         </button>

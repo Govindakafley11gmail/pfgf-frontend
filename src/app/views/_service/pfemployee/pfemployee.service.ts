@@ -46,12 +46,26 @@ export class PfemployeeService {
   updataPfEmployeeById(id,data) :Observable<any>{
     return this.http.put(`${this.Api_Http}` + "/pfemployees/" + id, data, {headers:this.header})
   }
+    updataGfEmployeeById(id,data) :Observable<any>{
+    return this.http.put(`${this.Api_Http}` + "/gf-employees/" + id, data, {headers:this.header})
+  }
 
   identificationType():Observable<any>{
     return this.http.get(`${this.Api_Http}` + "/identificationtypes",{headers:this.header})
   }
   getAccountPostingList(){
     return this.http.get(`${this.Api_Http}` + "/get-all-Account-Posting",{headers:this.header})
+  }
+  addLoan(formData){
+    return this.http.post(`${this.Api_Http}` + "/create_employee_loan", formData, {headers:this.header});
+  }
+  
+  updateLoan(data){
+      return this.http.post(`${this.Api_Http}` + "/update_loan_details", data, {headers:this.header});
+  
+  }
+  fetchEmployeeLoan(loanID:string){
+    return this.http.get(`${this.Api_Http}` + "/list_employee_loan_details/"+loanID,{headers:this.header});
   }
 //  ---------------------pfNominee-------------------------
 createPfNomineeDetails(data):Observable<any> {

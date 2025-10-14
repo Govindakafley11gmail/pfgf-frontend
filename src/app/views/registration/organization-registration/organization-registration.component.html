@@ -4,27 +4,16 @@
       Registration
       <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>PF/GF Member
       Organizations
-      <button
-        data-toggle="modal"
-        data-hover="Add New Collection"
-        (click)="openCreateCompanyModal()"
+      <button data-toggle="modal" data-hover="Add New Collection" (click)="openCreateCompanyModal()"
         class="btn ml-auto font-weight-bold hovertext pull-right"
-        style="background-color: #041562 !important; color: #fff !important"
-      >
+        style="background-color: #041562 !important; color: #fff !important">
         <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create
         Company
       </button>
     </div>
     <div class="card-body">
-      <table
-        class="table table-bordered table-hover"
-        datatable
-        [dtOptions]="dtOptions"
-        [dtTrigger]="dtTrigger"
-      >
-        <thead
-          style="background-color: #041562 !important; color: #fff !important"
-        >
+      <table class="table table-bordered table-hover" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead style="background-color: #041562 !important; color: #fff !important">
           <tr>
             <th>Sl.No</th>
             <th>Organization</th>
@@ -44,25 +33,16 @@
             </td>
             <td>{{ allPFUser.license_no }}</td>
             <!-- <td>{{ allPFUser.dzongkhag_name }}</td> -->
-             <td>{{ allPFUser.phone_no }}</td>
+            <td>{{ allPFUser.phone_no }}</td>
             <td>{{ allPFUser.branch_name }}</td>
-             <td>{{ allPFUser.registration_type }}</td>
+            <td>{{ allPFUser.registration_type }}</td>
             <td class="col-lg-2 text-center" *ngIf="companyEdit">
-              <button
-                class="btn btn-primary bg-success"
-                (click)="editpfCompaneyRegistrationByIds(allPFUser.company_id)"
-                *ngIf="companyEdit"
-              >
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i
-                >&nbsp;Edit
+              <button class="btn btn-primary bg-success" (click)="editpfCompaneyRegistrationByIds(allPFUser)"
+                *ngIf="companyEdit">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit
               </button>
-              <button
-                class="btn btn-primary bg-danger"
-                (click)="show(allPFUser.id)"
-                *ngIf="companyDelete"
-              >
-                <i class="fa fa-minus-square-o" aria-hidden="true"></i
-                >&nbsp;Delete
+              <button class="btn btn-primary bg-danger" (click)="show(allPFUser.id)" *ngIf="companyDelete">
+                <i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete
               </button>
             </td>
             <td *ngIf="!companyEdit">
@@ -74,57 +54,201 @@
     </div>
   </div>
 </div>
-<div
-  id="pause"
-  *ngIf="isLoading"
-  class="d-flex align-items-center justify-content-center"
->
+<div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
   <div id="spinner"></div>
 </div>
 
 <!----------------------confirmation------------------- -->
 
 <!-- Modal Structure -->
-<div
-  bsModal
-  #myModals="bs-modal"
-  [config]="{ backdrop: 'static', keyboard: false }"
-  class="modal fade"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="myModalLabel"
-  aria-hidden="true"
->
+<div bsModal #myModals="bs-modal" [config]="{ backdrop: 'static', keyboard: false }" class="modal fade" tabindex="-1"
+  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header" style="background-color: #041562 !important; color: #fff !important">
-        <h6 class="modal-title mr-3"(click)="selectedTab(1)">Company Registration</h6>
+        <h6 class="modal-title mr-3" (click)="selectedTab(1)">Company Registration</h6>
         <h6 class="modal-title mr-3" (click)="selectedTab(2)">Proprietors Details</h6>
-        <h6 class="modal-title mr-3"(click)="selectedTab(3)">Contact Person Details</h6>
-        <h6 class="modal-title mr-3"(click)="selectedTab(4)">Introducer Details</h6>
-         <button type="button" class="close text-white" aria-label="Close" (click)="myModals.hide()">
+        <h6 class="modal-title mr-3" (click)="selectedTab(3)">Contact Person Details</h6>
+        <h6 class="modal-title mr-3" (click)="selectedTab(4)">Introducer Details</h6>
+        <button type="button" class="close text-white" aria-label="Close" (click)="myModals.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-     <div *ngIf="activeTab === 1">
-     <app-p-forganisation-registration [companyId]="selectedCompanyId" (registrationDone)="closeModal()"></app-p-forganisation-registration>
-    </div>
+      <div *ngIf="activeTab === 1">
+        <div class="card shadow bg-white rounded ml-3 my-4">
+          <div class="card-header my-2 bg-white text-uppercase">
+            <strong>Create PF Company</strong>
+          </div>
 
-    <!-- Tab 2 Content -->
-    <div *ngIf="activeTab === 2">
-     <app-propriter [companyId]="selectedCompanyId"></app-propriter>
-    </div>
+          <div class="card-body">
+            <form [formGroup]="organizationRegistration">
 
-    <!-- Tab 3 Content -->
-    <div *ngIf="activeTab === 3">
-      <app-contact-person-detail [companyId]="selectedCompanyId"></app-contact-person-detail>
-    </div>
+              <!-- Row 1 -->
+              <div class="form-group row">
+                <div class="col-sm-3">
+                  <label>Registration Type *</label>
+                  <select formControlName="registration_type" class="form-control" (change)="onRegistrationTypeChange()">
+                    <option value="PF">PF</option>
+                    <option value="GF">GF</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <label>Organization *</label>
+                  <input type="text" class="form-control" formControlName="org_name" [readonly]="isDisabled"
+                    placeholder="Name of Organization...">
+                </div>
+                <div class="col-sm-3">
+                  <label>License No *</label>
+                  <input type="text" class="form-control" formControlName="license_no" [readonly]="isDisabled"
+                    placeholder="License No">
+                </div>
+                <div class="col-sm-3">
+                  <label>License Validity</label>
+                  <input type="date" class="form-control" formControlName="license_validity" [readonly]="isDisabled">
+                </div>
+              </div>
 
-    <!-- Tab 4 Content -->
-    <div *ngIf="activeTab === 4">
-     <app-introductive-details [companyId]="selectedCompanyId"></app-introductive-details>
-    </div>
-    
+              <!-- Row 2 -->
+              <div class="form-group row">
+                <div class="col-sm-3">
+                  <label>BIT/CIT No</label>
+                  <input type="text" class="form-control" formControlName="bit_cit_no" [readonly]="isDisabled"
+                    placeholder="BIT/CIT Number">
+                </div>
+                <div class="col-sm-3">
+                  <label>Organization Type *</label>
+                  <ng-select formControlName="org_type" [items]="orgTypes" bindLabel="org_name" bindValue="org_name"
+                    placeholder="Select Organization Type" appendTo="body"></ng-select>
+                </div>
+                <div class="col-sm-3">
+                  <label>Sector Type</label>
+                  <ng-select formControlName="sector_type" [items]="sectorWiseData" bindLabel="sector_name"
+                    bindValue="sector_name" placeholder="Select Sector Type" appendTo="body"></ng-select>
+                </div>
+                <div class="col-sm-3">
+                  <label>Dzongkhag *</label>
+                  <ng-select formControlName="dzongkhag_id" [items]="dzongkhag" bindLabel="dzongkhag_name"
+                    bindValue="dzongkhag_id" placeholder="Select Dzongkhag" appendTo="body"></ng-select>
+                </div>
+              </div>
+
+              <!-- Row 3 -->
+              <div class="form-group row">
+                <div class="col-sm-3">
+                  <label>Phone No</label>
+                  <input type="text" formControlName="phone_no" class="form-control" [readonly]="isDisabled"
+                    placeholder="Phone No...">
+                </div>
+                <div class="col-sm-3">
+                  <label>Email</label>
+                  <input type="email" formControlName="email_id" class="form-control" [readonly]="isDisabled"
+                    placeholder="Email">
+                </div>
+                <div class="col-sm-3">
+                  <label>Website</label>
+                  <input type="text" formControlName="website" class="form-control" [readonly]="isDisabled"
+                    placeholder="Website">
+                </div>
+                <div class="col-sm-3">
+                  <label>PostBox No</label>
+                  <input type="text" formControlName="post_box_no" class="form-control" [readonly]="isDisabled"
+                    placeholder="PostBox No">
+                </div>
+              </div>
+
+              <!-- Row 4 -->
+              <div class="form-group row">
+                <div class="col-sm-3">
+                  <label>Registration Branch *</label>
+                  <select class="form-control" formControlName="reg_branch" [disabled]="dropdownDisable">
+                    <option>Select Registration Branch</option>
+                    <option *ngFor="let reg_branchs of reg_branch" [value]="reg_branchs.id">
+                      {{ reg_branchs.branch_name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <label>Address *</label>
+                  <input type="text" formControlName="address" class="form-control" [readonly]="isDisabled"
+                    placeholder="Address">
+                </div>
+                <div class="col-sm-3">
+                  <label>Status *</label>
+                  <ng-select formControlName="status" [items]="status" bindLabel="company_status"
+                    bindValue="company_status" placeholder="Select Status" appendTo="body"></ng-select>
+                </div>
+                <div class="col-sm-3">
+                  <label>Interest types *</label>
+                  <ng-select formControlName="interest_type" [items]="interest_types" bindLabel="interest_type"
+                    bindValue="interest_type" placeholder="interest types" appendTo="body"></ng-select>
+                </div>
+                 <div class="col-sm-3" *ngIf="reg_type">
+                  <label>Lumpsum/Individual*</label>
+                  <ng-select formControlName="registered_as" [items]="lumpsum_individual" bindLabel="lumpsum_individual"
+                    bindValue="lumpsum_individual" placeholder="Lumpsum/Individual" appendTo="body"></ng-select>
+                </div>
+              </div>
+
+              <hr class="my-4">
+              <div class="my-3 card-header bg-white">
+                <strong>MOU Details</strong>
+              </div>
+
+              <!-- Row 5 -->
+              <div class="form-group row mt-2">
+                <div class="col-sm-3">
+                  <label>MOU Ref No</label>
+                  <input type="text" formControlName="mou_ref_no" class="form-control" [readonly]="isDisabled"
+                    placeholder="MOU Ref No">
+                </div>
+                <div class="col-sm-3">
+                  <label>MOU Date *</label>
+                  <input type="date" formControlName="mou_date" class="form-control" [readonly]="isDisabled"
+                    placeholder="MOU Date">
+                </div>
+                <div class="col-sm-3">
+                  <label>MOU Expiry Date *</label>
+                  <input type="date" formControlName="mou_expiry_date" class="form-control" [readonly]="isDisabled"
+                    placeholder="MOU Expiry Date">
+                </div>
+                <div class="col-sm-3">
+                  <label>Interest Rate *</label>
+                  <input type="number" formControlName="interest_rate" class="form-control" [readonly]="isDisabled"
+                    placeholder="Interest Rate">
+                </div>
+              </div>
+
+              <div class="clearfix mt-4">
+                <button class="btn float-right ml-2 mr-1" (click)="companeyRegistrations()"
+                  style="background-color: #041562!important; color: #fff!important;" *ngIf="save">Save</button>
+                <button class="btn btn-secondary float-right" (click)="cancelRegistrations()"
+                  *ngIf="cancel">Cancel</button>
+                <button class="btn btn-primary float-right ml-2 mr-1" (click)="editRegistrations()"
+                  style="background-color: #041562!important; color: #fff!important;" *ngIf="edit">Edit</button>
+                <button class="btn btn-primary float-right ml-2 mr-1" (click)="updatePfCompaney()"
+                  style="background-color: #041562!important; color: #fff!important;" *ngIf="update">Update</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2 Content -->
+      <div *ngIf="activeTab === 2">
+        <app-propriter [companyId]="selectedCompanyId"></app-propriter>
+      </div>
+
+      <!-- Tab 3 Content -->
+      <div *ngIf="activeTab === 3">
+        <app-contact-person-detail [companyId]="selectedCompanyId"></app-contact-person-detail>
+      </div>
+
+      <!-- Tab 4 Content -->
+      <div *ngIf="activeTab === 4">
+        <app-introductive-details [companyId]="selectedCompanyId"></app-introductive-details>
+      </div>
+
     </div>
   </div>
 </div>

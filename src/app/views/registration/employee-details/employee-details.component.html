@@ -4,14 +4,9 @@
       Registration
       <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>Provident
       Fund Employees
-      <button
-        data-toggle="modal"
-        data-hover="Add New Collection"
-        *ngIf="createEmployee"
-        (click)="myModals.show()"
+      <button data-toggle="modal" data-hover="Add New Collection" *ngIf="createEmployee" (click)="myModals.show()"
         class="btn ml-auto font-weight-bold hovertext pull-right"
-        style="background-color: #041562 !important; color: #fff !important"
-      >
+        style="background-color: #041562 !important; color: #fff !important">
         <i class="fa fa-plus-square-o" aria-hidden="true"></i>&nbsp;Create
         Employee
       </button>
@@ -19,15 +14,9 @@
     <div class="card-body">
       <label>Search</label>
       <!-- <input type="text" class="mb-2" (keyup)="getEmployeeDataBySearchFilter($event.target.value)"> -->
-      <table
-        class="table table-bordered table-striped rounded table-hover"
-        datatable
-        [dtOptions]="dtOptions"
-        [dtTrigger]="dtTrigger"
-      >
-        <thead
-          style="background-color: #041562 !important; color: #fff !important"
-        >
+      <table class="table table-bordered table-striped rounded table-hover" datatable [dtOptions]="dtOptions"
+        [dtTrigger]="dtTrigger">
+        <thead style="background-color: #041562 !important; color: #fff !important">
           <tr>
             <th>Sl.No</th>
             <th>Organization Name</th>
@@ -47,25 +36,15 @@
 
             <td>{{ pfemployeeDetails.employee_name }}</td>
             <td>{{ pfemployeeDetails.employee_id_no }}</td>
-          
+
             <td>{{ pfemployeeDetails.status }}</td>
 
             <td class="col-lg-2 text-center" *ngIf="employeeEdit">
-              <button
-                class="btn btn-success mr-2"
-                (click)="findEmployee(pfemployeeDetails)"
-                *ngIf="employeeEdit"
-              >
-                <i class="fa fa-pencil-square-o" aria-hidden="true"></i
-                >&nbsp;Edit
+              <button class="btn btn-success mr-2" (click)="findEmployee(pfemployeeDetails)" *ngIf="employeeEdit">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit
               </button>
-              <button
-                class="btn btn-danger"
-                (click)="show(pfemployeeDetails.id)"
-                *ngIf="employeeDelete"
-              >
-                <i class="fa fa-minus-square-o" aria-hidden="true"></i
-                >&nbsp;Delete
+              <button class="btn btn-danger" (click)="show(pfemployeeDetails.id)" *ngIf="employeeDelete">
+                <i class="fa fa-minus-square-o" aria-hidden="true"></i>&nbsp;Delete
               </button>
             </td>
             <td *ngIf="!employeeEdit">
@@ -81,30 +60,15 @@
     </div>
   </div>
 
-  <div
-    id="pause"
-    *ngIf="isLoading"
-    class="d-flex align-items-center justify-content-center"
-  >
+  <div id="pause" *ngIf="isLoading" class="d-flex align-items-center justify-content-center">
     <div id="spinner"></div>
   </div>
 
-  <div
-    bsModal
-    #myModals="bs-modal"
-    [config]="{ backdrop: 'static', keyboard: false }"
-    class="modal fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="true"
-  >
+  <div bsModal #myModals="bs-modal" [config]="{ backdrop: 'static', keyboard: false }" class="modal fade" tabindex="-1"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <div
-          class="modal-header"
-          style="background-color: #041562 !important; color: #fff !important"
-        >
+        <div class="modal-header" style="background-color: #041562 !important; color: #fff !important">
           <h6 class="modal-title mr-3" (click)="selectedTab(1)">
             Employee Registration/Update
           </h6>
@@ -112,21 +76,178 @@
             Nominee Details
           </h6>
           <h6 class="modal-title mr-3" (click)="selectedTab(3)">
-            Loan Introducer Details
+            Loan Details
           </h6>
-          <button
-            type="button"
-            class="close text-white"
-            aria-label="Close"
-            (click)="myModals.hide()"
-          >
+          <button type="button" class="close text-white" aria-label="Close" (click)="myModals.hide()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div *ngIf="activeTab === 1">
-          <app-pfemployeerigistration
-            [employeeData]="selectedEmployee"
-          ></app-pfemployeerigistration>
+          <div class="card shadow bg-white rounded ml-4 my-4">
+            <div class="card-body">
+              <form [formGroup]="pfEmployee">
+                <input type="hidden" formControlName="pf_employee_id">
+
+                <!-- Row 1 -->
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Registration Type*</label>
+                    <ng-select formControlName="registration_type" [items]="registrationType"
+                      bindLabel="registration_type" bindValue="value" placeholder="Select Type"
+                      appendTo="body" (change)="handleRegistrationTypeChange()"[readonly]="dropdownDisable">
+                      <ng-template ng-label-tmp let-item="item">
+                        <span>{{ item.registration_type }}</span>
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item">
+                        <span>{{ item.registration_type }}</span>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label>Company A/c*</label>
+                    <ng-select formControlName="company_id" [items]="pfaccno" bindLabel="org_name"
+                      bindValue="company_id" placeholder="Select Company" appendTo="body"[readonly]="dropdownDisable"
+                      (change)="getcompanyId($event)">
+                      <ng-template ng-label-tmp let-item="item">
+                        <span>{{ item.org_name +' [ '+ item.company_account_no + ' ]'}}</span>
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item">
+                        <span>{{ item.org_name +' [ '+ item.company_account_no + ' ]'}}</span>
+                      </ng-template>
+                    </ng-select>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Employee*</label>
+                    <input type="text" class="form-control" formControlName="employee_name" placeholder="Employee Name"[readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>DOB</label>
+                    <input type="date" class="form-control" formControlName="date_of_birth"[readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Gender</label>
+                    <ng-select formControlName="gender" [items]="gender" bindLabel="gender" bindValue="gender"
+                      placeholder="Select"[readonly]="dropdownDisable"></ng-select>
+                  </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Marital</label>
+                    <ng-select formControlName="marital_status" [items]="marital_status" bindLabel="maritalstatus"
+                      bindValue="maritalstatus" placeholder="Select" [readonly]="dropdownDisable"></ng-select>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Nationality*</label>
+                    <ng-select formControlName="nationality" [items]="nationalitys" bindLabel="nationality"
+                      bindValue="nationality" placeholder="Select" [readonly]="dropdownDisable"></ng-select>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>ID Type*</label>
+                    <ng-select formControlName="identification_types" [items]="identification_types"
+                      bindLabel="id_types_name" bindValue="id_types_name" placeholder="Select" [readonly]="dropdownDisable"></ng-select>
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>ID No*</label>
+                    <input type="text" class="form-control" formControlName="identification_no" placeholder="ID Number" [readonly]="dropdownDisable">
+                  </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Dept</label>
+                    <input type="text" class="form-control" formControlName="department" placeholder="Department" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Reg Date*</label>
+                    <input type="date" class="form-control" formControlName="registration_date" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Designation</label>
+                    <input type="text" class="form-control" formControlName="designation" placeholder="Designation" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Contact</label>
+                    <input type="text" class="form-control" formControlName="contact_no" placeholder="Contact No" [readonly]="dropdownDisable">
+                  </div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Email</label>
+                    <input type="email" class="form-control" formControlName="email_id" placeholder="Email" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Address*</label>
+                    <input type="text" class="form-control" formControlName="address" placeholder="Address" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Basic Pay*</label>
+                    <input type="number" class="form-control" formControlName="basic_pay" placeholder="Basic Pay" [readonly]="dropdownDisable"
+                      (keyup)="calculation1()">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Contribution*</label>
+                    <input type="number" class="form-control" formControlName="contribution"
+                      placeholder="Contribution %" (keyup)="calculation1()" [readonly]="dropdownDisable">
+                  </div>
+                </div>
+
+                <!-- Row 5 -->
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label>Emp Cont.*</label>
+                    <input type="number" class="form-control" formControlName="employee_contribution_amount"
+                      [(ngModel)]="EmployeeContributionAmt" placeholder="Employee Contribution" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Empr Cont.*</label>
+                    <input type="number" class="form-control" formControlName="employer_contribution_amount"
+                      [(ngModel)]="EmployerContributionAmt" placeholder="Employer Contribution" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label>Join Date*</label>
+                    <input type="date" class="form-control" formControlName="service_joining_date" [readonly]="dropdownDisable">
+                  </div>
+
+                  <div class="form-group col-md-3" *ngIf="registrationDate">
+                    <label>Status*</label>
+                    <ng-select formControlName="status" [items]="statuss" bindLabel="status" bindValue="status"
+                      placeholder="Select" [disabled]="dropdownDisable"></ng-select>
+                  </div>
+                </div>
+              </form>
+
+              <!-- Buttons -->
+              <div class="clearfix mt-3">
+                <button type="button" class="btn btn-primary float-right ml-2" (click)="createPfEmployeeDetails()"
+                  *ngIf="save">Save</button>
+                <button type="button" class="btn btn-light float-right" (click)="cancelPfEmployeeById()"
+                  *ngIf="cancel">Cancel</button>
+                <button type="button" class="btn btn-primary float-right ml-2" (click)="editPfEmployeeById()"
+                  *ngIf="edit">Edit</button>
+                <button type="button" class="btn btn-primary float-right ml-2" (click)="updataPfEmployeeById()"
+                  *ngIf="update">Update</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Tab 2 Content -->
@@ -136,9 +257,7 @@
 
         <!-- Tab 3 Content -->
         <div *ngIf="activeTab === 3">
-          <app-contact-person-detail
-            [companyId]="selectedCompanyId"
-          ></app-contact-person-detail>
+          <app-employeeloan [employeeData]="selectedEmployee"></app-employeeloan>
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ export class IntroducerComponent implements OnInit {
   @ViewChild('myModal') public myModal: ModalDirective;
   @ViewChild('myModals') public myModals: ModalDirective;
   dtTrigger: Subject<any> = new Subject<any>();
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   isCollapsed: boolean=false;
   introducer: FormGroup
   introducers;

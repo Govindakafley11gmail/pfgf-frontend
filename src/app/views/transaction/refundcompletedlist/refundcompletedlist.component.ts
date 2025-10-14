@@ -50,6 +50,15 @@ export class RefundcompletedlistComponent implements OnInit {
     })
   
   }
+  downloadRefundFile(doc_name) {
+    this.pfservice.downloadRefundFile(doc_name).subscribe(res => {
+        let blob: any = new Blob([res], { type: "application/pdf" });
+          const url = window.URL.createObjectURL(blob);
+          open(url, " " + doc_name + " " + new Date());
+    }, error => {
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
+    });
+  }
   viewCompletedDataList(){
     this.completedRefundFormGroup = this.fb.group({
       org_name:new FormControl(''),
@@ -103,56 +112,41 @@ export class RefundcompletedlistComponent implements OnInit {
     this.wait(2000).then(() => this.isLoading = false);
   }
   dataToApproved
-  refund_payment_voucher
-  paymentVoucher
+  refund_payment_vo
+  documents: any[];
   ViewCompletedRefundData(refNo) {
     this.pfservice.viewCompletedDataList(refNo).subscribe(res=>{
-      console.log(res)
       this.isLoading = false;
-      if (res['refund_payment_advise_docs'].length == 2) {
-        this.allRefundApprovalData = true;
-        this.refundAdvideNote = true;
-        this.paymentVoucher = false;
-         this.refund_approval_upload = res.refund_payment_advise_docs[0].doc_path;
-         this.refund_advise_note = res.refund_payment_advise_docs[1].doc_path;
-       }
-       else if(res['refund_payment_advise_docs'].length == 0){
-        this.allRefundApprovalData = false;
-        this.refundAdvideNote = false;
-        this.paymentVoucher = false;
-        this.refund_payment_voucher = false;
-        this.refund_approval_upload = false;
-        this.refund_advise_note = false;
-       }
-      else if (res['refund_payment_advise_docs'].length == 3) {
-        this.allRefundApprovalData = true;
-        this.refundAdvideNote = true;
-        this.paymentVoucher = true;
-        this.refund_payment_voucher = res.refund_payment_advise_docs[2].doc_path;
-         this.refund_approval_upload = res.refund_payment_advise_docs[0].doc_path;
-         this.refund_advise_note = res.refund_payment_advise_docs[1].doc_path;
-       }
-       else if(res['refund_payment_advise_docs'].length == 1){
-        this.allRefundApprovalData = false;
-        this.refundAdvideNote = true;
-        this.refund_advise_note = res.refund_payment_advise_docs[0].doc_path;
-       }
-      else if (res['refund_processed_upload_docs'].length == 3) {
-         this.processUpload =true;
-         this.processSlip =true;
-         this.committeeApproval =true;
-        this.process_upload = res['refund_processed_upload_docs'][0].doc_path;
-        this.process_slip = res['refund_processed_upload_docs'][1].doc_path;
-        this.committee_approval = res['refund_processed_upload_docs'][2].doc_path;
-      }
       
-       else if(res['refund_processed_upload_docs'].length == 2) {
-        this.processUpload =false;
-         this.processSlip =true;
-         this.committeeApproval =true;
-        this.process_slip = res.refund_processed_upload_docs[0].doc_path;
-        this.committee_approval = res.refund_processed_upload_docs[1].doc_path;
-      }
+
+      // now assign documents dynamically from res
+     this.documents = [
+  { 
+    name: 'Supporting Document', 
+    file: res.refund_payments_data[0]?.refund_approval_doc[0]?.doc_path, 
+    condition: !!res.refund_payments_data[0]?.refund_approval_doc?.[0] 
+  },
+  { 
+    name: 'Refund Request', 
+    file: res.refund_payments_data[0]?.refund_approval_doc[1]?.doc_path, 
+    condition: !!res.refund_payments_data[0]?.refund_approval_doc?.[1] 
+  },
+  { 
+    name: 'Refund Slip', 
+    file: res.refund_payments_data[0]?.refund_approval_doc[2]?.doc_path, 
+    condition: !!res.refund_payments_data[0]?.refund_approval_doc?.[2] 
+  },
+  { 
+    name: 'Payment Advise Note', 
+    file: res.refund_payments_data[0]?.refund_approval_doc[3]?.doc_path, 
+    condition: !!res.refund_payments_data[0]?.refund_approval_doc?.[3] 
+  },
+  { 
+    name: 'Payment Approval Note', 
+    file: res.refund_payments_data[0]?.refund_approval_doc[4]?.doc_path, 
+    condition: !!res.refund_payments_data[0]?.refund_approval_doc?.[4] 
+  },
+];
 
       this.completedRefundFormGroup = this.fb.group({
         org_name:new FormControl(res['org_name']),

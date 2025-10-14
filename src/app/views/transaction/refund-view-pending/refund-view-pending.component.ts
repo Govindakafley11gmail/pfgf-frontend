@@ -331,6 +331,11 @@ export class RefundViewPendingComponent implements OnInit {
 
     if (event.target.files[0]) {
       const files = <File>event.target.files[0];
+       const maxSizeInBytes = 5 * 1024 * 1024; // 2 MB
+  if (files.size > maxSizeInBytes) {
+      this.tosatr.error("Failed to approved because file size exceeds 5 MB.");
+    return; // stop further processing
+  }
       this.formarray.patchValue({
         approve_file_name: files
       })
@@ -362,7 +367,6 @@ export class RefundViewPendingComponent implements OnInit {
   checkValidationApprovedData;
   checkApprovedRefund;
   submitApproveedData() {
-   console.log(this.formarray.value.approve_file_name.length)
     for (let i = 0; i < this.formarray.value.data.length; i++) {
       if (this.formarray.value.data[i].registration_type == 'PF') {
         this.checkValidationApprovedData = true;
@@ -389,7 +393,6 @@ export class RefundViewPendingComponent implements OnInit {
 
   pfApprovedRefund() {
 
-    console.log(this.formarray.value.data)
     const formData = new FormData();
     formData.append("approve_file_name", this.formarray.get('approve_file_name').value);
     formData.append("data", JSON.stringify(this.formarray.get('data').value));
@@ -419,7 +422,6 @@ export class RefundViewPendingComponent implements OnInit {
   }
 
   gfApprovedRefund() {
-    console.log(this.formarray.value.data)
     const formData = new FormData();
     formData.append("approve_file_name", this.formarray.get('approve_file_name').value);
     formData.append("data", JSON.stringify(this.formarray.get('data').value));
@@ -608,6 +610,7 @@ export class RefundViewPendingComponent implements OnInit {
       this.isLoading = false;
     })
   }
+  
   refundType = [
     { refundtype: 'PF-Refund', value: 'PF' },
     { refundtype: 'GF-Refund', value: 'GF' }

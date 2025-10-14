@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ModalDirective} from 'ngx-bootstrap/modal';
@@ -18,7 +18,7 @@ export class ContactPersonDetailComponent implements OnInit, OnDestroy {
   @ViewChild('myModal') public myModal: ModalDirective;
   @ViewChild('myModals') public myModals: ModalDirective;
   dtTrigger: Subject<any> = new Subject<any>();
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   save:boolean=true;
   update
   ContactPerson: FormGroup;
@@ -29,10 +29,16 @@ export class ContactPersonDetailComponent implements OnInit, OnDestroy {
   org_Id;
   sid;
   constructor(private route: ActivatedRoute, private router: Router, private fb: FormBuilder, private pfservice: PfserviceService, private tosatr: ToastrService, private uservices: UserService) { }
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['companyId'] && this.companyId) {
+    this.contactPersonFormcontrol();
+    this.ContactPerson.patchValue({prop_company_id: this.companyId})
+  }
+}
   ngOnInit(): void {
     this.contactPersonFormcontrol();
     if(this.companyId){
-      this.getContactPersonByCompanyId(this.companyId)
+      this.getContactPersonByCompanyId(this.companyId);
     }
     
   }
@@ -55,7 +61,7 @@ export class ContactPersonDetailComponent implements OnInit, OnDestroy {
   contactPersonFormcontrol() {
     this.ContactPerson = this.fb.group({
       contact_id: [''],
-      contact_person_company_id: [this.route.snapshot.params['id']],
+      contact_person_company_id: [''],
       contact_person_name: ['', [Validators.required]],
       contact_no: ['', [Validators.required]],
       fix_line_no: [''],
@@ -93,7 +99,6 @@ export class ContactPersonDetailComponent implements OnInit, OnDestroy {
         this.submitted = false;
         // this.getContactPersonByCompanyId();
         this.tosatr.success('Created successfully!!!')
-        this.clearForm()
         // this.myModal.hide();
         this.ngOnDestroy();
       }, error => {
@@ -106,20 +111,7 @@ export class ContactPersonDetailComponent implements OnInit, OnDestroy {
       this.myModal.hide();
     }
   }
-  clearForm() {
-
-    this.ContactPerson.reset({
-
-      'contact_person_name': '',
-      'contact_no': '',
-      'fix_line_no': '',
-      'ext_no': '',
-      'email_id': '',
-      'designation': '',
-      'department': '',
-      'address': ''
-    });
-  }
+ 
   getContactPersonByCompanyId(companyId) {
     
     this.pfservice.getContactPersionCompanyId(companyId).subscribe(res => {
@@ -198,7 +190,6 @@ export class ContactPersonDetailComponent implements OnInit, OnDestroy {
   create() {
     if (this.route.snapshot.params['id']) {
       // this.getDepartment()
-      this.contactPersonFormcontrol();
       this.save = true;
       this.update = false;
       this.myModal.show();

@@ -22,7 +22,7 @@ export class PfemployeerigistrationlistComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   // @ViewChild(DataTableDirective, {static: false})
   datatableElement: any = DataTableDirective;
-  // dtOptions: DataTables.Settings = {};
+  dtOptions: any = {};
   
   Api_Http = Api;
 

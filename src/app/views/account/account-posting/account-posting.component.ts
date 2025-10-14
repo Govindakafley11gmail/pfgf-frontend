@@ -498,7 +498,7 @@ export class AccountPostingComponent implements OnInit {
   }
 
   viewDocumentAccountposting(docPath){
-   this.collection.downloadReport(docPath).subscribe(res => {
+   this.collection.downloadReportAccountPosting(docPath).subscribe(res => {
       this.isLoading = false;
 
       let blob: any = new Blob([res], { type: 'application/pdf' });

@@ -1,392 +1,639 @@
-
 <div class="shadow rounded ml-5 my-4" *ngIf="generateReport">
-    <div class="card-header bg-white">
-        <strong>Generate Report</strong>
+  <div class="card-header bg-white">
+    <strong>Generate Report</strong>
+  </div>
+  <div [formGroup]="report" class="ml-3 mr-3">
+    <div class="form-group row mt-4">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Report Category *:
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Report Name"
+          [items]="ReportWiseName"
+          bindValue="value"
+          bindLabel="reportname"
+          formControlName="report_name"
+          (change)="getReportCategory()"
+          appendTo="body"
+        >
+        </ng-select>
+        <span
+          class="text-danger"
+          *ngIf="
+            (registerFormControl.report_name.touched || submitted) &&
+            registerFormControl.report_name.errors?.required
+          "
+        >
+          Report Category is required
+        </span>
+      </div>
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Bussiness type *:
+      </label>
+      <div class="col-sm-4">
+        <select
+          class="form-control"
+          formControlName="registration_type"
+          (change)="ChangeRegistration()"
+        >
+          <option>Select Registration type</option>
+          <option
+            *ngFor="let registrationtype of regType"
+            [value]="registrationtype.value"
+          >
+            {{ registrationtype.registration }}
+          </option>
+        </select>
+        <span
+          class="text-danger"
+          *ngIf="
+            (registerFormControl.registration_type.touched || submitted) &&
+            registerFormControl.registration_type.errors?.required
+          "
+        >
+          Registration type is required
+        </span>
+      </div>
     </div>
-    <div [formGroup]="report" class="ml-3 mr-3">
-        <div class="form-group row mt-4">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Report
-                Category *: </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Report Name"
-                    [items]="ReportWiseName" bindValue="value"
-                    bindLabel="reportname" formControlName="report_name"
-                    (change)="getReportCategory()" appendTo="body">
-                </ng-select>
-                <span class="text-danger"
-                    *ngIf="(registerFormControl.report_name.touched ||
-                    submitted) &&
-                    registerFormControl.report_name.errors?.required">
-                    Report Category is required
-                </span>
-            </div>
-            <label for="inputPassword" class="col-sm-2 col-form-label">Bussiness
-                type *: </label>
-            <div class="col-sm-4">
-                <select class="form-control" formControlName="registration_type"
-                    (change)="ChangeRegistration()">
-                    <option> Select Registration type</option>
-                    <option *ngFor="let registrationtype of regType" [value]="registrationtype.value">{{registrationtype.registration}}</option>
-                </select>
-                <span class="text-danger"
-                    *ngIf="(registerFormControl.registration_type.touched ||
-                    submitted) &&
-                    registerFormControl.registration_type.errors?.required">
-                    Registration type is required
-                </span>
-            </div>
-        </div>
-        <div class="form-group row"*ngIf="formdata">
-            <label for="inputPassword" class="col-sm-2 col-form-label">From Date
-                : </label>
-            <div class="col-sm-4">
-                <input type="date" class="form-control"
-                    formControlName="from_date" [ngClass]="{ 'is-invalid':
-                    submitted &&
-                    registerFormControl.to_date.errors}">
-            </div>
-            <label for="inputPassword" class="col-sm-2 col-form-label">To Date :
-            </label>
-            <div class="col-sm-4">
-                <input type="date" class="form-control"
-                    formControlName="to_date" [ngClass]="{ 'is-invalid':
-                    submitted &&
-                    registerFormControl.to_date.errors}">
-            </div>
-        </div>
-
-        <div class="form-group row mt-4" *ngIf="monthAndYear">
-            <label for="inputPassword" class="col-sm-2 col-form-label">For Month
-                : </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Month"
-                    [items]="collectionofMonths" bindValue="id"
-                    bindLabel="month_name"
-                    formControlName="for_the_month" appendTo="body">
-                </ng-select>
-            </div>
-
-            <label for="inputPassword" class="col-sm-2 col-form-label">For Year
-                : </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Year"
-                [items]="get_Col_year" bindValue="year"
-                bindLabel="year"
-                formControlName="for_the_year" appendTo="body">
-            </ng-select>
-            </div>
-        </div>
-        <!-- ----------------daily collection----------- -->
-        <div class="form-group row mt-4" *ngIf="dailycollectionCondition">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Branch :
-            </label>
-            <div class="col-sm-4">
-                <ng-select formControlName="branch_id" [items]="branchName"
-                    bindLabel="branch_name" bindValue="id"
-                    placeholder="Select Branch Name" appendTo="body">
-                </ng-select>
-            </div>
-        </div>
-
-        <!-- -------------------Employee wise Statement------ -->
-        <div class="form-group row mt-4" *ngIf="employeewise">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Company
-                Name: </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Company Name"
-                    [items]="companyName" [(ngModel)]="companyid"
-                    bindValue="company_id" bindLabel="org_name"
-                    formControlName="company_id"
-                    (change)="getcompanyWiseEmployeeName()"
-                    [searchFn]="customSearchFn" clearAllText="Clear">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                </ng-select>
-            </div>
-
-            <label for="inputPassword" class="col-sm-2 col-form-label">Employee
-                Name: </label>
-            <div class="col-sm-4">
-                <ng-select formControlName="employee_id"
-                    [(ngModel)]="employeeid" [items]="employeeName"
-                    bindLabel="employee_name" bindValue="pf_employee_id"
-                    (change)="getEmployeeCID()"
-                    placeholder="Select Employee Name" appendTo="body">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.employee_name + ' -' +
-                          item.employee_id_no }}</span>
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.employee_name + ' -' +
-                            item.employee_id_no }}</span>
-                      </ng-template>
-                </ng-select>
-            </div>
-        </div>
-        <div class="form-group row mt-4" *ngIf="employeewise">
-            <label for="inputPassword" class="col-sm-2 col-form-label">CID No :
-            </label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" placeholder="Enter CID No" [ngClass]="{ 'is-invalid': submitted &&
-                    registerFormControl.employee_cid_no.errors}"
-                    formControlName="employee_cid_no">
-            </div>
-            <label for="inputPassword" class="col-sm-2 col-form-label"  *ngIf="employeewise">Status :
-            </label>
-            <div class="col-sm-4" *ngIf="employeewise">
-                <ng-select formControlName="status"
-                [items]="status"
-               bindLabel="status" bindValue="status"
-               placeholder="Select Status" appendTo="body">
-           </ng-select>
-            </div>
-            <label for="inputPassword" class="col-sm-2 col-form-label" *ngIf="excessref">Refund Type: </label>
-            <div class="col-sm-4"*ngIf="excessref">
-                <ng-select formControlName="Excess_Payment_Refund"
-                     [items]="monthly_refund"
-                    bindLabel="refund" bindValue="refund"
-                    placeholder="Select Refund" appendTo="body">
-                </ng-select>
-                
-            </div>
-        </div>
-        <!-- -----------companywise-------------- -->
-        <div class="form-group row mt-4" *ngIf="companyeewise">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Company
-                Name: </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Company Name"
-                    [items]="companyName" [(ngModel)]="companyid"
-                    bindValue="company_id" bindLabel="org_name"
-                    formControlName="company_id"
-                    (change)="getcompanyWiseEmployeeName()"
-                    [searchFn]="customSearchFn" clearAllText="Clear">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                </ng-select>
-            </div>
-        </div>
-
-        <!-- ---------monthly deposit- -->
-        <div class="form-group row mt-4" *ngIf="monthlydeposit">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Company
-                Name: </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Company Name"
-                    [items]="companyName" [(ngModel)]="companyid"
-                    bindValue="company_id" bindLabel="org_name"
-                    formControlName="company_id"
-                    (change)="getcompanyWiseEmployeeName()"
-                    [searchFn]="customSearchFn" clearAllText="Clear">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                </ng-select>
-                <span class="text-danger"
-                    *ngIf="(registerFormControl.company_id.touched || submitted)
-                    && registerFormControl.company_id.errors?.required">
-                    Report Category is required
-                </span>
-            </div>
-        </div>
-
-        <!-- -----A/c ledger report-- -->
-        <div class="form-group row mt-4" *ngIf="accountLedgerReport">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Branch :
-            </label>
-            <div class="col-sm-4">
-                <ng-select formControlName="branch_id" [items]="branchName"
-                    bindLabel="branch_name" bindValue="id"
-                    placeholder="Select Branch Name" appendTo="body">
-                </ng-select>
-            </div>
-
-            <label for="inputPassword" class="col-sm-2 col-form-label">Account
-                Group : </label>
-            <div class="col-sm-4">
-                <ng-select formControlName="account_group_id"
-                (change)="changeGetAccountTypeById()"
-                    [items]="accoungGroupDetails"
-                    bindLabel="account_group_name" bindValue="account_group_id"
-                    placeholder="Select account group name"
-                    appendTo="body">
-                </ng-select>
-            </div>
-        </div>
-        <div class="form-group row mt-4" *ngIf="accountLedgerReport">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Account
-                Type : </label>
-            <div class="col-sm-4">
-                <ng-select formControlName="account_type_id"
-                    [items]="accounttype" bindLabel="acc_name"  [searchFn]="customSearchFn"
-                    clearAllText="Clear"
-                    bindValue="account_type_id" placeholder="Select account
-                    type" appendTo="body">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.acc_name + ' -' +
-                            item.acc_description }}</span>
-                    </ng-template>
-                    <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.acc_name + ' -' +
-                            item.acc_description }}</span>
-                    </ng-template>
-                </ng-select>
-            </div>
-
-            <label for="inputPassword" class="col-sm-2 col-form-label">Company
-                Name : </label>
-            <div class="col-sm-4">
-                <ng-select placeholder="Select Company Name"
-                    [items]="companyName" [(ngModel)]="companyid"
-                    bindValue="company_id" bindLabel="org_name"
-                    formControlName="company_id"
-                    (change)="getcompanyWiseEmployeeName()"
-                    [searchFn]="customSearchFn" clearAllText="Clear">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.org_name + ' -' +
-                          item.company_account_no }}</span>
-                      </ng-template>
-                </ng-select>
-            </div>
-        </div>
-        <div class="form-group row mt-4" *ngIf="accountLedgerReport">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Employee
-                Name: </label>
-            <div class="col-sm-4">
-                <ng-select formControlName="employee_id" [items]="employeeName"
-                    bindLabel="employee_name"
-                    bindValue="pf_employee_id" placeholder="Select Employee
-                    Name" appendTo="body">
-                    <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
-                        <span>{{ item.employee_name + ' -' +
-                          item.employee_id_no }}</span>
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
-                        <span>{{ item.employee_name + ' -' +
-                            item.employee_id_no }}</span>
-                      </ng-template>
-                </ng-select>
-            </div>
-        </div>
-          <div class="form-group row mt-4" *ngIf="isstatus">
-         <label for="inputPassword" class="col-sm-2 col-form-label"  *ngIf="isstatus">Status :
-            </label>
-            <div class="col-sm-4" *ngIf="isstatus">
-                <ng-select formControlName="status"
-                [items]="status"
-               bindLabel="status" bindValue="status"
-               placeholder="Select Status" appendTo="body">
-           </ng-select>
-            </div>
-            </div>
-        <div class="form-group row mt-4">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Document
-                Type: </label>
-            <div class="col-sm-4">
-              <select name="document_type" id="document_type" formControlName="doc_type" class="form-control">
-                <!-- <option value="">Select Document Type</option> -->
-                <option *ngFor="let docType of documentTypes" [value]="docType.value">{{ docType.label }}</option>
-              </select>
-            </div>
-        </div>
+    <div class="form-group row" *ngIf="formdata">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >From Date :
+      </label>
+      <div class="col-sm-4">
+        <input
+          type="date"
+          class="form-control"
+          formControlName="from_date"
+          [ngClass]="{
+            'is-invalid': submitted && registerFormControl.to_date.errors
+          }"
+        />
+      </div>
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >To Date :
+      </label>
+      <div class="col-sm-4">
+        <input
+          type="date"
+          class="form-control"
+          formControlName="to_date"
+          [ngClass]="{
+            'is-invalid': submitted && registerFormControl.to_date.errors
+          }"
+        />
+      </div>
     </div>
 
-    <div class="form-group row">
-        <div class="col-sm-12">
-            <button class="btn btn-success pull-right mr-2 my-2"
-                (click)="generateAsPDF()" style="background-color:
-                #041562!important;color:#fff!important;"><i class="fa fa-cog"></i>&nbsp;Generate Report</button>
-            <button class="btn btn-success pull-right mr-2 my-2"
-                (click)="viewGeneratedReport()" style="background-color:
-                #041562!important;color:#fff!important;"><i class="fa fa-eye"></i>&nbsp;View Report</button>
-        </div>
+    <div class="form-group row mt-4" *ngIf="monthAndYear">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >For Month :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Month"
+          [items]="collectionofMonths"
+          bindValue="id"
+          bindLabel="month_name"
+          formControlName="for_the_month"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >For Year :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Year"
+          [items]="get_Col_year"
+          bindValue="year"
+          bindLabel="year"
+          formControlName="for_the_year"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
     </div>
-    <!-- *ngIf="viewReport" -->
+    <!-- ----------------daily collection----------- -->
+    <div class="form-group row mt-4" *ngIf="dailycollectionCondition">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Branch :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          formControlName="branch_id"
+          [items]="branchName"
+          bindLabel="branch_name"
+          bindValue="id"
+          placeholder="Select Branch Name"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+      <label
+        for="inputPassword"
+        class="col-sm-2 col-form-label"
+        *ngIf="isRemetStatus"
+        >Remittance Status :
+      </label>
+      <div class="col-sm-4" *ngIf="isRemetStatus">
+        <ng-select
+          formControlName="remit_status"
+          [items]="remittanceStatus"
+          bindLabel="status"
+          bindValue="status"
+          placeholder="Select Status"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+      <label
+        for="inputPassword"
+        class="col-sm-2 col-form-label"
+       *ngIf="isMouStatus"
+        >MOU Status :
+      </label>
+      <div class="col-sm-4" *ngIf="isMouStatus">
+        <ng-select
+          formControlName="status"
+          [items]="status"
+          bindLabel="status"
+          bindValue="status"
+          placeholder="Select Status"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- -------------------Employee wise Statement------ -->
+    <div class="form-group row mt-4" *ngIf="employeewise">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Company Name:
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Company Name"
+          [items]="companyName"
+          [(ngModel)]="companyid"
+          bindValue="company_id"
+          bindLabel="org_name"
+          formControlName="company_id"
+          (change)="getcompanyWiseEmployeeName()"
+          clearAllText="Clear"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Employee Name:
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          formControlName="employee_id"
+          [(ngModel)]="employeeid"
+          [items]="employeeName"
+          bindLabel="employee_name"
+          bindValue="pf_employee_id"
+          (change)="getEmployeeCID()"
+          placeholder="Select Employee Name"
+          appendTo="body"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.employee_name + " -" + item.employee_id_no }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.employee_name + " -" + item.employee_id_no }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row mt-4">
+      <label for="inputPassword" class="col-sm-2 col-form-label" *ngIf="employeewise"
+        >CID No :
+      </label>
+      <div class="col-sm-4"  *ngIf="employeewise">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter CID No"
+          [ngClass]="{
+            'is-invalid':
+              submitted && registerFormControl.employee_cid_no.errors
+          }"
+          formControlName="employee_cid_no"
+        />
+      </div>
+      <label
+        for="inputPassword"
+        class="col-sm-2 col-form-label"
+        *ngIf="employeewise"
+        >Reg Status :
+      </label>
+      <div class="col-sm-4" *ngIf="employeewise">
+        <ng-select
+          formControlName="status"
+          [items]="status"
+          bindLabel="status"
+          bindValue="status"
+          placeholder="Select Status"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+      <label
+        for="inputPassword"
+        class="col-sm-2 col-form-label"
+        *ngIf="excessref"
+        >Refund Type:
+      </label>
+      <div class="col-sm-4" *ngIf="excessref">
+        <ng-select
+          formControlName="Excess_Payment_Refund"
+          [items]="monthly_refund"
+          bindLabel="refund"
+          bindValue="refund"
+          placeholder="Select Refund"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <!-- -----------companywise-------------- -->
+    <div class="form-group row mt-4" *ngIf="companyeewise">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Company Name:
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Company Name"
+          [items]="companyName"
+          [(ngModel)]="companyid"
+          bindValue="company_id"
+          bindLabel="org_name"
+          formControlName="company_id"
+          (change)="getcompanyWiseEmployeeName()"
+          clearAllText="Clear"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+      <label
+        for="inputPassword"
+        class="col-sm-2 col-form-label"
+        *ngIf="isMouStatus"
+        >MOU Status:
+      </label>
+      <div class="col-sm-4" *ngIf="isMouStatus">
+        <ng-select
+          placeholder="Select MOU Status"
+          [items]="mouStatus"
+          bindValue="value"
+          bindLabel="status"
+          formControlName="mou_status"
+          [searchFn]="customSearchFn"
+          clearAllText="Clear"
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <span>{{ item.status }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- ---------monthly deposit- -->
+    <div class="form-group row mt-4" *ngIf="monthlydeposit">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Company Name:
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Company Name"
+          [items]="companyName"
+          [(ngModel)]="companyid"
+          bindValue="company_id"
+          bindLabel="org_name"
+          formControlName="company_id"
+          (change)="getcompanyWiseEmployeeName()"
+          clearAllText="Clear"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+        </ng-select>
+        <span
+          class="text-danger"
+          *ngIf="
+            (registerFormControl.company_id.touched || submitted) &&
+            registerFormControl.company_id.errors?.required
+          "
+        >
+          Report Category is required
+        </span>
+      </div>
+    </div>
+
+    <!-- -----A/c ledger report-- -->
+    <div class="form-group row mt-4" *ngIf="accountLedgerReport">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Branch :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          formControlName="branch_id"
+          [items]="branchName"
+          bindLabel="branch_name"
+          bindValue="id"
+          placeholder="Select Branch Name"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Account Group :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          formControlName="account_group_id"
+          (change)="changeGetAccountTypeById()"
+          [items]="accoungGroupDetails"
+          bindLabel="account_group_name"
+          bindValue="account_group_id"
+          placeholder="Select account group name"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row mt-4" *ngIf="accountLedgerReport">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Account Type :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          formControlName="account_type_id"
+          [items]="accounttype"
+          bindLabel="acc_name"
+          [searchFn]="customSearchFn"
+          clearAllText="Clear"
+          bindValue="account_type_id"
+          placeholder="Select account
+                    type"
+          appendTo="body"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.acc_name + " -" + item.acc_description }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.acc_name + " -" + item.acc_description }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Company Name :
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          placeholder="Select Company Name"
+          [items]="companyName"
+          [(ngModel)]="companyid"
+          bindValue="company_id"
+          bindLabel="org_name"
+          formControlName="company_id"
+          (change)="getcompanyWiseEmployeeName()"
+          clearAllText="Clear"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.org_name + " -" + item.company_account_no }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row mt-4" *ngIf="accountLedgerReport">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Employee Name:
+      </label>
+      <div class="col-sm-4">
+        <ng-select
+          formControlName="employee_id"
+          [items]="employeeName"
+          bindLabel="employee_name"
+          bindValue="pf_employee_id"
+          placeholder="Select Employee
+                    Name"
+          appendTo="body"
+        >
+          <ng-template ng-label-tmp let-item="item" *ngIf="companyacno">
+            <span>{{ item.employee_name + " -" + item.employee_id_no }}</span>
+          </ng-template>
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-search="searchTerm"
+            let-index="index"
+          >
+            <span>{{ item.employee_name + " -" + item.employee_id_no }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row mt-4" *ngIf="isstatus">
+      <label
+        for="inputPassword"
+        class="col-sm-2 col-form-label"
+        *ngIf="isstatus"
+        >Reg Status :
+      </label>
+      <div class="col-sm-4" *ngIf="isstatus">
+        <ng-select
+          formControlName="status"
+          [items]="status"
+          bindLabel="status"
+          bindValue="status"
+          placeholder="Select Status"
+          appendTo="body"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group row mt-4">
+      <label for="inputPassword" class="col-sm-2 col-form-label"
+        >Document Type:
+      </label>
+      <div class="col-sm-4">
+        <select
+          name="document_type"
+          id="document_type"
+          formControlName="doc_type"
+          class="form-control"
+        >
+          <!-- <option value="">Select Document Type</option> -->
+          <option *ngFor="let docType of documentTypes" [value]="docType.value">
+            {{ docType.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-12">
+      <button
+        class="btn btn-success pull-right mr-2 my-2"
+        (click)="generateAsPDF()"
+        style="background-color: #041562 !important; color: #fff !important"
+      >
+        <i class="fa fa-cog"></i>&nbsp;Generate Report
+      </button>
+      <button
+        class="btn btn-success pull-right mr-2 my-2"
+        (click)="viewGeneratedReport()"
+        style="background-color: #041562 !important; color: #fff !important"
+      >
+        <i class="fa fa-eye"></i>&nbsp;View Report
+      </button>
+    </div>
+  </div>
+  <!-- *ngIf="viewReport" -->
 </div>
 
-<div id="pause" *ngIf="isLoading" class="d-flex align-items-center
-    justify-content-center">
-    <div id="spinner"></div>
+<div
+  id="pause"
+  *ngIf="isLoading"
+  class="d-flex align-items-center justify-content-center"
+>
+  <div id="spinner"></div>
 </div>
 <div class="card shadow-sm rounded ml-5">
-    <div class="ml-3" *ngIf="viewReports">
-        <div class="card-header bg-white">
-            <strong>
-                <span><i class="fa fa-check text-success"> Transaction
-                        successful</i> </span>
-            </strong>
+  <div class="ml-3" *ngIf="viewReports">
+    <div class="card-header bg-white">
+      <strong>
+        <span
+          ><i class="fa fa-check text-success"> Transaction successful</i>
+        </span>
+      </strong>
+    </div>
+    <form [formGroup]="viewreport">
+      <!-- *ngIf="viewallreport" -->
+      <div class="form-group row mt-4">
+        <label for="inputPassword" class="col-sm-2 col-form-label"
+          >Report Category *:
+        </label>
+        <div class="col-sm-4">
+          <ng-select
+            placeholder="Select Report Name"
+            [items]="ReportWiseName"
+            bindValue="value"
+            bindLabel="reportname"
+            formControlName="report_name"
+            appendTo="body"
+          >
+          </ng-select>
+          <span
+            class="text-danger"
+            *ngIf="
+              (registerFormControl.report_name.touched || submitted) &&
+              registerFormControl.report_name.errors?.required
+            "
+          >
+            Report Category is required
+          </span>
         </div>
-        <form [formGroup]="viewreport">
-            <!-- *ngIf="viewallreport" -->
-            <div class="form-group row mt-4">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Report
-                    Category *: </label>
-                <div class="col-sm-4" >
-                    <ng-select placeholder="Select Report Name"
-                        [items]="ReportWiseName" bindValue="value"
-                        bindLabel="reportname" formControlName="report_name"
-                        appendTo="body">
-                    </ng-select>
-                    <span class="text-danger"
-                        *ngIf="(registerFormControl.report_name.touched ||
-                        submitted) &&
-                        registerFormControl.report_name.errors?.required">
-                        Report Category is required
-                    </span>
-                </div>
-                <label for="inputPassword" class="col-sm-2 col-form-label">Bussiness
-                    type *: </label>
-                <div class="col-sm-4">
-                    <select class="form-control"
-                        formControlName="registration_type"
-                        (change)="viewGeneratedAllReport()">
-                        <option> Select Registration type</option>
-                        <option *ngFor="let registrationtype of regType"[value]="registrationtype.value">{{registrationtype.registration}}</option>
-                    </select>
-                    <span class="text-danger"
-                        *ngIf="(registerFormControl.registration_type.touched || submitted) &&
-                        registerFormControl.registration_type.errors?.required">
-                        Registration type is required
-                    </span>
-                </div>
-            </div>
-                <div class="form-group row mt-4">
-                <label for="inputPassword" class="col-sm-2 col-form-label">From
-                    Date : </label>
-                <div class="col-sm-4">
-                    <input type="date" class="form-control"
-                        formControlName="from_date">
-                </div>
+        <label for="inputPassword" class="col-sm-2 col-form-label"
+          >Bussiness type *:
+        </label>
+        <div class="col-sm-4">
+          <select
+            class="form-control"
+            formControlName="registration_type"
+            (change)="viewGeneratedAllReport()"
+          >
+            <option>Select Registration type</option>
+            <option
+              *ngFor="let registrationtype of regType"
+              [value]="registrationtype.value"
+            >
+              {{ registrationtype.registration }}
+            </option>
+          </select>
+          <span
+            class="text-danger"
+            *ngIf="
+              (registerFormControl.registration_type.touched || submitted) &&
+              registerFormControl.registration_type.errors?.required
+            "
+          >
+            Registration type is required
+          </span>
+        </div>
+      </div>
+      <div class="form-group row mt-4">
+        <label for="inputPassword" class="col-sm-2 col-form-label"
+          >From Date :
+        </label>
+        <div class="col-sm-4">
+          <input type="date" class="form-control" formControlName="from_date" />
+        </div>
 
-                <label for="inputPassword" class="col-sm-2 col-form-label">To
-                    Date : </label>
-                <div class="col-sm-4">
-                    <input type="date" class="form-control"
-                        formControlName="to_date">
-                </div>
-            </div>
-            <!-- <div class="form-group row mt-4"*ngIf="monthAndYearView">
+        <label for="inputPassword" class="col-sm-2 col-form-label"
+          >To Date :
+        </label>
+        <div class="col-sm-4">
+          <input type="date" class="form-control" formControlName="to_date" />
+        </div>
+      </div>
+      <!-- <div class="form-group row mt-4"*ngIf="monthAndYearView">
                 <label for="inputPassword" class="col-sm-2 col-form-label">For
                     Month : </label>
                 <div class="col-sm-4">
@@ -405,54 +652,83 @@
                 <input type="hidden" formControlName="for_the_year"
                     [(ngModel)]="yeardates">
             </div> -->
-        </form>
-        <div class="form-group row">
-            <div class="col-sm-12">
-                <button class="btn btn-success pull-right mr-2 my-4"
-                    (click)="viewReport()" style="background-color:
-                    #041562!important;color:#fff!important;"><i class="fa fa-eye"></i>&nbsp; View Report</button>
-                <button class="btn btn-success pull-right mr-2 my-4"
-                    (click)="back()" style="background-color:
-                    #041562!important;color:#fff!important;"><i class="fa fa-backward"></i>&nbsp; Back</button>
-            </div>
-
-        </div>
+    </form>
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <button
+          class="btn btn-success pull-right mr-2 my-4"
+          (click)="viewReport()"
+          style="background-color: #041562 !important; color: #fff !important"
+        >
+          <i class="fa fa-eye"></i>&nbsp; View Report
+        </button>
+        <button
+          class="btn btn-success pull-right mr-2 my-4"
+          (click)="back()"
+          style="background-color: #041562 !important; color: #fff !important"
+        >
+          <i class="fa fa-backward"></i>&nbsp; Back
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- //datable -->
-    <div class="my-2 shadow-sm rounded p-1" *ngIf="tableView">
-        <table class="table table-bordered table-striped rounded table-hover"
-            datatable [dtOptions]="dtOptions"
-            [dtTrigger]="dtTrigger">
-            <thead style="background-color:
-                #041562!important;color:#fff!important;">
-                <tr>
-                    <th>Sl.No</th>
-                    <th>Report Type</th>
-                    <th>Report Name</th>
-                    <th>Document Date</th>
-                    <th>Reference No</th>
-                    <th>View / Download</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let collectViewReport of collectViewReports;let
-                    i=index">
-                    <td>{{i+1}}</td>
-                    <td>{{collectViewReport.doc_ref_type}}</td>
-                    <td>{{collectViewReport.doc_path}}</td>
-                    <td>{{collectViewReport.doc_date}}</td>
-                    <td>{{collectViewReport.doc_ref_no}}</td>
-                    <td class="text-center">
-                        <button class="btn" style="background-color:
-                            #4408b3!important;color:#fff!important;"
-                            (click)="viewDownloadableReport(collectViewReport.doc_path)">View</button>
-                        <button class="btn" style="background-color:
-                            #4408b3!important;color:#fff!important;"
-                            (click)="downloadGeneratedReports(collectViewReport.doc_path,collectViewReport.doc_ref_type)">Download</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <!-- //datable -->
+  <div class="my-2 shadow-sm rounded p-1" *ngIf="tableView">
+    <table
+      class="table table-bordered table-striped rounded table-hover"
+      datatable
+      [dtOptions]="dtOptions"
+      [dtTrigger]="dtTrigger"
+    >
+      <thead
+        style="background-color: #041562 !important; color: #fff !important"
+      >
+        <tr>
+          <th>Sl.No</th>
+          <th>Report Type</th>
+          <th>Report Name</th>
+          <th>Document Date</th>
+          <th>Reference No</th>
+          <th>View / Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let collectViewReport of collectViewReports; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ collectViewReport.doc_ref_type }}</td>
+          <td>{{ collectViewReport.doc_path }}</td>
+          <td>{{ collectViewReport.doc_date }}</td>
+          <td>{{ collectViewReport.doc_ref_no }}</td>
+          <td class="text-center">
+            <button
+              class="btn"
+              style="
+                background-color: #4408b3 !important;
+                color: #fff !important;
+              "
+              (click)="viewDownloadableReport(collectViewReport.doc_path)"
+            >
+              View
+            </button>
+            <button
+              class="btn"
+              style="
+                background-color: #4408b3 !important;
+                color: #fff !important;
+              "
+              (click)="
+                downloadGeneratedReports(
+                  collectViewReport.doc_path,
+                  collectViewReport.doc_ref_type
+                )
+              "
+            >
+              Download
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
