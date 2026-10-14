@@ -136,6 +136,16 @@
                     Bank Name is required
           </span>
         </div>
+          <div class="col-sm-5">
+          <label for="inputPassword">Remarks *:</label>
+          <textarea class="form-control" [readonly]="isDissabled" formControlName="remarks" placeholder="Remarks"></textarea>
+          <span class="text-danger" *ngIf="(registerFormControl.remarks.touched ||
+                    submitted)
+                    &&
+                    registerFormControl.remarks.errors?.required">
+                    Remarks is required
+          </span>
+        </div>
       </div>
       <div class="p-2 mr-1 pull-right" *ngIf="RefundExcessRefunds">
         <button class="btn btn-primary pull-right" [disabled]="isDissabled" (click)="processExcessPffund()" style="background-color:

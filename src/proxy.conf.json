@@ -1,6 +1,6 @@
 {
     "/api/*": {
-        "target": "http://172.16.16.193:8086/api",
+        "target": "https://172.16.16.193:8086/api",
         "secure": false,
         "changeOrigin":true,
         "logLevel": "debug"

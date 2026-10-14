@@ -21,6 +21,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {LoadingComponent} from '../../loading';
 import {ExcessPaymentDashboardComponent} from './excess-payment-dashboard/excess-payment-dashboard.component';
 import { RefundViewPendingComponent } from './refund-view-pending/refund-view-pending.component';
+import { RefundApprovalComponent } from './refund-approval/refund-approval.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { RefundViewPendingComponent } from './refund-view-pending/refund-view-pe
     LoadingComponent,
     ExcessPaymentDashboardComponent,
     RefundViewPendingComponent,
+    RefundApprovalComponent
 
   ],
   imports: [

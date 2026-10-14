@@ -74,6 +74,7 @@ export class ExcessPaymentDashboardComponent implements OnInit{
       branch_id: new FormControl('', Validators.required),
       bank_name: new FormControl('', Validators.required),
       pf_emp_acc_no: new FormControl('', Validators.required),
+      remarks: new FormControl('', Validators.required)
     })
   }
 

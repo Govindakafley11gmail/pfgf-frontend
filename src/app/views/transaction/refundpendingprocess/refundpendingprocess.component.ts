@@ -9,7 +9,7 @@ import { CompanyService } from '../../_service/GF-API/company.service';
 import { PfserviceService } from '../../_service/pf/pfservice.service';
 import { PfemployeeService } from '../../_service/pfemployee/pfemployee.service';
 import { UserService } from '../../_service/user.service';
-import {saveAs} from 'file-saver';
+import { saveAs } from 'file-saver';
 import { CollectionService } from '../../_service/collection/collection.service';
 
 @Component({
@@ -26,13 +26,13 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
 
   dtTrigger: Subject<any> = new Subject<any>();
 
-  constructor(private collection: CollectionService,private pfservice: PfserviceService, private company: CompanyService, private http: HttpClient, private tosatr: ToastrService, private employee: PfemployeeService, private fb: FormBuilder, private route: Router, private master: UserService) { }
+  constructor(private collection: CollectionService, private pfservice: PfserviceService, private company: CompanyService, private http: HttpClient, private tosatr: ToastrService, private employee: PfemployeeService, private fb: FormBuilder, private route: Router, private master: UserService) { }
   approvedorpendind;
   formarray: FormGroup;
   approvedData: FormGroup;
   approved;
   viewNote = false;
-  isProcessGf:boolean = false;
+  isProcessGf: boolean = false;
   ngOnInit(): void {
     this.approved = true;
     this.getApprovedOrPendingDataList();
@@ -188,7 +188,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
 
     }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     });
   }
 
@@ -222,7 +222,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
           open(url, path);
         }
       }, error => {
-        this.tosatr.error(error['statusText'] +". "+error.error.message);
+        this.tosatr.error(error['statusText'] + ". " + error.error.message);
         this.isLoading = false;
       })
     }
@@ -234,18 +234,18 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     this.pfservice.getRefundDetails().subscribe(res => {
       console.log(res)
       this.isLoading = false;
-       
+
       this.approvedorpendind = res;
       if (res != null) {
         this.isData = true;
       } else {
         this.isData = false;
       }
-     this.listpermission()
+      this.listpermission()
       this.dtTrigger.next();
 
     }, error => {
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
       this.isLoading = false;
     })
   }
@@ -253,20 +253,20 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
   userRefundCreate
   verifyRefunds;
   userRefundNote
-// console.log(this.arrayPermissionarrayPermission)
- listPermission = []
-  listpermission(){
-    this.master.editAllUserWithoutAuth(parseInt(localStorage.getItem('id'))).subscribe(res=>{
+  // console.log(this.arrayPermissionarrayPermission)
+  listPermission = []
+  listpermission() {
+    this.master.editAllUserWithoutAuth(parseInt(localStorage.getItem('id'))).subscribe(res => {
       console.log(res)
-        for(let j=0;j<res['user-permissions-list'].length;j++){
-        this.listPermission[j] =  res['user-permissions-list'][j].name
-        if(this.listPermission[j] == 'verify-refund'){
+      for (let j = 0; j < res['user-permissions-list'].length; j++) {
+        this.listPermission[j] = res['user-permissions-list'][j].name
+        if (this.listPermission[j] == 'verify-refund') {
           this.verifyRefunds = true;
           console.log(this.listPermission[j])
-        }else if(this.listPermission[j] == 'refund-process'){
+        } else if (this.listPermission[j] == 'refund-process') {
           this.userRefundCreate = true;
           console.log(this.listPermission[j])
-        }else if(this.listPermission[j] == 'reverse-collection') {
+        } else if (this.listPermission[j] == 'reverse-collection') {
           this.userRefundNote = true;
         }
       }
@@ -308,30 +308,30 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
   checkValidationApprovedData;
   checkApprovedRefund;
   submitApproveedData() {
-   console.log(this.formarray.value.approve_file_name.length)
+    console.log(this.formarray.value.approve_file_name.length)
 
     for (let i = 0; i < this.formarray.value.data.length; i++) {
       if (this.formarray.value.data[i].registration_type == 'PF') {
         this.checkValidationApprovedData = true;
         this.refunduploadfile = false;
         break;
-      } else if(this.formarray.value.data[i].registration_type == 'GF') {
+      } else if (this.formarray.value.data[i].registration_type == 'GF') {
         this.checkValidationApprovedData = false;
         this.refunduploadfile = false;
         break;
-      }else{
-        
-         return;
+      } else {
+
+        return;
       }
     }
     if (this.checkValidationApprovedData) {
       this.pfApprovedRefund();
-    } else if(!this.checkValidationApprovedData){
+    } else if (!this.checkValidationApprovedData) {
       this.gfApprovedRefund();
-    }else{
+    } else {
       this.tosatr.error("Failed to approved because Registration Type is different.");
     }
-  
+
   }
 
   pfApprovedRefund() {
@@ -361,7 +361,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
       this.formarray.reset(this.formarray);
       this.formarray.reset(formData);
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
 
@@ -387,7 +387,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
       }
     }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
 
@@ -419,9 +419,9 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
         this.myModal.hide();
 
       }
-    },error=>{
+    }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
 
@@ -438,9 +438,9 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
         this.myModal.hide();
 
       }
-    },error=>{
+    }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
   // -------------create--
@@ -519,11 +519,11 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
       total_dist_amt: new FormControl('', Validators.required),
       net_refundable: new FormControl('', Validators.required),
       refund_file_name: new FormControl(''),
-      pf_emp_acc_no : new FormControl('',Validators.required),
-      employee_contribution: new FormControl('',Validators.required),
-      employer_contribution: new FormControl('',Validators.required),
-      bank_name: new FormControl('',Validators.required),
-       employee_identification_no: new FormControl(''),
+      pf_emp_acc_no: new FormControl('', Validators.required),
+      employee_contribution: new FormControl('', Validators.required),
+      employer_contribution: new FormControl('', Validators.required),
+      bank_name: new FormControl('', Validators.required),
+      employee_identification_no: new FormControl(''),
       reference_no: new FormControl(''),
       reference_date: new FormControl(''),
     })
@@ -531,8 +531,8 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
   getByBranchName() {
     this.master.getBranchlist().subscribe(res => {
       this.branch_names = res['data'];
-    },error=>{
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+    }, error => {
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
 
@@ -576,7 +576,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     else {
 
       if (this.pfrefundscreen1.value.refundType == 'PF') {
-      this.pfProcess()
+        this.pfProcess()
 
       } else {
         this.gfProcess()
@@ -589,7 +589,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     console.log(this.pfrefundscreen1.value.pf_employee_id)
     this.isLoading = true;
     this.pfservice.getrefundbyemployeeid(this.pfrefundscreen1.value.pf_employee_id).subscribe(res => {
-       this.isProcessGf =false;
+      this.isProcessGf = false;
       this.isLoading = false;
       this.process = true;
       this.pfRefund = true;
@@ -619,9 +619,9 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
         const dateDiff = diffInMs / (1000 * 60 * 60 * 24);
 
         if (dateDiff >= 0) {
-          this.asOnDateEmployeeInterest = this.lastTransactionData.interest_chargeable_amount_1 *  res['pfemployee'].interest_rate/ 100 * dateDiff / 365;
-          this.asOnDateEmployerInterest = this.lastTransactionData.interest_chargeable_amount_2 * res['pfemployee'].interest_rate / 100 * dateDiff / 365;
-    
+          this.asOnDateEmployeeInterest = this.lastTransactionData.interest_chargeable_amount_1 * res['interest_rate'] / 100 * dateDiff / 365;
+          this.asOnDateEmployerInterest = this.lastTransactionData.interest_chargeable_amount_2 * res['interest_rate'] / 100 * dateDiff / 365;
+
         } else {
           this.screen1();
           this.processing_message = "You Cannot process The Refund, Date is incorrect"
@@ -633,7 +633,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
         this.comp_acc_no = res['companyname'][0].company_account_no;
         this.emp_acc_no = this.refundCollection['pf_emp_acc_no']
         this.pfemployee_id = this.refundCollection['identification_no']
-        
+
         this.pfrefundscreen2 = this.fb.group({
           registration_type: new FormControl(res['pfemployee'].registration_type),
           interest_chargeable_amount_1: [this.lastTransactionData['interest_chargeable_amount_1']],
@@ -653,25 +653,25 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
           refund_total_interest: [Math.round((parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + this.asOnDateEmployeeInterest + this.asOnDateEmployerInterest) * 100) / 100, [Validators.required]],
           refund_total_disbursed_amount: [Math.round(parseFloat(this.totalDisAmt) * 100) / 100, Validators.required],
           refund_net_refundable: [Math.round((parseFloat(this.lastTransactionData['total_employee_contribution']) + parseFloat(this.lastTransactionData['total_employer_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + this.asOnDateEmployeeInterest + this.asOnDateEmployerInterest - this.totalDisAmt) * 100) / 100, [Validators.required]],
-          refund_file_name: new FormControl('',[Validators.required]),
-           employee_identification_no: new FormControl(''),
-          
-          refund_emplyee_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employee_contribution'])+parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.asOnDateEmployeeInterest)).toFixed(2),Validators.required),
-          refund_emplyr_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employer_contribution'])+parseFloat(this.lastTransactionData['total_interest_on_employer_contribution'])+ parseFloat(this.asOnDateEmployerInterest)).toFixed(2),Validators.required),
-          bank_name: new FormControl('',Validators.required),
+          refund_file_name: new FormControl('', [Validators.required]),
+          employee_identification_no: new FormControl(''),
+
+          refund_emplyee_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.asOnDateEmployeeInterest)).toFixed(2), Validators.required),
+          refund_emplyr_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employer_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + parseFloat(this.asOnDateEmployerInterest)).toFixed(2), Validators.required),
+          bank_name: new FormControl('', Validators.required),
           refund_remarks: [
-            '1. Nu.............., in favor of........................., Bank Account No......................, Bank Name:..................'+'\n'+
-          '2. Nu................, in favor of........................., Bank Account No......................, Bank Name:..................'],
-          pf_emp_acc_no: new FormControl('',Validators.required),
+            '1. Nu.............., in favor of........................., Bank Account No......................, Bank Name:..................' + '\n' +
+            '2. Nu................, in favor of........................., Bank Account No......................, Bank Name:..................'],
+          pf_emp_acc_no: new FormControl('', Validators.required),
           refund_amount: [Math.round((parseFloat(this.lastTransactionData['total_employee_contribution']) + parseFloat(this.lastTransactionData['total_employer_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + this.asOnDateEmployeeInterest + this.asOnDateEmployerInterest - this.totalDisAmt) * 100) / 100],
-          reference_no: new FormControl('',Validators.required),
-          reference_date: new FormControl('',Validators.required),
+          reference_no: new FormControl('', Validators.required),
+          reference_date: new FormControl('', Validators.required),
         })
       }
       this.screen2()
     }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
 
   }
@@ -680,23 +680,25 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     console.log(this.pfrefundscreen1.value)
     this.isLoading = true;
     this.company.getrefundbyemployeeid(this.pfrefundscreen1.value.pf_employee_id).subscribe(res => {
-      console.log(res)
-      this.isProcessGf =true;
+      console.log("hello",res)
+      this.isProcessGf = true;
       this.isLoading = false;
       this.process = true;
       this.pfRefund = false;
-     this.isDisabled = false;
-      this.totaldistributionAmt = res[0].gfdisbursement
+      this.isDisabled = false;
+      let response = res['pfemployee']
+   let disbursed = response[0].gfdisbursement
+
+      this.totaldistributionAmt = disbursed
       if (this.totaldistributionAmt == null || this.totaldistributionAmt == '') {
         this.totalDisAmt = 0
       } else {
         this.totalDisAmt = this.totaldistributionAmt[0].refund_total_disbursed_amount
       }
+      // this.pfcontributions = res['pfemployee'].gfdisbursement[0]
+      this.refundCollection = res['pfemployee'];
 
-      this.pfcontributions = res[0].gfdisbursement[0]
-      this.refundCollection = res[0];
-
-      this.lastTransactionData = res[0].gf_last_transaction_data;
+      this.lastTransactionData = response[0].gf_last_transaction_data;
       console.log("last", this.lastTransactionData)
       if (this.lastTransactionData == null || this.lastTransactionData == '') {
         this.tosatr.warning(' You cannot process your refund before closing!');
@@ -708,33 +710,30 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
 
         const diffInMs = (this.currentDate - this.previousDate)
         const dateDiff = diffInMs / (1000 * 60 * 60 * 24);
-        console.log(dateDiff)
 
         if (dateDiff >= 0) {
-          this.asOnDateEmployeeInterest = this.lastTransactionData.interest_chargeable_amount_1 * res[0]['interest_rate'] / 100 * dateDiff / 365;
-          this.asOnDateEmployerInterest = this.lastTransactionData.interest_chargeable_amount_2 * res[0]['interest_rate'] / 100 * dateDiff / 365;
-          console.log(this.asOnDateEmployeeInterest,this.asOnDateEmployerInterest)
+          this.asOnDateEmployeeInterest = this.lastTransactionData.interest_chargeable_amount_1 * res['interest_rate'] / 100 * dateDiff / 365;
+          this.asOnDateEmployerInterest = this.lastTransactionData.interest_chargeable_amount_2 * res['interest_rate'] / 100 * dateDiff / 365;
         } else {
           this.screen1()
           this.processing_message = "You Cannot process The Refund, Date is incorrect"
         }
 
-        this.employee_data = this.refundCollection['employee_contribution_amount'];
-        this.org_name = this.refundCollection['org_name']
-        this.employee_name = this.refundCollection['employee_name']
-        this.comp_acc_no = this.refundCollection['company_account_no']
-        this.emp_acc_no = this.refundCollection['pf_emp_acc_no']
-        this.pfemployee_id = this.refundCollection['identification_no']
-
+        this.employee_data = this.refundCollection[0].employee_contribution_amount;
+        this.org_name = this.refundCollection[0].org_name;
+        this.employee_name = this.refundCollection[0].employee_name;
+        this.comp_acc_no = this.refundCollection[0].company_account_no;
+        this.emp_acc_no = this.refundCollection[0].pf_emp_acc_no;
+        this.pfemployee_id = this.refundCollection[0].identification_no;
         this.pfrefundscreen2 = this.fb.group({
-          registration_type: new FormControl(res[0]['registration_type']),
+          registration_type: new FormControl(this.refundCollection[0].registration_type),
           interest_chargeable_amount_1: [this.lastTransactionData['interest_chargeable_amount_1']],
           interest_chargeable_amount_2: [this.lastTransactionData['interest_chargeable_amount_2']],
           id: ['', [Validators.required]],
-          refund_company_id: [this.refundCollection['pf_employee_company_id'], [Validators.required]],
+          refund_company_id: [this.refundCollection[0].pf_employee_company_id, [Validators.required]],
           refund_processing_date: [this.processing_date, [Validators.required]],
-          refund_employee_cid: [this.refundCollection['identification_no'], [Validators.required]],
-          refund_employee_id: [this.refundCollection['pf_employee_id'], [Validators.required]],
+          refund_employee_cid: [this.refundCollection[0].identification_no, [Validators.required]],
+          refund_employee_id: [  this.refundCollection[0].pf_employee_id, [Validators.required]],
           refund_employee_contribution: [this.lastTransactionData['total_employee_contribution'], [Validators.required]],
           refund_employer_contribution: [this.lastTransactionData['total_employer_contribution'], [Validators.required]],
           refund_interest_on_employee_contr: [Math.round(parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) * 100) / 100, [Validators.required]],
@@ -745,25 +744,24 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
           refund_total_interest: [Math.round((parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + this.asOnDateEmployeeInterest + this.asOnDateEmployerInterest) * 100) / 100, [Validators.required]],
           refund_total_disbursed_amount: [Math.round(parseFloat(this.totalDisAmt) * 100) / 100, Validators.required],
           refund_net_refundable: [Math.round((parseFloat(this.lastTransactionData['total_employee_contribution']) + parseFloat(this.lastTransactionData['total_employer_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + this.asOnDateEmployeeInterest + this.asOnDateEmployerInterest - this.totalDisAmt) * 100) / 100, [Validators.required]],
-          refund_file_name: new FormControl('',[Validators.required]),
-          refund_emplyee_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employee_contribution'])+parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.asOnDateEmployeeInterest)).toFixed(2),Validators.required),
-          refund_emplyr_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employer_contribution'])+parseFloat(this.lastTransactionData['total_interest_on_employer_contribution'])+ parseFloat(this.asOnDateEmployerInterest)).toFixed(2),Validators.required),
-          bank_name: new FormControl('',Validators.required),
+          refund_file_name: new FormControl('', [Validators.required]),
+          refund_emplyee_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.asOnDateEmployeeInterest)).toFixed(2), Validators.required),
+          refund_emplyr_contrib: new FormControl((parseFloat(this.lastTransactionData['total_employer_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + parseFloat(this.asOnDateEmployerInterest)).toFixed(2), Validators.required),
+          bank_name: new FormControl('', Validators.required),
           employee_identification_no: new FormControl(''),
           refund_remarks: [
-            '1. Nu.............., in favor of........................., Bank Account No......................, Bank Name:..................'+'\n'+
-          '2. Nu................, in favor of........................., Bank Account No......................, Bank Name:..................'],
+            '1. Nu.............., in favor of........................., Bank Account No......................, Bank Name:..................' + '\n' +
+            '2. Nu................, in favor of........................., Bank Account No......................, Bank Name:..................'],
           pf_emp_acc_no: new FormControl(''),
           refund_amount: [Math.round((parseFloat(this.lastTransactionData['total_employee_contribution']) + parseFloat(this.lastTransactionData['total_employer_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employee_contribution']) + parseFloat(this.lastTransactionData['total_interest_on_employer_contribution']) + this.asOnDateEmployeeInterest + this.asOnDateEmployerInterest - this.totalDisAmt) * 100) / 100]
-          ,reference_no: new FormControl('',Validators.required),
-          reference_date: new FormControl('',Validators.required),
+          , reference_no: new FormControl('', Validators.required),
+          reference_date: new FormControl('', Validators.required),
         })
-        console.log(  this.pfrefundscreen2.value.registration_type, this.pfrefundscreen2.value.interest_chargeable_amount_1)
         this.screen2()
       }
     }, error => {
       this.isLoading = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
     })
   }
 
@@ -814,8 +812,8 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     this.submitted = true;
     console.log(this.pfrefundscreen2.value)
     // stop here if form is invalid
-    if (this.pfrefundscreen2.invalid ) {
-      
+    if (this.pfrefundscreen2.invalid) {
+
       this.tosatr.warning('Cannot submit refund some fields are empty !');
       return;
     }
@@ -859,9 +857,9 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     formData.set('reference_no', this.pfrefundscreen2.get('reference_no').value);
     formData.set('reference_date', this.pfrefundscreen2.get('reference_date').value);
     this.isLoading = true;
-    
+
     this.pfservice.savePfRefund(formData).subscribe(res => {
-      
+
       this.isLoading = false;
       if (res['message']) {
         this.tosatr.error(res['message']);
@@ -872,9 +870,9 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
       }
       this.ngOnDestroy();
       // this.tosatr.success('Refund Submitted successfully');
-    
+
     }, error => {
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
       this.isLoading = false;
     })
   }
@@ -925,7 +923,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
 
       // this.tosatr.success('Refund Submitted successfully');
     }, error => {
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
       this.isLoading = false;
     })
   }
@@ -947,30 +945,30 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
     this.company.getEmployeeNameByCompanyName().subscribe(res => {
       this.isLoading = false;
       this.companyname = res
-    },error=>{
-      this.isLoading = false;
-    })
-  }
- 
-  generateNotesheet(){
-    this.isLoading = true;
-    this.pfservice.generateNotesheet(this.formarray.value.data).subscribe(res => {
-       if(res[0] == 'success'){
-         this.viewNote = true;
-         this.notesheet = res;
-        this.tosatr.success(res['message']);
-       }else{
-        this.tosatr.success(res['message']);
-       }
-      this.isLoading = false;
     }, error => {
-      this.viewNote = false;
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
       this.isLoading = false;
     })
   }
 
- async viewNoteSheet(docPath){
+  generateNotesheet() {
+    this.isLoading = true;
+    this.pfservice.generateNotesheet(this.formarray.value.data).subscribe(res => {
+      if (res[0] == 'success') {
+        this.viewNote = true;
+        this.notesheet = res;
+        this.tosatr.success(res['message']);
+      } else {
+        this.tosatr.success(res['message']);
+      }
+      this.isLoading = false;
+    }, error => {
+      this.viewNote = false;
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
+      this.isLoading = false;
+    })
+  }
+
+  async viewNoteSheet(docPath) {
     this.isLoading = true;
     await this.collection.downloadReport(docPath).subscribe(res => {
       this.isLoading = false;
@@ -979,7 +977,7 @@ export class RefundpendingprocessComponent implements OnInit, OnDestroy {
       const url = window.URL.createObjectURL(blob);
       open(url);
     }, error => {
-      this.tosatr.error(error['statusText'] +". "+error.error.message);
+      this.tosatr.error(error['statusText'] + ". " + error.error.message);
       this.isLoading = false;
     })
   }

@@ -23,14 +23,15 @@ export class UserService {
     'Content-Type': 'application/json;charset=utf-8',
     'Authorization': 'Bearer ' + localStorage.getItem('access_token'), 
   });
-  postLoginData(crediential): Observable<any> {
-    return this.http.post(`${this.Api_Http}` + "/login", crediential);
+  postLoginData(crediential: any): Observable<any> {
+    return this.http.post(`${this.Api_Http}` + "/login", crediential,{  withCredentials: false
+});
   }
   logout() {
     const crediential = '';
     return this.http.post<any>(`${this.Api_Http}` + "/logout",crediential, { headers: this.header });
   }
-  logoutLogin(token) {
+  logoutLogin(token: string) {
     const crediential = '';
     return this.http.post<any>(`${this.Api_Http}` + "/logout",crediential, { headers:   new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
@@ -41,25 +42,25 @@ export class UserService {
    });
   }
   
-  createuser(users): Observable<any> {
+  createuser(users: any): Observable<any> {
     return this.http.post<any>(`${this.Api_Http}` + "/register", users);
   }
-  insideCreateUser(users) {
+  insideCreateUser(users: any) {
     console.log(users)
     return this.http.post(`${this.Api_Http}` + "/users", users, { headers: this.header });
   }
-  searchuser(formData){
+  searchuser(formData: any){
         return this.http.post(`${this.Api_Http}` + "/search-employee-details", formData, { headers: this.header });
 
   }
   //changepassword
-  ChangeUserPassword(changepassword) {
+  ChangeUserPassword(changepassword: any) {
     return this.http.post(`${this.Api_Http}` + "/forgot-password-mail", changepassword);
   }
-  ChangeUserOTP(otp) {
+  ChangeUserOTP(otp: any) {
     return this.http.post(`${this.Api_Http}` + "/verify-otp", otp, { headers: this.header });
   }
-  submitToChangePassword(changepassword) {
+  submitToChangePassword(changepassword: any) {
     return this.http.post(`${this.Api_Http}` + "/update-forgot-password", changepassword, { headers: this.header });
   }
   listBranchWithoutAuth() {

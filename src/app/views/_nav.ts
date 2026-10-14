@@ -2,7 +2,7 @@ import { INavData } from "@coreui/angular";
 import { UserGuard } from "./_guard/user.guard";
 import * as data from '../containers//index';
 export const navItems: INavData[] = [
- 
+
   {
     title: true,
     name: "Menu",
@@ -11,7 +11,7 @@ export const navItems: INavData[] = [
     icon: "fa fa-bar-chart-o",
     name: "    Dashboard",
     url: "/dashboard",
-    
+
   },
   {
     name: " Access Management",
@@ -73,7 +73,7 @@ export const navItems: INavData[] = [
       },
     ],
   },
-   {
+  {
     name: "Employee Search",
     url: "/employeeSearch",
     icon: "fa fa-credit-card",
@@ -88,12 +88,12 @@ export const navItems: INavData[] = [
         url: "/registration/organizationRegistration",
         icon: "fa fa-edit",
       },
-       {
+      {
         name: "Employee Details",
         url: "/registration/employee-details",
         icon: "fa fa-edit",
       },
-      
+
       // {
       //   name: "PF Organization",
       //   url: "/registration/pfregistrationlist",
@@ -164,8 +164,19 @@ export const navItems: INavData[] = [
         url: "/transaction/excess-payment-refund",
         icon: "fa fa-edit",
       },
+        {
+        name: "Refund Approval",
+        url: "/transaction/refund-approval",
+        icon: "fa fa-edit",
+      },
+      // {
+      //   name: "Approval",
+      //   url: "/transaction/refund-approval",
+      //   icon: "fa fa-edit",
+      // },
     ],
   },
+
   {
     name: "  Reports",
     url: "/report/generate-report",

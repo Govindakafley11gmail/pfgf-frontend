@@ -171,6 +171,7 @@ export class RefundapprovedlistComponent implements OnInit {
       payment_total_amount: this.fb.control({ value: datum.payment_total_amount, disabled: false })
     });
   }
+  
   collectionmode = [
     { collectionmodes: 'cash' },
     { collectionmodes: 'cheque' },

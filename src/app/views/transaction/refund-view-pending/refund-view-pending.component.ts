@@ -16,9 +16,9 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./refund-view-pending.component.scss']
 })
 export class RefundViewPendingComponent implements OnInit {
-  @ViewChild('myModal') public myModal: ModalDirective;
-  @ViewChild('myModals') public myModals: ModalDirective;
-  @ViewChild('myModal1') public myModal1: ModalDirective;
+  @ViewChild('myModal') public myModal!: ModalDirective;
+  @ViewChild('myModals') public myModals!: ModalDirective;
+  @ViewChild('myModal1') public myModal1!: ModalDirective;
   // dtOptions: DataTables.Settings = {};
   dtOptions: any = {}; // Now Angular will recognize it
 
